@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Product Details | A&M Fashion</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <style>
+    /* ============================
+       BRAND VARIABLES & RESET
+       ============================ */
+    :root {
+      --primary-black: #000000;
+      --primary-gold: #D4AF37;
+      --bg-light: #f0f2f5;
+      --white: #ffffff;
+      --text-dark: #1a1a1a;
+      --text-grey: #666666;
+      --accent-red: #d32f2f;
+      --shadow-soft: 0 20px 40px -10px rgba(0,0,0,0.1);
+      --shadow-hover: 0 30px 60px -12px rgba(0,0,0,0.15);
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
+    body { 
+      background-color: var(--bg-light); 
+      /* Creative Mesh Gradient Background */
+      background-image: 
+        radial-gradient(at 40% 20%, hsla(28, 77%, 96%, 1) 0px, transparent 50%),
+        radial-gradient(at 80% 0%, hsla(189, 100%, 96%, 1) 0px, transparent 50%),
+        radial-gradient(at 0% 50%, hsla(355, 100%, 97%, 1) 0px, transparent 50%);
+      padding-top: 85px; 
+      color: var(--text-dark);
+    }
+
+    /* ============================
+       HEADER STYLES
+       ============================ */
+    header {
+      background-color: var(--primary-black);
+      height: 85px;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+    .header-container {
+      max-width: 1300px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      gap: 30px;
+      justify-content: space-between;
+    }
+    .logo-box {
+      display: flex; flex-direction: column; cursor: pointer; padding-right: 20px; border-right: 1px solid rgba(255,255,255,0.1);
+    }
+    .logo-top { display: flex; gap: 8px; align-items: baseline; }
+    .logo-text { font-family: 'Playfair Display'; font-size: 32px; font-weight: 700; color: var(--white); }
+    .logo-fashion { font-family: 'Playfair Display'; font-size: 12px; letter-spacing: 6px; color: var(--primary-gold); }
+    .diamond-icon { color: var(--primary-gold); }
+    
+    .search-box {
+        flex-grow: 1; max-width: 500px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); border-radius: 50px; display: flex; align-items: center; padding: 0 20px; transition: 0.3s;
+    }
+    .search-box:focus-within { background: rgba(255,255,255,0.15); border-color: var(--primary-gold); }
+    .search-box input { width: 100%; border: none; outline: none; padding: 12px 0; font-size: 14px; color: var(--white); background: transparent; }
+    .search-btn { background: none; border: none; cursor: pointer; color: var(--primary-gold); font-size: 20px; }
+    
+    .nav-items { display: flex; align-items: center; gap: 30px; color: var(--white); font-size: 14px; }
+    .login-btn { background-color: var(--primary-gold); color: var(--primary-black); padding: 8px 30px; font-weight: 700; border: 1px solid var(--primary-gold); cursor: pointer; border-radius: 50px; text-transform: uppercase; font-size: 13px; transition: 0.3s; }
+    .login-btn:hover { box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
+    
+    .nav-link { color: var(--white); text-decoration: none; display: flex; align-items: center; gap: 5px; }
+    .cart-icon { font-size: 24px; position: relative; cursor: pointer; transition: transform 0.2s; }
+    .cart-icon:hover { transform: scale(1.1); }
+    .cart-count { position: absolute; top: -8px; right: -10px; background-color: var(--primary-gold); color: var(--primary-black); font-size: 10px; font-weight: 800; padding: 3px 6px; border-radius: 20px; transition: transform 0.2s; }
+    .cart-count.bump { transform: scale(1.5); }
+
+    /* ============================
+       MAIN LAYOUT
+       ============================ */
+    main {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px 100px;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    .back-nav { margin-bottom: 30px; }
+    .back-btn {
+      padding: 12px 24px;
+      border: 1px solid transparent;
+      background: white;
+      color: var(--text-dark);
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 50px;
+      display: inline-flex; align-items: center; gap: 10px;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+    .back-btn:hover { border-color: var(--primary-gold); color: var(--primary-gold); transform: translateX(-5px); }
+
+    /* CREATIVE PRODUCT CARD */
+    .product-detail {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: 60px;
+      border: 1px solid rgba(255,255,255,0.6);
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 80px;
+      border-radius: 24px;
+      box-shadow: var(--shadow-soft);
+      animation: fadeIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    /* ============================
+       GALLERY (Left Side)
+       ============================ */
+    .gallery-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .main-image-container {
+      width: 100%;
+      height: 550px;
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.03);
+      border: 1px solid #f0f0f0;
+    }
+
+    .main-image {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    
+    .main-image-container:hover .main-image {
+      transform: scale(1.08);
+    }
+
+    .thumbnails {
+      display: flex;
+      gap: 15px;
+      padding: 5px 0;
+    }
+
+    .thumb {
+      width: 80px;
+      height: 80px;
+      border: 2px solid transparent;
+      border-radius: 16px;
+      cursor: pointer;
+      object-fit: cover;
+      opacity: 0.5;
+      transition: all 0.3s;
+    }
+    .thumb:hover { opacity: 1; transform: translateY(-3px); }
+    .thumb.active {
+      border-color: var(--primary-gold);
+      opacity: 1;
+      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+    }
+
+    /* ============================
+       DETAILS (Right Side)
+       ============================ */
+    .details { display: flex; flex-direction: column; }
+    
+    .prod-title { 
+      font-family: 'Playfair Display'; 
+      font-size: 42px; 
+      font-weight: 700; 
+      margin-bottom: 15px; 
+      color: var(--primary-black);
+      line-height: 1.1;
+      letter-spacing: -0.5px;
+    }
+
+    .price-row {
+      display: flex;
+      align-items: baseline;
+      gap: 20px;
+      margin-bottom: 30px;
+      padding-bottom: 30px;
+      border-bottom: 1px dashed #e0e0e0;
+    }
+    .prod-price { 
+      font-size: 32px; 
+      font-weight: 800; 
+      color: var(--primary-black); 
+      font-family: 'Playfair Display';
+    }
+    .prod-desc { 
+      color: var(--text-grey); 
+      font-size: 17px; 
+      line-height: 1.8; 
+      margin-bottom: 40px; 
+    }
+
+    /* Interactive Controls */
+    .control-group { margin-bottom: 30px; }
+    .label { 
+      font-size: 13px; 
+      font-weight: 800; 
+      text-transform: uppercase; 
+      letter-spacing: 1.5px; 
+      margin-bottom: 15px; 
+      display: block;
+      color: var(--primary-black);
+    }
+
+    /* ============================
+       COLORS (NEW - VISIBLE)
+       ============================ */
+    .color-options { display: flex; gap: 15px; flex-wrap: wrap; }
+    .color-circle {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+      position: relative;
+    }
+    .color-circle:hover { transform: scale(1.1); }
+    .color-circle.active {
+      border-color: var(--primary-black);
+      transform: scale(1.1);
+      box-shadow: 0 0 0 4px rgba(0,0,0,0.1);
+    }
+    /* Checkmark icon inside active color */
+    .color-circle.active::after {
+      content: '✔'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 14px; font-weight: bold; text-shadow: 0 0 2px rgba(0,0,0,0.5);
+    }
+
+    /* Sizes */
+    .size-options { display: flex; gap: 15px; flex-wrap: wrap; }
+    .size-chip {
+      min-width: 50px; height: 50px;
+      border: 1px solid #e0e0e0;
+      background: white;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .size-chip:hover { border-color: var(--primary-black); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+    .size-chip.active {
+      background: var(--primary-black);
+      color: white;
+      border-color: var(--primary-black);
+      transform: scale(1.1);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    }
+
+    /* Buttons */
+    .action-area {
+      margin-top: 20px;
+      display: flex;
+      gap: 20px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 18px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: 0.3s;
+    }
+    .btn:active { transform: scale(0.96); }
+
+    .btn-add { 
+      background: var(--primary-black); 
+      color: white; 
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15); 
+    }
+    .btn-buy { 
+      background: var(--primary-gold); 
+      color: var(--primary-black); 
+      box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2); 
+    }
+    
+    .btn-add:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(0,0,0,0.25); }
+    .btn-buy:hover { transform: translateY(-3px); background: #e6c42f; box-shadow: 0 15px 30px rgba(212, 175, 55, 0.3); }
+
+    /* ============================
+       RELATED PRODUCTS SECTION
+       ============================ */
+    .related-section {
+      margin-top: 80px;
+      padding-top: 40px;
+      border-top: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .related-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+
+    .related-title {
+      font-family: 'Playfair Display';
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--primary-black);
+      position: relative;
+    }
+    
+    /* Underline decoration */
+    .related-title::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 3px;
+      background: var(--primary-gold);
+      margin-top: 10px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 30px;
+    }
+
+    .related-card {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(0,0,0,0.05);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      cursor: pointer;
+      position: relative;
+    }
+
+    .related-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+      border-color: var(--primary-gold);
+    }
+
+    .related-img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      background: #f9f9f9;
+    }
+
+    .related-info {
+      padding: 20px;
+    }
+
+    .related-prod-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--primary-black);
+      margin-bottom: 8px;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .related-price {
+      font-family: 'Playfair Display';
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--accent-red);
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .product-detail { grid-template-columns: 1fr; gap: 40px; padding: 30px; }
+      .main-image-container { height: 400px; }
+      .header-container { padding: 0 15px; }
+      .logo-fashion { display: none; }
+      .search-box { display: none; }
+      .action-area { flex-direction: column; }
+      .prod-title { font-size: 32px; }
+      .related-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-container">
+    <div class="logo-box" onclick="window.location.href='index.html'">
+      <div class="logo-top">
+        <div class="logo-text">A&M</div>
+        <i class="ph ph-diamond-fill diamond-icon"></i>
+      </div>
+      <div class="logo-fashion">Fashion</div>
+    </div>
+    <div class="search-box">
+      <input type="text" placeholder="Search products...">
+      <button class="search-btn"><i class="ph ph-magnifying-glass"></i></button>
+    </div>
+    <div class="nav-items">
+      <button class="login-btn">Login</button>
+      <div class="nav-link">
+        <i class="ph ph-shopping-bag cart-icon"></i>
+        <span class="cart-count" id="cartCount">0</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- Back Navigation -->
+  <div class="back-nav">
+    <a href="#" id="backLink" class="back-btn">
+      <i class="ph ph-arrow-left"></i> Back
+    </a>
+  </div>
+
+  <!-- Product Container -->
+  <div id="product-container" style="text-align: center; padding: 80px 20px;">
+    Loading product details...
+  </div>
+
+  <!-- RELATED PRODUCTS SECTION -->
+  <section class="related-section">
+    <div class="related-header">
+      <h2 class="related-title">You May Also Like</h2>
+    </div>
+    <div id="relatedGrid" class="related-grid">
+      <!-- Related cards injected by JS -->
+    </div>
+  </section>
+</main>
+
+<script>
+/* ========= LOGIC PRESERVED & IMPROVED ========= */
+
+// Global Cart Count
+let cartTotal = 0;
+
+/* ========= STEP 1 — GET PRODUCT ID ========= */
+const params = new URLSearchParams(window.location.search);
+const productId = params.get("id");
+
+if (!productId) {
+  document.getElementById("product-container").innerHTML =
+    "<h2>Invalid product selection</h2>";
+}
+
+/* ========= STEP 2 — DETECT CATEGORY BASED ON ID PREFIX ========= */
+let sourceFile = "";
+if (productId.startsWith("s")) sourceFile = "sarees.html";
+if (productId.startsWith("j")) sourceFile = "jeans.html";
+if (productId.startsWith("k")) sourceFile = "kurtas.html";
+if (productId.startsWith("w")) sourceFile = "westerntop.html";
+if (productId.startsWith("c")) sourceFile = "cordset.html";
+
+/* Set Back Link Smartly */
+const backLink = document.getElementById("backLink");
+if(sourceFile) backLink.href = sourceFile;
+
+/* ========= STEP 3 — FETCH CATEGORY FILE ========= */
+fetch(sourceFile)
+  .then(res => res.text())
+  .then(html => {
+    let parser = new DOMParser();
+    let doc = parser.parseFromString(html, "text/html");
+
+    /* ========= STEP 4 — FIND THE CARD WITH SAME data-id ========= */
+    let card = doc.querySelector(`.product-card[data-id="${productId}"]`);
+
+    if (!card) {
+      document.getElementById("product-container").innerHTML =
+        "<h2 style='color:red'>Product not found</h2>";
+      return;
+    }
+
+    /* ========= STEP 5 — EXTRACT PRODUCT DETAILS ========= */
+    let title = card.getAttribute("data-title") || "No Title";
+    let price = card.getAttribute("data-price") || "N/A";
+    let desc = card.getAttribute("data-description") || "No description.";
+
+    /* FETCH COLORS FROM ATTRIBUTE (IMPORTANT) */
+    // This looks for data-colors="#ff0000, #00ff00" in HTML card
+    let colors = [];
+    
+    if (card.getAttribute("data-colors")) {
+       colors = card.getAttribute("data-colors").split(",").map(c => c.trim());
+    } 
+    // Fallback: Default Colors if none found
+    else {
+       colors = ["#000000", "#800000", "#00008B", "#556B2F"];
+    }
+
+    /* Extract ALL images from slider for gallery */
+    let imgs = [];
+    card.querySelectorAll(".slider img").forEach(img => {
+      imgs.push(img.src);
+    });
+
+    /* ========= STEP 6 — BUILD ENHANCED PRODUCT HTML ========= */
+    
+    // 1. Thumbnails
+    const thumbnailsHTML = imgs.map((src, idx) => `
+      <img src="${src}" 
+           class="thumb ${idx === 0 ? 'active' : ''}" 
+           onclick="changeImage('${src}', this)">
+    `).join("");
+
+    // 2. Colors (Dynamic)
+    const colorsHTML = colors.map((c, idx) => `
+      <div class="color-circle ${idx === 0 ? 'active' : ''}" 
+           style="background-color: ${c}"
+           onclick="selectColor(this)"
+           title="${c}">
+      </div>
+    `).join("");
+
+    document.getElementById("product-container").innerHTML = `
+      <div class="product-detail">
+        <!-- LEFT: GALLERY -->
+        <div class="gallery-wrapper">
+          <div class="main-image-container">
+            <img src="${imgs[0]}" class="main-image" id="mainImg" alt="${title}">
+          </div>
+          <div class="thumbnails">
+            ${thumbnailsHTML}
+          </div>
+        </div>
+
+        <!-- RIGHT: DETAILS -->
+        <div class="details">
+          <h1 class="prod-title">${title}</h1>
+          
+          <div class="price-row">
+            <span class="prod-price">${price}</span>
+          </div>
+          
+          <p class="prod-desc">${desc}</p>
+
+          <!-- COLORS (FETCHED & VISIBLE) -->
+          <div class="control-group">
+            <span class="label">Select Color</span>
+            <div class="color-options">
+              ${colorsHTML}
+            </div>
+          </div>
+
+          <!-- SIZES -->
+          <div class="control-group">
+            <span class="label">Select Size</span>
+            <div class="size-options">
+              <div class="size-chip" onclick="selectSize(this)">S</div>
+              <div class="size-chip active" onclick="selectSize(this)">M</div>
+              <div class="size-chip" onclick="selectSize(this)">L</div>
+              <div class="size-chip" onclick="selectSize(this)">XL</div>
+              <div class="size-chip" onclick="selectSize(this)">XXL</div>
+            </div>
+          </div>
+
+          <div class="action-area">
+            <button class="btn btn-add" onclick="addToCart()">
+              <i class="ph ph-shopping-cart"></i> Add to Cart
+            </button>
+            <button class="btn btn-buy" onclick="buyNow()">
+              <i class="ph ph-lightning"></i> Buy Now
+            </button>
+          </div>
+
+          <div style="margin-top: 30px;">
+             <a href="${sourceFile}" style="color: #999; text-decoration: none; font-size: 14px;">
+                ← View all items in this collection
+             </a>
+          </div>
+        </div>
+
+      </div>
+    `;
+
+    /* ========= STEP 7 — LOAD RELATED PRODUCTS ========= */
+    loadRelatedProducts(doc);
+
+  })
+  .catch(error => {
+    console.error("Error loading product:", error);
+    document.getElementById("product-container").innerHTML = 
+      "<h2>Could not load product file. Make sure you are running this on a server (Live Server).</h2>";
+  });
+
+/* ========= FUNCTION TO LOAD RELATED PRODUCTS ========= */
+function loadRelatedProducts(doc) {
+  const container = document.getElementById("relatedGrid");
+  const allCards = doc.querySelectorAll(".product-card");
+  let relatedHTML = "";
+  let count = 0;
+
+  // Loop through cards, skip current product, take max 4
+  allCards.forEach(card => {
+    if (count >= 4) return; // Limit to 4 related products
+    
+    const cardId = card.getAttribute("data-id");
+    if (cardId !== productId) {
+      const rTitle = card.getAttribute("data-title") || "Product";
+      const rPrice = card.getAttribute("data-price") || "N/A";
+      const rImg = card.querySelector(".slider img")?.src || "https://via.placeholder.com/300";
+
+      relatedHTML += `
+        <div class="related-card" onclick="window.location.href='product.html?id=${cardId}'">
+          <img src="${rImg}" class="related-img" alt="${rTitle}">
+          <div class="related-info">
+            <h3 class="related-prod-title">${rTitle}</h3>
+            <div class="related-price">${rPrice}</div>
+          </div>
+        </div>
+      `;
+      count++;
+    }
+  });
+
+  container.innerHTML = relatedHTML;
+}
+
+/* ========= INTERACTIVE FUNCTIONS ========= */
+
+// 1. Change Main Image
+function changeImage(src, el) {
+  document.getElementById("mainImg").src = src;
+  document.querySelectorAll(".thumb").forEach(t => t.classList.remove("active"));
+  el.classList.add("active");
+}
+
+// 2. Select Size
+function selectSize(el) {
+  document.querySelectorAll(".size-chip").forEach(c => c.classList.remove("active"));
+  el.classList.add("active");
+}
+
+// 3. Select Color (NEW)
+function selectColor(el) {
+  document.querySelectorAll(".color-circle").forEach(c => c.classList.remove("active"));
+  el.classList.add("active");
+}
+
+// 4. Add to Cart
+function addToCart() {
+  cartTotal++;
+  document.getElementById("cartCount").innerText = cartTotal;
+  const btn = document.querySelector(".btn-add");
+  const old = btn.innerHTML;
+  btn.innerHTML = `<i class="ph-fill ph-check"></i> Added`;
+  setTimeout(() => btn.innerHTML = old, 2000);
+}
+
+// 5. Buy Now
+function buyNow() {
+  alert("Proceeding to Checkout...");
+}
+
+</script>
+
+</body>
+</html>

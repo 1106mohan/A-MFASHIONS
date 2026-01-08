@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A&M Fashion | Kurtas Collection</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        :root {
+            --primary-black: #000000;
+            --primary-gold: #D4AF37;
+            --secondary-gold: #F1C40F;
+            --text-light: #ffffff;
+            --bg-light: #f5f5f5;
+            --white: #ffffff;
+            --shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
+        body { background-color: var(--bg-light); padding-top: 85px; }
+
+        header {
+            background-color: var(--primary-black);
+            height: 85px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            border-bottom: 2px solid var(--primary-gold);
+        }
+
+        .header-container {
+            max-width: 1300px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            gap: 30px;
+        }
+
+        /* Logo */
+        .logo-box { display: flex; flex-direction: column; cursor: pointer; text-align: left; padding-right: 20px; border-right: 1px solid #333; }
+        .logo-top { display: flex; align-items: baseline; gap: 8px; }
+        .logo-text { font-family: 'Playfair Display', serif; color: var(--text-light); font-size: 32px; font-weight: 700; }
+        .diamond-icon { color: var(--primary-gold); font-size: 20px; margin-bottom: 6px; }
+        .logo-fashion { font-family: 'Playfair Display', serif; color: var(--primary-gold); font-size: 12px; letter-spacing: 6px; text-transform: uppercase; font-weight: 400; margin-left: 2px; }
+        .logo-decoration { width: 40px; height: 2px; background-color: var(--primary-gold); margin-top: 5px; }
+
+        /* Search */
+        .search-box { flex-grow: 1; max-width: 500px; background: #1a1a1a; border: 1px solid #333; border-radius: 4px; display: flex; align-items: center; padding: 0 15px; position: relative; }
+        .search-box input { width: 100%; border: none; outline: none; padding: 12px 0; font-size: 14px; color: var(--text-light); background: transparent; }
+        .search-btn { background: none; border: none; cursor: pointer; color: var(--primary-gold); font-size: 20px; }
+
+        /* Nav Items */
+        .nav-items { display: flex; align-items: center; gap: 30px; color: var(--text-light); font-size: 14px; }
+        .login-btn { background-color: var(--primary-gold); color: var(--primary-black); padding: 8px 30px; font-weight: 700; border: 1px solid var(--primary-gold); cursor: pointer; border-radius: 2px; text-transform: uppercase; font-size: 13px; }
+        .nav-link { color: var(--text-light); text-decoration: none; display: flex; align-items: center; gap: 5px; }
+        .cart-icon { font-size: 22px; position: relative; }
+        .cart-count { position: absolute; top: -8px; right: -8px; background-color: var(--primary-gold); color: var(--primary-black); font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 10px; }
+
+        /* Category Nav */
+        .category-nav { 
+            background: var(--white); 
+            padding: 15px 0; 
+            display: flex; 
+            justify-content: center; 
+            margin-bottom: 20px; 
+            border-bottom: 1px solid #eee; 
+            position: relative;
+            z-index: 10;
+        }
+        .cat-container { 
+            max-width: 1300px; 
+            width: 100%; 
+            display: flex; 
+            justify-content: space-between; 
+            padding: 0 20px; 
+            gap: 30px; 
+            min-width: 800px; 
+        }
+        .cat-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: inherit; cursor: pointer; gap: 8px; transition: transform 0.3s; }
+        .cat-item:hover { transform: translateY(-3px); }
+        .cat-img { width: 60px; height: 60px; object-fit: contain; }
+        .cat-text { font-size: 13px; font-weight: 500; color: var(--primary-black); text-transform: uppercase; letter-spacing: 1px; }
+        .cat-item.active .cat-text { color: var(--primary-gold); font-weight: 700; }
+
+        main { max-width: 1300px; margin: 0 auto; padding: 0 10px; }
+        
+        .section-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 10px 15px; border-bottom: 1px solid var(--primary-gold); margin-bottom: 20px; }
+        .section-title { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; }
+        .back-btn { text-decoration: none; color: var(--primary-black); font-weight: 600; border: 1px solid #333; padding: 8px 15px; transition: 0.3s; }
+        .back-btn:hover { border-color: var(--primary-gold); color: var(--primary-gold); }
+
+        /* Product Grid */
+        .product-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
+            gap: 20px; 
+            padding: 10px 0 40px; 
+            position: relative;
+            z-index: 5;
+        }
+        
+        /* Product Card */
+        .product-card { 
+            background: var(--white); 
+            padding: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            border: 1px solid #eee; 
+            overflow: hidden; 
+            position: relative;
+        }
+        .product-card:hover { box-shadow: 0 10px 20px rgba(0,0,0,0.1); transform: translateY(-5px); border-color: var(--primary-gold); }
+        
+        /* --- SLIDER ANIMATION CSS --- */
+        .slider { 
+            width: 100%; 
+            height: 260px; 
+            position: relative; 
+            overflow: hidden; 
+            background: #f3f3f3;
+        }
+
+        .slider img {
+            width: 100%;
+            height: 260px;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0; 
+            transition: left 1s linear, opacity 1s ease-in-out;
+        }
+
+        /* State: Only 'active' class image is visible by default */
+        .slider img.active {
+            opacity: 1;
+            left: 0;
+            z-index: 2;
+        }
+
+        /* Animation Keyframes - Slides images Right to Left */
+        @keyframes slideShow {
+            0% { left: 0; opacity: 1; z-index: 2; }
+            20% { left: -100%; opacity: 0; z-index: 1; } /* Image 1 exits left */
+            
+            25% { left: 100%; opacity: 0; z-index: 1; } /* Image 2 enters from right */
+            40% { left: 0; opacity: 1; z-index: 2; }    /* Image 2 visible */
+
+            45% { left: -100%; opacity: 0; z-index: 1; } /* Image 2 exits */
+            
+            50% { left: 100%; opacity: 0; z-index: 1; } /* Image 3 enters */
+            60% { left: 0; opacity: 1; z-index: 2; }    /* Image 3 visible */
+
+            65% { left: -100%; opacity: 0; z-index: 1; } /* Image 3 exits */
+            
+            70% { left: 100%; opacity: 0; z-index: 1; } /* Image 4 enters */
+            85% { left: 0; opacity: 1; z-index: 2; }    /* Image 4 visible */
+            
+            90% { left: 0; opacity: 0; z-index: 0; } /* Fade out */
+            100% { left: 0; opacity: 0; z-index: 0; }
+        }
+
+        /* Apply animation on Hover */
+        .product-card:hover .slider img {
+            animation: slideShow 8s infinite;
+        }
+
+        /* --- END SLIDER CSS --- */
+
+        .prod-info { padding: 15px; width: 100%; text-align: left; }
+        .prod-title { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; margin-bottom: 5px; color: var(--primary-black); }
+        .prod-offer { color: #c0392b; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+        .prod-desc { font-size: 12px; color: #777; line-height: 1.4; margin-top: 5px; }
+
+        footer { background-color: var(--primary-black); color: #888; padding: 60px 0 30px; margin-top: 50px; text-align: center; border-top: 4px solid var(--primary-gold); }
+        .footer-logo { font-family: 'Playfair Display', serif; font-size: 28px; color: white; margin-bottom: 20px; }
+        .footer-logo span { color: var(--primary-gold); }
+        .footer-links { display: flex; justify-content: center; gap: 30px; margin-bottom: 30px; }
+        .footer-links a { color: white; text-decoration: none; font-weight: 500; }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo-box" onclick="window.location.href='index.html'">
+                <div class="logo-top">
+                    <div class="logo-text">A&M</div>
+                    <i class="ph ph-diamond-fill diamond-icon"></i>
+                </div>
+                <div class="logo-fashion">Fashion</div>
+                <div class="logo-decoration"></div>
+            </div>
+            <div class="search-box">
+                <input type="text" placeholder="Search Kurtas...">
+                <button class="search-btn"><i class="ph ph-magnifying-glass"></i></button>
+            </div>
+            <div class="nav-items">
+                <button class="login-btn">Login</button>
+                <div class="nav-link"><i class="ph ph-shopping-bag cart-icon"></i></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Nav (Kurtas Active) -->
+    <nav class="category-nav">
+        <div class="cat-container">
+            <!-- 1. Sarees -->
+            <a href="sarees.html" class="cat-item">
+                <img src="https://picsum.photos/seed/saree/60/60" class="cat-img" alt="Sarees">
+                <span class="cat-text">Sarees</span>
+            </a>
+            
+            <!-- 2. Kurtas (Active) -->
+            <a href="kurtas.html" class="cat-item active">
+                <img src="https://picsum.photos/seed/kurta/60/60" class="cat-img" alt="Kurtas">
+                <span class="cat-text">Kurtas</span>
+            </a>
+            
+            <!-- 3. Western Tops -->
+            <a href="westerntop.html" class="cat-item">
+                <img src="https://picsum.photos/seed/westerntop/60/60" class="cat-img" alt="Western Tops">
+                <span class="cat-text">Western Tops</span>
+            </a>
+            
+            <!-- 4. Jeans -->
+            <a href="jeans.html" class="cat-item">
+                <img src="https://picsum.photos/seed/jeans/60/60" class="cat-img" alt="Jeans">
+                <span class="cat-text">Jeans</span>
+            </a>
+            
+            <!-- 5. Coords Sets -->
+            <a href="#" class="cat-item">
+                <img src="https://picsum.photos/seed/coordsset/60/60" class="cat-img" alt="Coords Sets">
+                <span class="cat-text">Coords Sets</span>
+            </a>
+        </div>
+    </nav>
+
+    <main>
+        <div class="section-header">
+            <div class="section-title">Kurtas Collection</div>
+            <a href="index.html" class="back-btn">← Back to Home</a>
+        </div>
+
+        <!-- 20 Products Grid -->
+        <div class="product-grid">
+
+            <!-- Product 1 -->
+            <div class="product-card" 
+                 data-id="k1"
+                 data-title="Cotton Straight Kurta"
+                 data-price="₹1,299"
+                 data-oldprice="₹2,499"
+                 data-discount="48% off"
+                 data-description="Lightweight cotton for daily wear with breathable fabric."
+                 data-colors="#FFD700, #D2691E, #F08080" <!-- Gold, Chocolate, Light Coral --
+                 data-images="https://picsum.photos/seed/kurta1/600/800,
+                              https://picsum.photos/seed/kurta1a/600/800,
+                              https://picsum.photos/seed/kurta1b/600/800,
+                              https://picsum.photos/seed/kurta1c/600/800">
+
+                <div class="slider">
+                    <img src="data:image/webp;base64,UklGRm43AABXRUJQVlA4IGI3AADwtgCdASoKAYsBPp1Gm0olo6IpKlyZkSATiWdu4DvI6yQ1vn6VD68986w8biZ0H/kwXDm4bfmyRpbb9Q+4r52TTwN3FyRhn/+48G/IL7H8jfcbyP9Zuop8z/CH8n+9e2D+m76fkLqC+z/+B6e/4HZ+bb/q/QI9vPuX7D+ot85/5PQz7H+wD/N/7f/1PWP/Z+Dt9z/3n7W/AF/P/7v/8P9r7uX93+3HnH+p/2v+AX+hf4j0xP/v7df3C//Xuh/sJ///9qaHA/TP/RQzATceuNMmQsn8HeXhK6kQ12R+Vxq64zFVUhm2zZugNj+pbfKpMKWXJLLwHbytO+f6LddlIB1Zg7Ybdpm04dxNGeEappau5ZY8ZPKwBbatFRiPqEhsKGOnBQO4iik339E316M2TXCqOdXW46mBZWykQr0b05PQ/unlu2yevqxGovTg4YTneDVMBVBbVAYG2lF8JYZeNFpzZP8q42ikSd2hnlqCEhMDcAXp0Tw+NTWfpvrzjb6bBM9ZFh14o3h8GolIf2IYxqNVpg81sIgrm54r4EUqRzc+ZniPjF/4R2MQKSpa0EInDkPPzDlJpoWEi0h7XCCVElhRrqK8HH2GyxgssPvj8cUP5J5rcfDJCfBiz28tY7jOXH0T4Uc+1i6hN4WI5ucphc4+WjA9lTOuZDY7HqXWKZZdFc5x0s1hit7K2wAUl8hVNOwKZAgGXsjy9zWZGQhV3lsfPg3dbnpJZt+zm+eOaHxJC+zstF4sGgNor9eOzY01z4FGrGm6tIsFrHLOekJBXtzENWn9b/+uiy+xrXjmIue8QX/esK2jD+9wRDuWpIVo3vq+U5uICT2eijQextOJHkG2zYxC+s/SLj3fYbu17++P411hXBWXYbybmnn62ZC45ZZIGZUyvHchnoVCWvk3cl1HzBtSrCz2Xqwkve3MvhpdwDmAEYilKkHo1qBB5xghXMK0EnGOeXuE0olQdHawV8Y4SHA8lyFHRcgOxHkmQmQyOR1Jq1NJ/lTJqNXe5OkXBYxm4akjA1sQyeACHte3PS3giK+tnY4+W64edr4ds1YUggFKXAoYq0qvW0DZoL5JE/bW/S8mCZ0dh5XSyVvzC7GR4rgjlyEk9EMrwehbKNJopMT02YVnOfeDok+LDsHjVVc0mouKjk0MIngh8yfhnRPznGHNDToFDJmMBBvCaTaaCNHkYVzCYohb2g6RWgn0X92cEkE94IptADmoScRrYmRsjozV/be4GD1AcFm2FWVD9y6ki+oJZamWUtNxScSZrfUDGK0KMA3r2jN8RwkTCzMXlgSxt8V3ZZ9z+tF3qfsCAL1EI/fi5Q9gJDVBbmoUBYi7sETBqTxk4bgjdafHA4Wg67yyW6eSDXVu6ul8olK4jdq99iE9efrj9xNfUMV5537PY1CfudhnsjQuYQeo33hE5JdRIwQyQ1lC6/JjNhCYWtsnkZQYz0OfT1EzWLud4ltKN/4iNBf+RDQi0dW0hlauXHcBjI4p8fjftzSFF8wXRIe4oHZXbzWEErobrjInLssf2RAezZm8dVC3QShlzU7e5UOv5R83xMDLqlazc/Yuv3mRVbgjuXyLRd73htcaMv3NwtrhNgs1tuRSyzZ8tdnSIALOe9gXZszfoDYuDLRo9emKmaMV8oHNISm7DFc5JZvpp+1AkFiajNfhi/xPoTjC2S5eQwmuL/1pt7KXQOSLcXEmLk80XWI4pj+69+qqdeKilEDyHi8MVvqcaK9o2+CrdcRnsUypdFRjC/GQqtB/Bz7fo/i11cV47kxSrbdEO/tGRK8a0vHhlkOzVbjlHfu/0kY2NzPHA9w6qE6chlJeTViSevQsdlBsEw0uf51Ft0EtnfrOsG/bntkyt2wAFgfwYVc1Y0Q3O57CEDzBe8NTgTe3Pww2TPVUPJsKdr5OGV0ehpLUB+/8lxUBOgfp/tlLVJxiKYPNuB/wQWmLc6fAAAD+7uW4vvrNi+cjtiH7gG7DT801oGdl31N8sbQWMfHOYbzrPbl3jHZNoJZ1tVipO8iNl1idbVOiQwi7CwkuBMSH1+nUmJom3lW5Ki6aSRJrvOXOyXkPigNOmx64YCXNViiL4p1bgzG4Uosi6wMAK0OBChareksQWyM2FFHknXyUaeBk/FfeVKuC8t2tNaB7+HhNwU/OGggIv4Rcl2vyQCdnJIoke4ZtsId5rXr7alJuoBqEPHi4p6neIYt4i4KsuDieIx3nOFXn6R83Y9Fplu+tPYWG/a+c4Qz3PfKDFB3nBHyQ7T6rqwbT6+TCmJqUPWwJ398cciBGY70TCyy4wAlBTP36fmEDlTqEJx+hFy0XAuZCmV9lvkjFZ2kNazulWP/WHiS4dTg8mMjmNVbNK5vsbcD8a/4YV4XDESHW9KR2AyNc0fQFRITfFhTvlqpy1miiUSc5pF8wQnsq/3z3vdpfny0Jl+dXH4EtvhJvx8YDjDJvVRX1i107qkMCa19d/acT82JIfNEZZljX4PN5CJrxpIcIDoap96HaxsweiA/N26Cio5+plKGj4hWeA4hGWoMYE5JDS3Kgx/7rnfde4pfK+rcN1saPcd9nB+3jfICre2xbveO7iX025l64P9+Z3XFBVbYjn/U3YlmcQUzzbvgTBHqhIPeWdRzpaWSfapVHv7Qeu3G43Oo9s3K38JcV8q5mEUSEEsVbXKJswJh3rzgVT1xbFkvFO3itirlq+PCjUrl0znczvktO6ymYSJffsXWPc6KK7eTjQkHa89hjOSNQ8MGwq6C6WRL+ku2aOrSUz2UUOVnfskxYNGL+0cOSmq2UC/yb+tRZHHC0+93loudqicwXLOdB8smkctpZxomo4gtN0QO8wz9SMc2ZHNYfJpWx3vNy/oy45BMCJHG4MSC0NTDaoyE4koWWUTBGxZNSJbMwu44b9kJmG1GvV8q43JwRxdpEU7Vjf8J34A3y7wzqjhINtiQakzSIgA37ggyc4nxifr4u9B8YsFlqbA1l1S7+HyqAD4ehZqy5/PjcgMT7TdSMPyYvEtiI63HFOqljCA5991IsAZ97KxyXJEsUsNz26mul9VmSwQrPCSfM7kCYnSl1h0nxubZqXFa4T1u4QtaMkPvsD5wG4VFJGTIjPlCjtpN/sg5tnYkaV4b20v16772OnYp8QZjFTGlzz08XxgzE4mf0wjE2KRzGDtx3J1M61XBArqik2XivucP6MhyolK5XWrawsr8wkBRzNDYCutax49CkU0DHT7Gi7okNA9F1q4zO7EU8RYkPlLLZAlzKMF4shH//ZvdBva/QrsbDMx2fS8/BdcYK6L3khUSWa3bikKwwf4yxR6wD/xYtR8GzKBmLs+/+kRTQLZgoT0ydD/GduMnIficq3J9YjYaqNQOzRMZHgp3gtR8OfdF5dQaUyDZYgPgOnZO6aFfjbNs4JxzsRNQG3ZN0jirPLYAELFIpnHpqmccetoBSFFveIhlCJqfOn5YNz8Gj/KN6RRiy7Vq/uTYeS5Y4N7m4X2bfxraW5NZ+a0EvRiy9ggVNXZFkMZ1dJIhc1GVuB7LVJ5OinXNtiBL6GA6xyzeQnsGImeB5fHA63K61EvGZpJSMgXRdCQySsqZc3Q0aNrNM9khnLVH1UlHObh6EUg1xKcMhwsu+ROPj4mFYDF20gFhac4WiWm/3jvLCKFDd/PAzaGk3r4FJWsxfJavidL4AAWbUjWhoQoCg9E6ncat6c99n0H6j/q692XWkyk4rixfTl8e+jtTnmLk1VihtFU/Euh+RoY3f1EzbovApV1l2jpKYmNnJK8WM3hQvTWIlCTFXwAh+r0myohfBrjuRs0yoyGj8s7kwGTPU95VU+O2ZH8D5PvA+BzgiYQ2sZU9yVO9Z8M0BasgLttZlaCchotAFpxRT7/feeEl2Eqwbev73SQvm1n+ACwmCBIp98TIH8+mhsqZ/pCDvZ+bltkoflP1rR709s9MZpdsetfMgBD0EIZscV1BGhrIDA70Nc/4vuMbn4lyL+s+4VR7hwLJsnairDQD8XyrEDOSK1ozie8x+eb4ojwtrl7UCQPdaOGWyhnNQSWhMu4plVCwsAGYVKTM9XEEjuLS0cEZuqeoMvIaKLJ0FNlclKsrw8kcfH2eqfyBseBnTkWWng/823RN9Mi0+jIK08L6bgy5tOqJb7gVbz1AR0R8j9Vrt++HukZ+jG3vzZl+z5qfarx8EeruZH4tbNq4NSOw/Cb0pA/ST2WTCgvlsFy9tTBSBVXOF/jE4hWwzUn0zhs2/itxFuyDd3vXyhZQ17DAJD4+eYn/NMCBqTFrQP8PC9TuEAsGW2bHJoENIJ/Bl3QGRq6z7MBMhglnAPZacDa5Tlz8eNf/jocODqmw+Frljf/QNgDd0hUHuHngytlverdV4wTxp+3YrEHPShgVu6APqThJHTPkpUmMi1K6/N9MQSgV+0mMpqSG+Ts/4mmEatVo2xDl/RRpbIdO0GbZdt9Pz73uexjJz/ouX4zsCRKmx1EjJ9DUQT8Deksr1lWKbvYmrgdkou2WDS7uXB7P1uJV6peCck61jUf5aDTJ5cNEHr9dHf/cmj61Cp7nAkWbw0roLPB98FEiDVRmRZYShfNssuFs4OYwLEZN1W+Qxj1NKtvFv4HdYz1KA161/2tOHdtP12S88UQ0mIzGzh1vxN8PzIDVcpteiwglA/5Ew0Es3t3leeNu7DIIdxmvk0kAID9u2497pDayGJzbb51wh0cZx9idf1ZwO5XfwA7aW/lbnaNBCbPoOgAp674eXr2chivM3/4/TINq0BHTNT4p1vIlSRQohznZ0jlFsRCRfXaY4XyGDHJUKc2frbMsvTU9vMwbNYg3KOb8lktYGi3PJs0fQ7ZvJaUNOM4HZmv1vnLdaOkcWEqIHl5/gWdaE5V8qFFSsWlFpAEQJNMuMAE/3rzIqeqL5jHdUj99dXm5wGhEPE+5JZkC+BKlPKWbXnkfzWw30dKR98Vl2RrxenRkBfdWHH0pnRK4XfDZ3V5dWLdVxiwp6lSo0Gerc0zRxgoepTUiNk6XC0X2SyZA0etVWgeh0eeoezC5z9VKQKpFBSLYE7Uh4aF8h1a62XrB8/lNNPVNyathfhSqjlQ3N/FxVTEmPI9xgKpL0VhKlxF2nLDXKOL2mdo+7y8l3h/2xkHn1pp6lQfPWHf9DprbTZBUmEmYXqQYdIAzTcKMkTMmies3fw8B3BeSdwdwNz/fmBnJMcTgw7OcSY/gYinT8x5J7Z1xc9XMnguf8KGOhMK11g77mfU2cHb9abiVIEiyo9AXJu3odl67ZvoKLq+PgR5nHFcg7aqrLoSZ2kwEOk8zj5/CBeigVi8EOuGJkE4p7+y9q9Tpdx5jTar8kPWF8O3wSeO8bklxDyMUEqb1fLsn4u+WKHMPMih7sqfBpcoOJ3DDUyea9jcn/69drcg4lCn2y6KN/zJBYULmGLGH4JYR8wwEyFdS0MkMeMb3WSdMRBBDDsCP4qB9uSlD6u1oXkioaTEaL6dLvNz9uidOVjoTapPW6noUg1WbwSRUl7PIMIYvbL5RrXaN1F7CEm0BJ9/TRj4SO5iLwKexoSJ+wFG+0xyFsEYaYpLykPH6R83wOXetg0wYx4aiZ1U54SpUbtcYtKHGCXHMvF7z5pEwmhzNGUFxxwi9AMmozjPUwFXAdorf6aNhCJo5fOd9BtXnlQGdgXrDQ8i63MkyjD5sA47iuRq+UeQBSeZM9vh2G4+/L9/VdO5MtiVBmPhMCIrQXVAAQ97eSwUAAmJ8JhyejEM/knput+WkUtGaEnny5LF3vqyq0qBVVMBCN40mx+8shehHO44Tk7MhNqIMYX5vjYergao7kv8Z6IFxg8VSL7kz2gz0hd67ZlVX64ZOQZsaiTQmUluIPJOYXOzUm3DGIqwuslScer7egzk3jFC3RE2iAbhpvjcowM0mHSC46oyK2k5j782gojhuhbClEiQj2tzTiiwQ/UQ7Goe0g/ChG7CsraYUlGu67heTEx/V9pjsbYytV4R4K2gJc9nsjaZfnVASL4NXeFTXBLrgP3fHD4OYoBgwJd60ki6JuWiZcJC6UEh/gRIfV9zR3jWvkbfgspVK5w9Y8p/WXtsVAsClcrmp8z2293j1k/+j0JjTSBmme21EH1I4idHa5STOAsAaEgjrz6x75IJSTULKdOqsByJWKUZLj4RZMlgBtIs5fAjdU43rvEKJWdYLBqiku+GBhdbCH77HRcNkXp5pqfWhu2GQXCUpb7/Pu1p5oSLEs6P9Ds8RXvG+urD2pJ6vhwViMmjgZE8/sQmTjHRhsVaV33pQmAUTxjvohiUAOL2YlVsD15H/52v1bJAG+cxVPUUv6RTuTaj7o9ndC4eJN6MLybwTNGFHggAlit8klcIUDdL0Q8drLXTcen9DMSA6r8apRe08E0dZ+15s1rVuQAufTnVKvDHM+X2KkyYTVdv4BtYE6Yc6bpz1Cg1K9y2slFtIPB2LRFfc/sJ6QegmPxgEXnoihT9Ei7w3q783PcuosYnHgxUNLzIZzAlVKtNmpQvzYek/VmnmXXgWzP818fuISQaBbzuK9OVuQfeLcM9wiZShpjtlZ+YpC16ZdQ1fd/0eOBCOC4TeHUFsq2BK9We/fQoJ38QxnjLHGgoGbMzgiTNjGNvCh4wV00TdmAE+ksbkJD+YAySOtOqDAnt65jRcbWYUfpOkT6Yzl8pqlNAm6w3X+/SekOKML38TkeRgaC1OGtXXYGzwkKBwNZYGX/29DOi5ivccX4L4k0ZcF3gFrmyKLHNjGKMMFSHFnzd5QebA2SduH4W6QTtT0ix/s7+KsA2fUGneKn3xKRZv2/IhKmr1XV7WGMWKDUX75A2S1vW0jkOfZAtSSGTC+927oI5RjAARH/I+TCkz2Sy/KGdeobr5Py8a8SeXIBNBFcte8aoB7+npBEf/S/fyRigmmMS/NNSu8nwVbOYlO0Zdqi5sdF0v8A8sm6Xu93kigqU9PjU0ZQGgkBEy4hH7QK9m4QVQXMMHaD8+E2b3V3BiNyHA3VKzWpSYdn78BYAsqe4zB0cNMr79Me8VWheSQLy8+UjT6mKQV2u8cG6qfhdqbw765g7wt3acjC83JhlyKY77yVDiJSfCqf6RrSbNjeDPOyTO1us00bIN6MPNeg/X5NeFGPH8x8fGWiv+eQrfhDU0sJ6KtwyuBn3Xw2ZKvDAwKluu/QA92g2ahDlxnODGEUIY5A10pUm8gaKxuUQOuvLBrujL5CHZ3eG4qE7kDR/F9iJhhyxKkmAaY1MtfPk5IEUsMlQUEKpBOj4X+qiTAq0uEMaUvleObwKIhflLl9vBgZEx8xFvq6W/miZNqdsr1jKkjbF0QBZLjiedBABxLENCcG54+gGyp3kV+07UMBBunC4zub5gE4W56eRTCopnsEdmn9JrYoqYC2lEX+TdOK4W5z9XPjWcivU46Y5Mu+oK6f67dnfWLec/jHLlPldWL7whIZtEfzYG9iZAF+36MOrZPvYDEf4Xs5GQ089IVEc6FdtMuMTe1XHAJfeLSFasf4XBYDtVV8HSGQJK/fVz45W417JJuq4lzZilOXjLAmOHzCU/4//H9l0pdZtBSKjQ/+zsrDPCHf9O6JQobyOuY8amQlgLI3JFAm7nTla8Elck2IBJV7V3DyO2kLeL/QyHiC9uN3KetSe/INcxhkY3IFPHWuhqGQ8WT0p5zi+xfnnFa+VJsSAnUXklwR9jd1Yz3uXM59ammB9uvjYJrTwYrfW9i4NjM4d4lfc6JuNw+DK9UCMKvB0RSeZfDdJXv1jc2B6AViyPCJh89BDbxlpy4gkCxufhxFwLkb8NEm0C6kkmABFrCWCa6a9INdgzvnymCerfjOKF8aEjqEl8/OEXQZ5OTWqa98duSWs0iVoXd2XUj5Y7RIldcQYY1E8UDzTVPAfvZ5kziT5oJiNT7gK0rAieDc2/JREyS/w66w+yuCqSvMgd2M0S/u48YKfrrsGX0KYmO1tMKAt44yQgJg7w1QIuauAuQybeZuQjd3X7cAiFwneqz7BCIPnmzpfCcTct4zpKVb625bM1Mk8GPudtva1hcV/wBnQGEDMNO9YlbkXj0lcRN9l9AAOOy4+eQtKgTllUjQSTX5uqCaCQ64+Hbqq4kTLnY9eUQaC/vTVxY90CledXSbUt/vVmBZqcQUjiGHv+nXKhhcacyTPnlj9ch4VA62n4NwCTS9irUNKTSbmIin7Q9PQtGBZ4oeETSDUDdUzSkQ6TLeunACdPcrokFBixdwQ7tkA2oNClp8Fh26sXzRiOHsPbTnvKMzmcgqBnsD1NddYwRNbII+W25+moWXTWPpJmRpdVfxYnk4T8DeE2SeciaRA1Al3ZJweO75zN1aIidwBrGl+OyvLGivKyKml++1gfYqk43QJJ0BEFoE4xjQQpRBbfCn52ZceOkEs2uJW8UAxr3HJLlnhbiLZjCxWavwShNetPcqPRNLl6LEacy1FVPf76SQpEIZIEL3qoOboVwWaIriM3pKfAUlUwlN+74zWH1pmk0k1OfDrzEllzDaL21kT74nCHHDsDRI3Up7iMziHGchHOzH8YeplZ2C/F6BIZa1QMwtTxRRRjLnGCWyfvrSjJosOsUsNJek4N/pu+cZkWzszLnth0wvz+jTMQqEgl+nBi9qeYpQW8iW0kEK8cQul/DQb4w8Ou+68ZJVnsdXPr7t7RVhgChkuy2i5w8GEktPfFTzyihnsG5GeKbW2TQOeiwWTZFl3NrstmzfG1uaJLNcuymuzcItK3rHhDgF8F3GUm33rSaFSu+zi4qdsWl1J3cLmiqnjMBHeNIzccn7Oq8XDJqHlJUxFjcSGgbBFvgjF0JnZwnqc8ilzJAWtxCr6UUUGqHzoEXdLW2xyanakjWo/esufSpJjHD+MSNPRlyEXq27nUfYdPpzjthRR4d77KQTY9logJrcYDk+WfIIcQBf5ciowL3vt0lHc0BCriciGUpVTRlH172XfzWAGNkQn+bzrq8Sn+zIf5peaRV3Iiz+cUxSxmEhXSkAFzrW/v2L4MnhBe3qOv36gfa3PKlTOelLbPQAtl0XTt4zneWc050Ig/njlXUKynveIpbw8yMIJtvfbUnO3vKxTfRlt2NNPaBxlFK/axums7JspD6AjZj/7jA/sfa8ipuzyVNWmdu3y5cHxaoN+og89tyySenYhkhRupw+mPuAz4g3JTsTsw7K4qDK67/Y9sy9CfbiDYSoHft3+wCDTDBAXhh2wGVrt4GGVrDADLnTxMw634gAKyj1bgxYqkBdMhncXIwu3lj7q0b7QLlZ3nr2XZakxOuSyX8MQlRgxyjWxx9Sm9yVlbdE2Ozlxy5mjrvLXcO6x5Q2uURBxXCanLqmBsPCMUrK4iRpK1eNa3OVZ6SItZDOgCyZYVcHg37eg3UgAk5E2ij1eWWHTQ6t7ydlZg30H/5EnpWG3bqqMq1V56G8j60iJuCVpGqlzS8WAQ4SZmc/BVMyweZXr4+Uv11Vzl8OscDxrlWoKZOq4M7rLqjS/JtUQe50b/gXoxnn2wWQ8rk63MDNoFLkOAnJzNUdsjUQSItCMlKCRU+gUoMPyfzpJfqk2O6ZPzZsJA5f7oiYLoqarLiweY9Low4JgRlfRe7/rEBWDaFIJfKZ1NEjclUwz/2haaJeT8ZrbXdGX7AXMfd7zF4QNT18V7Hb+kuYgFoeS3LsfFBOTlxOWhcw8ILg2AB6l6cpAyTeqdmK42ta5fpMoRVuE89inyFTGhNSsBH/x89IE0Ohz29BzbA/dN/DjxNGar1WszF+VYbPKKx7C0sWZyn+T9Z7jgAUeWqmwhqcRcXq/z6FvY1XrrCb9DbUFvgbH3TJTHRy+O3yNd5fHwBsEV4aRX3hWOwd+S968O1g/kc+WIY5zplzKP+qcDrbSKavMSrpaQ57XheZ82dKWEnXt+zx/ANK40B3eoEBQz+7dsORoTGDqzp3A/CIMNeyEkhRniv3jvMeqSlw7yYPIBF6KWBq8gomSiA6q+79ykZW5QtROum4O2tk8ZafViBiuWk7rdJc9TgjnsceB92IooUefeBQcc6O0xSBPxYCBk3b7gjsCYdD9X4q6VY1HIMOqPZdwEcdreEgf5Y6PwVIB1HIlbkLGbNF9SvasOhKJMubsYUIVXiw/TxiMcS1ATW5Of6KvUzzsSakWvtcpMjakhtKCydufB6nFrFSsl5tMmGVvuKd3Fxwn0DAWTuvU4F0g1fk6niH4CzhfxXVqmxmUXcVw9wXP/pYUnqakxML+s52HtqlgofinjhSIQOP69U+h3uQirfQc5br0kD1fCs46LEI8Gp60oAINRXw+ejDICwQvjenr3pEb/RXx9rI0ar9GxTkWU6waucjUAqDPnN7TzddAigb74PQ0AdpI72pdWI5YjMXrmA/qiP5b3wLM8YTenJKPVZEGg0JKzecCI0f3uzOtrT9FVyRrvrJ3UoW8jVjR9cu6Wd18Ft1plum+WvMvpm+BWV99Q//EjiYRu4a8pCcg/rPUiIGw76rsOiZVObWUysefjDljl0DJst2BRCDbAFl0NE8RX7c/jfdnrlqGEugpGNkJIcGu5pcMJLMDa1R4itcjNpZJ/6orLdz+V4u0DXrdSehhMddtuijzkENn6K9dHySc4WGvJDwzsaZT6eADThOO4CjeGPdwa35ED4V6KZbvujU26guV9A2w5b4In33P6V7CvUOjFUXybRbZPTdyit/LkEklDlv3AqFWcV41ftQ9m4VMjLesf8eXw2F7IzRuVUJxLt4HZNUX2Na2ROiTonB9AYpEUCGdklxpjpFNsqDuVF6YGEHc93l1aU71GfSqShKIBxcIzyRdyaKvjGa+ATQIHt7bg67FEpwnhpQrZtYrL+XWYGPAIHV0l2i1wOUZPvGwlagzsORx24bZx22Hf7Ubn/xzl45FcbdoQj9q+2ys1pA9XmhvGbRHhg2a0jwt5p25v1FOQRm1CcLeouJ202sOr/2xrveGon3lhDihLMfDFd1Pdx0Pj7WIPwndbDuC6CEUUWJ9+uIcXBIqzkt8OyFVh7rj7ciuiytOiQCy1OM8gnifkqENEdhuzWS8QTzssJ8n0qljfnbBTXQECPOqcjtCeFoxn4vM52YAqPVVZD/4d5q0mkD96fVFFDgGnpnHTFhUofIXnk1SP/A9mfW3YGJDD7wYedXehdLO2zj+OquRutroxsIRYjCo9mi4vihG6IkhnYIvzb3RcqGHZuUOBi9LbImEhXRu25aZ/UPN5stb8/4cfV3yMIuxLDtVRdP/NvsG/MyZhv1gvMLvjGBtBsZdTj0WK4EosgULtKhCGIUkX8CBTVFxQv5TNduoIbJ3dCGcJGlGqWyP8Jw+V3SDLKr0Nx/Cm1I1AQaOVRdSo3deaAMl0ncrlXXMPNAufd+RX5XGXmxWQsfsAfEyZcj9XwHG5mzFwMvFFi1BMNT4i2tL1z2rSWIqfNpOIknCmK/adOFwROu4AMcCSOj5ZcX6IMEu1rWTTL7qrcLTsvumVpCdA5G9++WW3UzdH1eLkVaZfpK6VQVEWawndiOgq9iR3qLcVWoX3DZGqVylEtIYnIP66QxpPlcSXknXEovmFaZ/fDZHzcDqR88S/saAbN4GJOmB6XTfp709L+JfjlF/7WFbAM1rsC9LuSudgFn8SLYYcRxEmR82rxK/NlzcqQrQ4uUkUq++9ShLNg9FLhTRdc4+HCPtbeddmoMkXJAYIBy/pLhuXg6wft3D+UJ3ycSiLzdO/hMBDdPpU6tRVScRMoImza+fPta43x3PToLiw2MCBEbRwh9Nqp2l1qG8N/i2BAucoH/+agg1b9RvWWSPfhsU+4JMk+LdfCMfC6nbDFssCJ/HgXjUHZkN7WXgDzUOSQY2dZzgI8TIKcNci6AChZ16N7VNMgaQhzTVpxX1nT2UT5Q5mn7KxRABXr/SP3WwfD/YkWYLHW0yukeVYivgdFfQajVa3EOvLiNlx3AmrI87ah7fE8ag48TD/9MNk4V5NInrpPJ5KPLxLh8DW7UeJ2ncdQMQy+bq9RZDNi0NS0f8pKAISH9r0CX0TRqGpLBu91yL69tRol8BtqYO+sktI8hbcWyI005GjkoidDQ3foGO8ehXfkzxsrCWlPNZ0ziUo8+mQkgAJe1bM4tgx4+Xgahyr5DPuJ6kyc1kS5qCDN7Xu3ikDWO6y/GYzl9z7sCeapvxnL3eJE5pgp8ReWcoaJ72V5Cag8bRYXGmSAPOSVc//NuxBv3KOkE/Ai0qB1iJguVP4HqDNXyqZM1T87V/OwqRdFFH7DHFsrwy2I/AHbBrBQmxuJ92CyaeE4jvzsJvOStfaB2/eQCzM2rhUc/GYVHVDJn2bMj9I2TZNbGhCm9id4LZ7p26/orum2RuBG/I+mwY8PFmbBteyFDJycIbljBEdiDvLb9RfQ2yi+srrsqn/Y6XuaL9LPYKmu6q03RsVcE9lnI9xyrdJR7nYqVwbAupGl+NXP0KMzJTLBUfDv7eq7E5C4W9WgGksNngDUx6F/d+U/nzKuIS+NVDbM7X2Bx8gpITHuDm9cLx2HMj7PZ8ahhuFfVSb9iGzya7Uk40ASaIC4pL/ov2gQwQgWjtMzGbRxcpD7xFnKv3PLINY7ATot6xA1DGt3j7IJP6P97OioIs1vYM2mWNuYJbYwFe4srVamfWAsFLxQ29kEMpaVll1eEnR8aGfTZXAuimz9rLuc4+VlZ/ovP5mgXwaWA4zC1xEzRSo9i5qkFApLigWarYSiaI2dbDCdNZrWjlhmxLGzm9LfhC1McgosqERmXa+6LfpGSCIqKlhOiQDyT3ZwVUZSi5g1ybgpYKXbDl1k/4SOyMgbySS3KjA8gsvfmF+BzYkn9vEBZZqQHyZndYRYiuOWgkyp/S0OkyjmbHgf9PzOnPv3puPsMccKOeJFiUzBkV4+7cc6GOxgsYvEKQmJLmmVP2GCtVc2ccVRNZCsvn2oAE3Ye8r5s8r//BazHSuqYaTzFSUa6cDGvYVgUPIBuZr1NekPKCE2gbL9UPFmbyG7XhOeG15wRzh4BhKK2ZoMnhZPwwaeXb9UDOTb+Arn5tTfMSsqpa7pJ8cd5h3h0cTUqmbGuP/hsjI20Xpe1xOS0/AwOTkU3YsRDCWwsk37AXm6u2xqa/xfEkZrR8IULrrzo/zDNCK4aCZjqgEYUYcwCbnO0Ltxjc7MyR0RpXaMerO+d1AWHr16ErpNcjJ3NTDWE4cvp/a+yjcr2+ZV/v7i8pkzsA9zmhYRy4hNZQgRvQ+JCBeDVmgKQ4Ukq0b6Pezq9rL0WAEcTnmiJTfYY9bEcYHwbmGXJiP5GpKtWIzM5RMdHkfmql8iw7kqbFSScFvSuq4svlP2VvMmEtnYwAuWA11ZtrUAJX/PaxCn2wNC12vrxTs/gcpqtj3ykBEziHcC/Q7o9GvDyIeWw2LxmJmtPS5nJmZaStusBUGWVTcMMvJyAm23OI4bVuxlQkcXLG4l+iqgKL0EP0sENsX0COq/DPXmBUl/cBh2XddBnpto1ocg540HSu3vBzK6eNxdFEw8E+ADA9gTEX9ZXZuPTGImqP5eDKrZlc13LnXEooILvBErXPlQ+YhISnjAqYq4aMZRnJDV+EjeOvPdduskQG2d4GSXFH0cpv0F0/G1sc6ASK1jpewt41V7EpLxAGMHizhsInoeIIR92oNe7SYX5QAGCLlTGmZHhzt7FhQeHxAik9ojdL5IAkI85sNEELBkn8HnWBpsGllrbfoHV3lLou5wCJ0yiAkg/XU/IE34kDSC8DCFMYOpOVxy+GG1AyjkKzaS21IdM6/Zx2yc+V+fqOvE5NgX7SJYe7VPsiNAanJQq6qRmeoKyFAp+kBKKhoNDkv+Vx7s1EZBttzQQb8fhwAuR2VmvyLokP5fgQQ3sPm5AYp8WWa/iGzM3EptFj+9Dg0gmX/+MwQlVWv0/0PNj7YnPzvrQ7pNN7u1Zlk9ZEhd0/f6qZB70NuHDl3mpJaGzvKbddQxFeh9sW7bmpbsQ8rLVR3C1vOJHGdrbzweNpFKrTQ+9UK3eI4udvhNbTdoeuM3CpfErvwayIUX2jHRLXSuReJ88VBzGvdBIpdznMFQh6vDPEAHImYJEHm+OMmPeB//Xe+G+0MiLF0OZ0g613ui9wENklfIdANuQBo56pAfH8neMittPK2GJqh39/PvZyCGkbGRCDVx7TrxvzNuIX7gtNWU/C/OZmgQVXJV21WAo9YL+vULpOiTKh8qqg4IlwBCffssqdd80AGU0g5dNPpv32IWHVmQhDTb/ST/Jwq7IlgEoECCs2cBja/jNOMdQO8zjEPYfwZCiIJ6L0/Z6vL0tnnbV3BAXB2VcbODnbxiyYaHdhGD4fAHqoNtQuOGbEpJdXf3bdNIEBIv2WL14pgMUaUoye9fCzdvaD0EwD1Jwn3BKsrcqAzzAKgxSVQJu5wmQvsGAgMMoDhiNCZ6O6ylkw++vBsUr4hubQpNep2cdQNLxVnVx4+otIa6NZrHMD2xh6/J9MjnAPoiSzBgAleof+QUyqGEYh8EbPyeEcTuEDK1QJL0sjaCCO/BU6lAOvonR+85wKLVivx6xFSgS7EnX46xSG5eu8bEp9GCxK/2MsQNzu6WdCEBrruUylWCCoZX8OLUHpeMvY5R5auNXPUyNgnbyhDHhTL/bLU4Q+fPS08lqbPyXacllrx0MjlY+Bg8fY4lEpIckM5e4Ciy4xdWODNLq8VUSjLm/epwzPpoEm7ElD2WsZKKR0wtkgT6oU2TiBiXrzHYpCi0j4ISgNFkGTx8WCj83FRW8mxWLT9vLfL7dh+sEawccA09e+NQ8EHnnOTc1m5ElBE4jSNxVCUgQfoqLKg3edTCuh6/lkQnGrE7QChjZ4nKYP+Hri47mq8THFI0GhlmiM2k8Ycp3DkrEltEcDPkxvfC4Z4kZDKHyVnu3S0wmwxfbqM/4uIAABF3O7eFtWmkvYEG9LEs0FyFgXD4dbLOH+yPqLZ33YyNLMWK2s4jYdgw0PbjmQu6dLseqWKxMETk1um9LqWCPW0sE/jGZKsusGUhoDDvc4Zfx13oO25UiQQovtIVij4mdvDl+sAb0Pzhrk21ljhAqe93rC6zdupAglFOg58cibbG/2tBvK2iuN3mzrmMXpTMDhR72jrObj1KIVu576Kh+fV0UndwEv8QuNoM6SnfgJ9tn6XGbCn1Op4v4OHfQn7ubP+hyl3/Y5LFMff893Ao+Kbv/AyJ2jxTuqditElUJUJdF93dbHjtTlc2mBkElJr9aZjU6ElFwvs4HnNISzuKwCNZAFUV95lu+SDZyPNMybkcw4PggLPatWMmpH3eb2jePDQ9jKXKOyE9ft8n5MBGO7ihvoQVYLav+E7UOGJjAp1kiFN5NoewsvXY1Kqh4C0N48FmCmyOAIXicZJJfWfe5bcgiCIXtyPsqRHQZFjkLH579awPqmMFLid3skVKvT32IpZ4+htIZte0uB/0LJJnCTFFj75pwU+nDo4eKLGNFTFCvOW0ARluamF/EajAtjuXsdxcU0nYiWENI/DPGXb6C/qoZmEyRBiM3OwS7jZrvuuWNygdjpwVwBYvrlUZWflggpARKFM4iFvXW0f5SK4roCDcI69yV4Kyh0tty7ST86GWQBWa1Zj9AjQQCHzihMEs7Dl5tdPMfBm9QZfSxFwanJ650k1n7M3pFogFA+Kxs13yJvZRh1JEX+GI/0S+ePDAM7LtaiPHFVtTYU2nA8uAaDvZC5ZQLqo3GMFYaF66RTtTCn+SaqcnIW0Z6t6mFpedDOB05fPDInSaiZX6hXfE56mUqAgdlOiLDqHE4PNkTgATpZu8uemdvSAEW4MVO2ch0JU80gbfJEvRKvpDB2b2T0lBTvvlIYythCxMM8u64hlnBLew6wZLdCM7tFSnNNUK85SxsCIWcavD0N5vKGtk+e06Yeowvtud13bwOR/Dj6DeLWR5jMVSOGpGmd5ENZ47dPpMeYOkkKeDeMw/X9c3MPzrtEPRreGG26HyBWI+jBJWL9OWtBS8ISvtt+X0FR65dKrEjfiVMv7lLGBsQliSht5EbDN9uwierp+GNPBuKYtzX32m66pKAAvjIMO2epEagnVsA5zWr7qQHg9mpBR9kMG7PkwRxIyrHkA37wM0i5YJunYYyyCNB47JoLvcSFAyv9YDcJbO5ayxC/OGetakZ350+9wrP8f4X0HQvPL5r+3mRHdqGAKruXzGYHKoZd5X/rLh+TCjuQAz5XIirtOs6ZlchQDRah6TRdrhKp6HS7QtBfKwsJqfuvL61DCBn57ss47dSoSsXEp2VvA3b0yiLKTvRC9cmwPqK+oWstsW+lqQuVKUKEkgZRIDHyjiBzMAgbpwOvaEWA+0MUsyexQfVPvutu9de7qopHgfSy9mO3fQ/mcYIyMeanZ+6a8sOlCvV8XR1Kb9/4dogTp9nkce0bLVwS45/s5fIIua/yeeFo5lL5MYB1f1Q9rOQ02RJpldiPImc7w2Nfkq8Z9+UWm7osc01B5KxJJ5XqXkzxgnma0Rh/YANHdvIrqziNT9dN7uzCJNlxrQVtGfv4ut5c+1Rak3QDJUQQfchFuX1taU4YE47txqYVgYF5SlFsIJhx65adQHFON8Rqkt7FHNhaHSEuxj4BronTHSh9CEJSXxlwPguQ9iHtXPRUTVurca1Oxu+uPklfv7PFYon/S109WCeh0QSAWk8KoeLCfRuxZNZqlQChzgZp2Ku7579c0E79Rat0FZJ8aWodOjyMerm3X3+GpHJu/1WS87U6b/TK7wF+RY5bqv42Bi+itBdbLmTmM6SiGyRXe/oHAN/M1NYlcLGA8kXMZp5VsR+2eS6tE1S5G57W8eHAoa9mP8xvAqdcgSA2AkDDUcDC0MuWI/V6U67Bx6xoqZIYvZjcygR0A46uvpiIDyNIbEvbkhFUljssrTEsPNCDdtCzzau6EQFwPmaMlQT2UkKulfDN7CgP4/WWEkVAvcjOYQg8hKe7RliWjc4dgMgNjNiapr2khafCqLtunfqwnifHR5YnvmpyYrEaUE7n+YAdDm8EPPYWlaCpxUluFPIyVIJ6dXEgKbtEBJT25dM/lY/ATn71gBBODSQB7ieXuA5oFTvodti6MBFLX60+AYvCDRVFrBIIX3EODLUvhST5jroeKESxX3pzbeRNZULWIndHTOFBJ8s236/e2jQrITTp4r/u6zJOnL1khLWCTbpzNz0s7e6mGEBMQgYOjkMIrrKxSer1XMnYTsx//ofCDRdquOdVYlzY68TGS1AQgw597AR1ziA4L99knYTTAZ0Td8KUa4zDS1n27yTcAfGvwdxna78CVRVBa/t7jm0xVDZ5sd6bbkWOSuO4d9VlWIQMvILWMVqG6ZdVfhfl/3sOYQRg8Ibr66IXyiNtgC3iCHzlXQlq30fzSMCfxwlYk6n4QY3V/Mj0dS1zDHFlylZxE1U6UMSC3sExMTs7x+9bDWESPfaBTLWgXZZwKHUWQ/pBOGGXruMU/Zkk9MmwkvBPmvncCVvFESK2B0zZOk8YuhJxqDtIefeDc4FbwEsJN1gqmK8SB1oeC9cgRI+bKSeigkLfmwDlt6n52NcdEboC6dAu2ZEdJx2g0ZkVlFqvK8/4dTZk6pgMQ+gqBAOUSUhlU3GVKAVLTlNMZSEs1IcGgUINJ8jE+6W2EZeGKzToqgBTFUnOobs3y5ewfoTMKyxZjV7+L1GlEIY48VVPl/8b14KiE36Of44W4tjFtzG99NfxXxsuGMYYc/MX5jOvjZ0qw8yLvsZkmrGIU++oWZbbl0jxXMFJ8C4mrQju5eHBEoj0WnOYSKWF7bXJDjgJP+BTp9SbJdgT4uN/9X9obxKeV5C8rgJs72OCL1weYuHjToLRpMHMdipxUiki2Uk8gMrBXubVOrDAC6RFI+eyt0a4YfSUjPG5XrMo01ViejwRiXimdu3k/iMZAY9Q+2wwkOPhlADW2lmnfa8efO/CVo5EYJNsvhrKkOkUlYZQZo3g9Ua4pvpDqq3aS1vjnRogEjwmcr+S3aw8Uhpzrqev7p4GmmhdGk9a61ah9zDqnO7PkpdRQdn+t+f054L387IBpX62iO7Xls5c7yveq6KETkT/asD71W6twLWToW/0OpsKQAF6kQEaoZCC3r+dz9sF5drwzs3zR46EUN8LJwCtKKrFCzNy1sqOQDMv2VC8dIzjYZESKnHz4ns2Lty4AAKZkY6stNV3gBbHIHr0PLLbofDe74nuk9d4LQlE4xPKp2RMbfV7GetHKkZbw/I8BezIsyuwRy4oJkRaUMjZUNx6JE2rrdIA0QuKogb876mohNlE5diDXVD0t5HGGw/LcgR9S0B/SumAxqBCXNy3MTuLFSR/NtLxcRFejwm6PnyI+5/cvJGeEFTnuso0uDHOhq0B3EokCZ1yN5xneANFMtm/P6EjIxFoWSlLnw7rlsCWTzmI0LLRVR/u5OkB9kbPscsv5NvmhOxkNTYaoUR/obh0duH1mSqCI8YFfmN/1zwJGx2PiStgUIjSvjWMRRIgfh6nUBYmSeCs6dHeuRDMCZM9aoqG+XqJh+9Z5YBbztRtblB3y7I/f24PHxBKWkZo0T6d23N7pwvxa6SY3nUcxNogCaOMRK7taXpinrvV2OAGPZdrtM2qqdpUlwSjZTxehk6SUnP7Ccw86HUmZMMaR/7O/TB2489+Qnc7GdvKacpC1JA5RQqJnu9j9FRv7uEC4Ao7SNW677/f1ppSlij5ewAEdTcfzAPyW/Kj6tb7J8/80IzdZJpkmtCmZPkhPxL6nUMq3qDtIkvuj8qBcH+wIB4uCpjfTTKUHC6lBAnLieSrQlFpTdz8dQNfRscUBLPOLDVE2uHHdX5/wjaq1lOuWgSovZL4e80AC4RkL4jcOTLBUbpkBU5JBFGnqFGKrhRJiEI7dbhT/pzONcb0AAAAA=" class="active">
+                    <img src="https://th.bing.com/th/id/OIP.oaLfI2hAmIu_XAr57x5vwAHaLH?w=204&h=306&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3">
+                    <img src="https://th.bing.com/th/id/OIP.D85qP9Dky54Jn_XC-V5JzgHaOV?w=206&h=368&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3">
+                    <img src="https://th.bing.com/th/id/OIP.FGxGZ8neLKkCA1qgCFUGfQHaKL?w=206&h=283&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Cotton Straight Kurta</div>
+                    <div class="prod-offer">₹1,299</div>
+                    <div class="prod-desc">Lightweight cotton for daily wear.</div>
+                </div>
+            </div>
+
+            <!-- Product 2 -->
+            <div class="product-card" 
+                 data-id="k2"
+                 data-title="Anarkali Suit"
+                 data-price="₹2,499"
+                 data-oldprice="₹4,999"
+                 data-discount="50% off"
+                 data-description="Flowy georgette Anarkali with heavy embroidery work."
+                 data-colors="#FF0000, #8B0000, #008000" <!-- Red, Maroon, Green -
+                 data-images="https://picsum.photos/seed/kurta2/600/800,
+                              https://picsum.photos/seed/kurta2a/600/800,
+                              https://picsum.photos/seed/kurta2b/600/800,
+                              https://picsum.photos/seed/kurta2c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/kurta2/300/400" class="active">
+                    <img src="https://picsum.photos/seed/kurta2a/300/400">
+                    <img src="https://picsum.photos/seed/kurta2b/300/400">
+                    <img src="https://picsum.photos/seed/kurta2c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Anarkali Suit</div>
+                    <div class="prod-offer">₹2,499</div>
+                    <div class="prod-desc">Flowy georgette with heavy embroidery.</div>
+                </div>
+            </div>
+
+            <!-- Product 3 -->
+            <div class="product-card" 
+                 data-id="k3"
+                 data-title="Silk Pathani"
+                 data-price="₹15,000"
+                 data-oldprice="₹20,000"
+                 data-discount="25% off"
+                 data-description="Premium silk kurta with traditional woven design."
+                 data-colors="#DAA520, #B8860B, #CD853F" <!-- Golden, Bronze, Peru --
+                 data-images="https://picsum.photos/seed/kurta3/600/800,
+                              https://picsum.photos/seed/kurta3a/600/800,
+                              https://picsum.photos/seed/kurta3b/600/800,
+                              https://picsum.photos/seed/kurta3c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/kurta3/300/400" class="active">
+                    <img src="https://picsum.photos/seed/kurta3a/300/400">
+                    <img src="https://picsum.photos/seed/kurta3b/300/400">
+                    <img src="https://picsum.photos/seed/kurta3c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Silk Pathani</div>
+                    <div class="prod-offer">₹15,000</div>
+                    <div class="prod-desc">Premium silk with traditional woven.</div>
+                </div>
+            </div>
+
+            <!-- Product 4 -->
+            <div class="product-card" 
+                 data-id="k4"
+                 data-title="Block Print Kurta"
+                 data-price="₹1,800"
+                 data-oldprice="₹2,500"
+                 data-discount="28% off"
+                 data-description="Rajasthani hand block print in earthy tones."
+                 data-colors="#A52A2A, #8B4513, #D2691E" <!-- Brown, Sienna, Chocolate --
+                 data-images="https://picsum.photos/seed/kurta4/600/800,
+                              https://picsum.photos/seed/kurta4a/600/800,
+                              https://picsum.photos/seed/kurta4b/600/800,
+                              https://picsum.photos/seed/kurta4c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/kurta4/300/400" class="active">
+                    <img src="https://picsum.photos/seed/kurta4a/300/400">
+                    <img src="https://picsum.photos/seed/kurta4b/300/400">
+                    <img src="https://picsum.photos/seed/kurta4c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Block Print Kurta</div>
+                    <div class="prod-offer">₹1,800</div>
+                    <div class="prod-desc">Rajasthani hand block print.</div>
+                </div>
+            </div>
+
+            <!-- Product 5 -->
+            <div class="product-card" 
+                 data-id="k5"
+                 data-title="Chikankari Kurta"
+                 data-price="₹4,500"
+                 data-oldprice="₹5,999"
+                 data-discount="25% off"
+                 data-description="Lucknowi shadow work on fine cotton fabric."
+                 data-colors="#F0E68C, #FFFAF0, #E0FFFF" <!-- Khaki, White, Cyan --
+                 data-images="https://picsum.photos/seed/kurta5/600/800,
+                              https://picsum.photos/seed/kurta5a/600/800,
+                              https://picsum.photos/seed/kurta5b/600/800,
+                              https://picsum.photos/seed/kurta5c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/kurta5/300/400" class="active">
+                    <img src="https://picsum.photos/seed/kurta5a/300/400">
+                    <img src="https://picsum.photos/seed/kurta5b/300/400">
+                    <img src="https://picsum.photos/seed/kurta5c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Chikankari Kurta</div>
+                    <div class="prod-offer">₹4,500</div>
+                    <div class="prod-desc">Lucknowi shadow work.</div>
+                </div>
+            </div>
+
+            <!-- Product 6 -->
+            <div class="product-card" 
+                 data-id="k6"
+                 data-title="Georgette Straight"
+                 data-price="₹1,599"
+                 data-oldprice="₹2,500"
+                 data-discount="36% off"
+                 data-description="Simple straight cut design made of flowy georgette."
+                 data-colors="#FFC0CB, #FF69B4, #DB7093" <!-- Pink shades --
+                 data-images="https://picsum.photos/seed/kurta6/600/800,
+                              https://picsum.photos/seed/kurta6a/600/800,
+                              https://picsum.photos/seed/kurta6b/600/800,
+                              https://picsum.photos/seed/kurta6c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/kurta6/300/400" class="active">
+                    <img src="https://picsum.photos/seed/kurta6a/300/400">
+                    <img src="https://picsum.photos/seed/kurta6b/300/400">
+                    <img src="https://picsum.photos/seed/kurta6c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Georgette Straight</div>
+                    <div class="prod-offer">₹1,599</div>
+                    <div class="prod-desc">Simple straight flowy georgette.</div>
+                </div>
+            </div>
+
+            <!-- Product 7 -->
+            <div class="product-card" 
+                 data-id="k7"
+                 data-title="Velvet Kurta"
+                 data-price="₹3,200"
+                 data-oldprice="₹4,500"
+                 data-discount="28% off"
+                 data-description="Rich velvet texture for winter and festive wear."
+                 data-colors="#800020, #000080, #4B0082" <!-- Maroon, Navy, Indigo --
+                 data-images="https://picsum.photos/seed/kurta7/600/800,
+                              https://picsum.photos/seed/kurta7a/600/800,
+                              https://picsum.photos/seed/kurta7b/600/800,
+                              https://picsum.photos/seed/kurta7c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/kurta7/300/400" class="active">
+                    <img src="https://picsum.photos/seed/kurta7a/300/400">
+                    <img src="https://picsum.photos/seed/kurta7b/300/400">
+                    <img src="https://picsum.photos/seed/kurta7c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Velvet Kurta</div>
+                    <div class="prod-offer">₹3,200</div>
+                    <div class="prod-desc">Rich velvet texture for winter.</div>
+                </div>
+            </div>
+
+            <!-- Product 8 -->
+            <div class="product-card" 
+                 data-id="k8"
+                 data-title="Linen Rayon"
+                 data-price="₹1,199"
+                 data-oldprice="₹2,000"
+                 data-discount="40% off"
+                 data-description="Breathable linen rayon mix perfect for summer heat."
+                 data-colors="#FAFAD2, #F5F5DC, #FFFACD" <!-- Cream shades --
+                 data-images="https://picsum.photos/seed/kurta8/600/800,
+                              https://picsum.photos/seed/kurta8a/600/800,
+                              https://picsum.photos/seed/kurta8b/600/800,
+                              https://picsum.photos/seed/kurta8c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/kurta8/300/400" class="active">
+                    <img src="https://picsum.photos/seed/kurta8a/300/400">
+                    <img src="https://picsum.photos/seed/kurta8b/300/400">
+                    <img src="https://picsum.photos/seed/kurta8c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Linen Rayon</div>
+                    <div class="prod-offer">₹1,199</div>
+                    <div class="prod-desc">Breathable linen rayon mix.</div>
+                </div>
+            </div>
+
+            <!-- Product 9 -->
+            <div class="product-card" 
+                 data-id="k9"
+                 data-title="A-line Cut"
+                 data-price="₹999"
+                 data-oldprice="₹1,999"
+                 data-discount="0% off"
+                 data-description="Flattering A-line silhouette for casual and party wear."
+                 data-colors="#2F4F4F, #708090, #000000" <!-- Grays and Black --
+                 data-images="https://picsum.photos/seed/kurta9/600/800,
+                              https://picsum.photos/seed/kurta9a/600/800,
+                              https://picsum.photos/seed/kurta9b/600/800,
+                              https://picsum.photos/seed/kurta9c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/kurta9/300/400" class="active">
+                    <img src="https://picsum.photos/seed/kurta9a/300/400">
+                    <img src="https://picsum.photos/seed/kurta9b/300/400">
+                    <img src="https://picsum.photos/seed/kurta9c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">A-line Cut</div>
+                    <div class="prod-offer">₹999</div>
+                    <div class="prod-desc">Flattering A-line silhouette.</div>
+                </div>
+            </div>
+
+            <!-- Product 10 -->
+            <div class="product-card" 
+                 data-id="k10"
+                 data-title="Short Cotton Kurti"
+                 data-price="₹899"
+                 data-oldprice="₹1,200"
+                 data-discount="25% off"
+                 data-description="Casual short kurta for daily summer comfort."
+                 data-colors="#FF7F50, #FF6347, #FFD700" <!-- Orange and Yellow --
+                 data-images="https://picsum.photos/seed/kurta10/600/800,
+                              https://picsum.photos/seed/kurta10a/600/800,
+                              https://picsum.photos/seed/kurta10b/600/800,
+                              https://picsum.photos/seed/kurta10c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/kurta10/300/400" class="active">
+                    <img src="https://picsum.photos/seed/kurta10a/300/400">
+                    <img src="https://picsum.photos/seed/kurta10b/300/400">
+                    <img src="https://picsum.photos/seed/kurta10c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Short Cotton Kurti</div>
+                    <div class="prod-offer">₹899</div>
+                    <div class="prod-desc">Casual short kurta.</div>
+                </div>
+            </div>
+
+            <!-- Product 11 -->
+            <div class="product-card" 
+                 data-id="k11"
+                 data-title="Jacquard Weave"
+                 data-price="₹2,400"
+                 data-oldprice="₹3,500"
+                 data-discount="31% off"
+                 data-description="Intricate weave pattern on premium silk-cotton blend."
+                 data-colors="#808080, #A9A9A9, #D3D3D3" <!-- Greys --
+                 data-images="https://picsum.photos/seed/kurta11/600/800,
+                              https://picsum.photos/seed/kurta11a/600/800,
+                              https://picsum.photos/seed/kurta11b/600/800,
+                              https://picsum.photos/seed/kurta11c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/kurta11/300/400" class="active">
+                    <img src="https://picsum.photos/seed/kurta11a/300/400">
+                    <img src="https://picsum.photos/seed/kurta11b/300/400">
+                    <img src="https://picsum.photos/seed/kurta11c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Jacquard Weave</div>
+                    <div class="prod-offer">₹2,400</div>
+                    <div class="prod-desc">Intricate weave pattern.</div>
+                </div>
+            </div>
+
+            <!-- Product 12 -->
+            <div class="product-card" 
+                 data-id="k12"
+                 data-title="Wedding Sherwani"
+                 data-price="₹12,000"
+                 data-oldprice="₹15,000"
+                 data-discount="20% off"
+                 data-description="Royal wedding sherwani with heavy zari and embroidery."
+                 data-colors="#D4AF37, #F1C40F, #FFFFFF" <!-- Golds and White --
+                 data-images="https://picsum.photos/seed/kurta12/600/800,
+                              https://picsum.photos/seed/kurta12a/600/800,
+                              https://picsum.photos/seed/kurta12b/600/800,
+                              https://picsum.photos/seed/kurta12c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/kurta12/300/400" class="active">
+                    <img src="https://picsum.photos/seed/kurta12a/300/400">
+                    <img src="https://picsum.photos/seed/kurta12b/300/400">
+                    <img src="https://picsum.photos/seed/kurta12c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Wedding Sherwani</div>
+                    <div class="prod-offer">₹12,000</div>
+                    <div class="prod-desc">Royal wedding with heavy zari.</div>
+                </div>
+            </div>
+
+            <!-- Product 13 -->
+            <div class="product-card" 
+                 data-id="k13"
+                 data-title="Floral Print"
+                 data-price="₹1,299"
+                 data-oldprice="₹1,800"
+                 data-discount="27% off"
+                 data-description="Spring floral print on soft cotton fabric."
+                 data-colors="#FFB7C5, #FFE4E1, #F0F8FF" <!-- Pinks and Blues --
+                 data-images="https://picsum.photos/seed/kurta13/600/800,
+                              https://picsum.photos/seed/kurta13a/600/800,
+                              https://picsum.photos/seed/kurta13b/600/800,
+                              https://picsum.photos/seed/kurta13c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/kurta13/300/400" class="active">
+                    <img src="https://picsum.photos/seed/kurta13a/300/400">
+                    <img src="https://picsum.photos/seed/kurta13b/300/400">
+                    <img src="https://picsum.photos/seed/kurta13c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Floral Print</div>
+                    <div class="prod-offer">₹1,299</div>
+                    <div class="prod-desc">Spring floral print.</div>
+                </div>
+            </div>
+
+            <!-- Product 14 -->
+            <div class="product-card" 
+                 data-id="k14"
+                 data-title="Pastel Colors"
+                 data-price="₹1,499"
+                 data-oldprice="₹2,000"
+                 data-discount="25% off"
+                 data-description="Soft pastel shades available in mint, peach and lavender."
+                 data-colors="#98FF98, #FFDAB9, #E6E6FA" <!-- Pastel Green, Peach, Lavender --
+                 data-images="https://picsum.photos/seed/kurta14/600/800,
+                              https://picsum.photos/seed/kurta14a/600/800,
+                              https://picsum.photos/seed/kurta14b/600/800,
+                              https://picsum.photos/seed/kurta14c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/kurta14/300/400" class="active">
+                    <img src="https://picsum.photos/seed/kurta14a/300/400">
+                    <img src="https://picsum.photos/seed/kurta14b/300/400">
+                    <img src="https://picsum.photos/seed/kurta14c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Pastel Colors</div>
+                    <div class="prod-offer">₹1,499</div>
+                    <div class="prod-desc">Soft pastel shades.</div>
+                </div>
+            </div>
+
+            <!-- Product 15 -->
+            <div class="product-card" 
+                 data-id="k15"
+                 data-title="Asymmetric"
+                 data-price="₹2,200"
+                 data-oldprice="₹3,000"
+                 data-discount="26% off"
+                 data-description="Modern asymmetric cut with unique hemline detail."
+                 data-colors="#708090, #2F4F4F, #000000" <!-- Grey, Dark Grey, Black --
+                 data-images="https://picsum.photos/seed/kurta15/600/800,
+                              https://picsum.photos/seed/kurta15a/600/800,
+                              https://picsum.photos/seed/kurta15b/600/800,
+                              https://picsum.photos/seed/kurta15c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/kurta15/300/400" class="active">
+                    <img src="https://picsum.photos/seed/kurta15a/300/400">
+                    <img src="https://picsum.photos/seed/kurta15b/300/400">
+                    <img src="https://picsum.photos/seed/kurta15c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Asymmetric</div>
+                    <div class="prod-offer">₹2,200</div>
+                    <div class="prod-desc">Modern asymmetric cut.</div>
+                </div>
+            </div>
+
+            <!-- Product 16 -->
+            <div class="product-card" 
+                 data-id="k16"
+                 data-title="Layered Kurta"
+                 data-price="₹3,500"
+                 data-oldprice="₹4,500"
+                 data-discount="22% off"
+                 data-description="Double layer design with contrast inner fabric."
+                 data-colors="#FFD700, #000000, #800000" <!-- Gold, Black, Maroon --
+                 data-images="https://picsum.photos/seed/kurta16/600/800,
+                              https://picsum.photos/seed/kurta16a/600/800,
+                              https://picsum.photos/seed/kurta16b/600/800,
+                              https://picsum.photos/seed/kurta16c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/kurta16/300/400" class="active">
+                    <img src="https://picsum.photos/seed/kurta16a/300/400">
+                    <img src="https://picsum.photos/seed/kurta16b/300/400">
+                    <img src="https://picsum.photos/seed/kurta16c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Layered Kurta</div>
+                    <div class="prod-offer">₹3,500</div>
+                    <div class="prod-desc">Double layer contrast design.</div>
+                </div>
+            </div>
+
+            <!-- Product 17 -->
+            <div class="product-card" 
+                 data-id="k17"
+                 data-title="Traditional Weave"
+                 data-price="₹2,800"
+                 data-oldprice="₹3,500"
+                 data-discount="20% off"
+                 data-description="Handwoven texture with authentic village look."
+                 data-colors="#8B4513, #A0522D, #D2B48C" <!-- Browns --
+                 data-images="https://picsum.photos/seed/kurta17/600/800,
+                              https://picsum.photos/seed/kurta17a/600/800,
+                              https://picsum.photos/seed/kurta17b/600/800,
+                              https://picsum.photos/seed/kurta17c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/kurta17/300/400" class="active">
+                    <img src="https://picsum.photos/seed/kurta17a/300/400">
+                    <img src="https://picsum.photos/seed/kurta17b/300/400">
+                    <img src="https://picsum.photos/seed/kurta17c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Traditional Weave</div>
+                    <div class="prod-offer">₹2,800</div>
+                    <div class="prod-desc">Handwoven texture.</div>
+                </div>
+            </div>
+
+            <!-- Product 18 -->
+            <div class="product-card" 
+                 data-id="k18"
+                 data-title="Bandhgala"
+                 data-price="₹8,500"
+                 data-oldprice="₹10,000"
+                 data-discount="15% off"
+                 data-description="Colorful tie-dye technique from Rajasthan."
+                 data-colors="#FF4500, #32CD32, #FFFF00" <!-- Red, Green, Yellow --
+                 data-images="https://picsum.photos/seed/kurta18/600/800,
+                              https://picsum.photos/seed/kurta18a/600/800,
+                              https://picsum.photos/seed/kurta18b/600/800,
+                              https://picsum.photos/seed/kurta18c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/kurta18/300/400" class="active">
+                    <img src="https://picsum.photos/seed/kurta18a/300/400">
+                    <img src="https://picsum.photos/seed/kurta18b/300/400">
+                    <img src="https://picsum.photos/seed/kurta18c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Bandhgala</div>
+                    <div class="prod-offer">₹8,500</div>
+                    <div class="prod-desc">Colorful tie-dye technique.</div>
+                </div>
+            </div>
+
+            <!-- Product 19 -->
+            <div class="product-card" 
+                 data-id="k19"
+                 data-title="Ikat Print"
+                 data-price="₹3,200"
+                 data-oldprice="₹4,500"
+                 data-discount="28% off"
+                 data-description="Blurred ikat pattern woven into threads."
+                 data-colors="#9932CC, #C71585, #808000" <!-- Purple, Deep Pink, Olive --
+                 data-images="https://picsum.photos/seed/kurta19/600/800,
+                              https://picsum.photos/seed/kurta19a/600/800,
+                              https://picsum.photos/seed/kurta19b/600/800,
+                              https://picsum.photos/seed/kurta19c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/kurta19/300/400" class="active">
+                    <img src="https://picsum.photos/seed/kurta19a/300/400">
+                    <img src="https://picsum.photos/seed/kurta19b/300/400">
+                    <img src="https://picsum.photos/seed/kurta19c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Ikat Print</div>
+                    <div class="prod-offer">₹3,200</div>
+                    <div class="prod-desc">Blurred ikat pattern.</div>
+                </div>
+            </div>
+
+            <!-- Product 20 -->
+            <div class="product-card" 
+                 data-id="k20"
+                 data-title="Tassel Detail"
+                 data-price="₹4,100"
+                 data-oldprice="₹5,500"
+                 data-discount="25% off"
+                 data-description="Festive tassel detail on kurta placket."
+                 data-colors="#FF6347, #FFD700, #D2691E" <!-- Red, Gold, Brown --
+                 data-images="https://picsum.photos/seed/kurta20/600/800,
+                              https://picsum.photos/seed/kurta20a/600/800,
+                              https://picsum.photos/seed/kurta20b/600/800,
+                              https://picsum.photos/seed/kurta20c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/kurta20/300/400" class="active">
+                    <img src="https://picsum.photos/seed/kurta20a/300/400">
+                    <img src="https://picsum.photos/seed/kurta20b/300/400">
+                    <img src="https://picsum.photos/seed/kurta20c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Tassel Detail</div>
+                    <div class="prod-offer">₹4,100</div>
+                    <div class="prod-desc">Festive tassel detail.</div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-logo">A&M <span>Fashion</span></div>
+        <div class="footer-links"><a href="index.html">Home</a><a href="#">Contact</a><a href="#">Terms</a></div>
+        <div>© 2024 A&M Fashion & Jewels.</div>
+    </footer>
+<script>
+document.querySelectorAll(".product-card").forEach(card => {
+    card.addEventListener("click", () => {
+        const id = card.getAttribute("data-id");
+        window.location.href = "product.html?id=" + id;
+    });
+});
+</script>
+</body>
+</html>

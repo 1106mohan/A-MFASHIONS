@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A&M Fashion | Coords Sets Collection</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        :root {
+            --primary-black: #000000;
+            --primary-gold: #D4AF37;
+            --secondary-gold: #F1C40F;
+            --text-light: #ffffff;
+            --bg-light: #f5f5f5;
+            --white: #ffffff;
+            --shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
+        body { background-color: var(--bg-light); padding-top: 85px; }
+
+        header {
+            background-color: var(--primary-black);
+            height: 85px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            border-bottom: 2px solid var(--primary-gold);
+        }
+
+        .header-container {
+            max-width: 1300px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            gap: 30px;
+        }
+
+        /* Logo */
+        .logo-box { display: flex; flex-direction: column; cursor: pointer; text-align: left; padding-right: 20px; border-right: 1px solid #333; }
+        .logo-top { display: flex; align-items: baseline; gap: 8px; }
+        .logo-text { font-family: 'Playfair Display', serif; color: var(--text-light); font-size: 32px; font-weight: 700; }
+        .diamond-icon { color: var(--primary-gold); font-size: 20px; margin-bottom: 6px; }
+        .logo-fashion { font-family: 'Playfair Display', serif; color: var(--primary-gold); font-size: 12px; letter-spacing: 6px; text-transform: uppercase; font-weight: 400; margin-left: 2px; }
+        .logo-decoration { width: 40px; height: 2px; background-color: var(--primary-gold); margin-top: 5px; }
+
+        /* Search */
+        .search-box { flex-grow: 1; max-width: 500px; background: #1a1a1a; border: 1px solid #333; border-radius: 4px; display: flex; align-items: center; padding: 0 15px; position: relative; }
+        .search-box input { width: 100%; border: none; outline: none; padding: 12px 0; font-size: 14px; color: var(--white); background: transparent; }
+        .search-btn { background: none; border: none; cursor: pointer; color: var(--primary-gold); font-size: 20px; }
+
+        /* Nav Items */
+        .nav-items { display: flex; align-items: center; gap: 30px; color: var(--text-light); font-size: 14px; }
+        .login-btn { background-color: var(--primary-gold); color: var(--primary-black); padding: 8px 30px; font-weight: 700; border: 1px solid var(--primary-gold); cursor: pointer; border-radius: 2px; text-transform: uppercase; font-size: 13px; }
+        .nav-link { color: var(--text-light); text-decoration: none; display: flex; align-items: center; gap: 5px; }
+        .cart-icon { font-size: 22px; position: relative; }
+        .cart-count { position: absolute; top: -8px; right: -8px; background-color: var(--primary-gold); color: var(--primary-black); font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 10px; }
+
+        /* Category Nav */
+        .category-nav { 
+            background: var(--white); 
+            padding: 15px 0; 
+            display: flex; 
+            justify-content: center; 
+            margin-bottom: 20px; 
+            border-bottom: 1px solid #eee;
+            position: relative;
+            z-index: 10;
+        }
+        .cat-container { max-width: 1300px; width: 100%; display: flex; justify-content: space-between; padding: 0 20px; gap: 30px; min-width: 800px; }
+        .cat-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: inherit; cursor: pointer; gap: 8px; transition: transform 0.3s; }
+        .cat-item:hover { transform: translateY(-3px); }
+        .cat-img { width: 60px; height: 60px; object-fit: contain; }
+        .cat-text { font-size: 13px; font-weight: 500; color: var(--primary-black); text-transform: uppercase; letter-spacing: 1px; }
+        .cat-item.active .cat-text { color: var(--primary-gold); font-weight: 700; }
+
+        main { max-width: 1300px; margin: 0 auto; padding: 0 10px; }
+        
+        .section-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 10px 15px; border-bottom: 1px solid var(--primary-gold); margin-bottom: 20px; }
+        .section-title { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; }
+        .back-btn { text-decoration: none; color: var(--primary-black); font-weight: 600; border: 1px solid #333; padding: 8px 15px; transition: 0.3s; }
+        .back-btn:hover { border-color: var(--primary-gold); color: var(--primary-gold); }
+
+        /* Product Grid */
+        .product-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
+            gap: 20px; 
+            padding: 10px 0 40px; 
+            position: relative;
+            z-index: 5;
+        }
+        
+        /* Product Card */
+        .product-card { 
+            background: var(--white); 
+            padding: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            border: 1px solid #eee; 
+            overflow: hidden; 
+            position: relative;
+        }
+        .product-card:hover { box-shadow: 0 10px 20px rgba(0,0,0,0.1); transform: translateY(-5px); border-color: var(--primary-gold); }
+        
+        /* --- SLIDER ANIMATION CSS --- */
+        .slider { 
+            width: 100%; 
+            height: 260px; 
+            position: relative; 
+            overflow: hidden; 
+            background: #f3f3f3;
+        }
+
+        .slider img {
+            width: 100%;
+            height: 260px;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: left 1s linear, opacity 1s ease-in-out;
+        }
+
+        /* State: Only 'active' class image is visible by default */
+        .slider img.active {
+            opacity: 1;
+            left: 0;
+            z-index: 2;
+        }
+
+        /* Animation Keyframes - Slides images Right to Left */
+        @keyframes slideShow {
+            0% { left: 0; opacity: 1; z-index: 2; }
+            20% { left: -100%; opacity: 0; z-index: 1; } /* Image 1 exits left */
+            
+            25% { left: 100%; opacity: 0; z-index: 1; } /* Image 2 enters from right */
+            40% { left: 0; opacity: 1; z-index: 2; }    /* Image 2 visible */
+
+            45% { left: -100%; opacity: 0; z-index: 1; } /* Image 2 exits */
+            
+            50% { left: 100%; opacity: 0; z-index: 1; } /* Image 3 enters */
+            60% { left: 0; opacity: 1; z-index: 2; }    /* Image 3 visible */
+
+            65% { left: -100%; opacity: 0; z-index: 1; } /* Image 3 exits */
+            
+            70% { left: 100%; opacity: 0; z-index: 1; } /* Image 4 enters */
+            85% { left: 0; opacity: 1; z-index: 2; }    /* Image 4 visible */
+            
+            90% { left: 0; opacity: 0; z-index: 0; } /* Fade out */
+            100% { left: 0; opacity: 0; z-index: 0; }
+        }
+
+        /* Apply animation on Hover */
+        .product-card:hover .slider img {
+            animation: slideShow 8s infinite;
+        }
+
+        /* --- END SLIDER CSS --- */
+
+        .prod-info { padding: 15px; width: 100%; text-align: left; }
+        .prod-title { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; margin-bottom: 5px; color: var(--primary-black); }
+        .prod-offer { color: #c0392b; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+        .prod-desc { font-size: 12px; color: #777; line-height: 1.4; margin-top: 5px; }
+
+        footer { background-color: var(--primary-black); color: #888; padding: 60px 0 30px; margin-top: 50px; text-align: center; border-top: 4px solid var(--primary-gold); }
+        .footer-logo { font-family: 'Playfair Display', serif; font-size: 28px; color: white; margin-bottom: 20px; }
+        .footer-logo span { color: var(--primary-gold); }
+        .footer-links { display: flex; justify-content: center; gap: 30px; margin-bottom: 30px; }
+        .footer-links a { color: white; text-decoration: none; font-weight: 500; }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo-box" onclick="window.location.href='index.html'">
+                <div class="logo-top">
+                    <div class="logo-text">A&M</div>
+                    <i class="ph ph-diamond-fill diamond-icon"></i>
+                </div>
+                <div class="logo-fashion">Fashion</div>
+                <div class="logo-decoration"></div>
+            </div>
+            <div class="search-box">
+                <input type="text" placeholder="Search Coords Sets...">
+                <button class="search-btn"><i class="ph ph-magnifying-glass"></i></button>
+            </div>
+            <div class="nav-items">
+                <button class="login-btn">Login</button>
+                <div class="nav-link"><i class="ph ph-shopping-bag cart-icon"></i></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Nav (Coords Sets Active) -->
+    <nav class="category-nav">
+        <div class="cat-container">
+            <!-- 1. Sarees -->
+            <a href="sarees.html" class="cat-item">
+                <img src="https://picsum.photos/seed/saree/60/60" class="cat-img" alt="Sarees">
+                <span class="cat-text">Sarees</span>
+            </a>
+            
+            <!-- 2. Kurtas -->
+            <a href="kurtas.html" class="cat-item">
+                <img src="https://picsum.photos/seed/kurta/60/60" class="cat-img" alt="Kurtas">
+                <span class="cat-text">Kurtas</span>
+            </a>
+            
+            <!-- 3. Western Tops -->
+            <a href="westerntop.html" class="cat-item">
+                <img src="https://picsum.photos/seed/westerntop/60/60" class="cat-img" alt="Western Tops">
+                <span class="cat-text">Western Tops</span>
+            </a>
+            
+            <!-- 4. Jeans -->
+            <a href="jeans.html" class="cat-item">
+                <img src="https://picsum.photos/seed/jeans/60/60" class="cat-img" alt="Jeans">
+                <span class="cat-text">Jeans</span>
+            </a>
+            
+            <!-- 5. Coords Sets (Active) -->
+            <a href="cordset.html" class="cat-item active">
+                <img src="https://picsum.photos/seed/cordset/60/60" class="cat-img" alt="Coords Sets">
+                <span class="cat-text">Coords Sets</span>
+            </a>
+        </div>
+    </nav>
+
+    <main>
+        <div class="section-header">
+            <div class="section-title">Coords Sets Collection</div>
+            <a href="index.html" class="back-btn">← Back to Home</a>
+        </div>
+
+        <!-- 20 Products Grid -->
+        <div class="product-grid">
+
+            <!-- Product 1 -->
+            <div class="product-card" 
+                 data-id="c1"
+                 data-title="Velvet Cord Set"
+                 data-price="₹3,500"
+                 data-oldprice="₹4,999"
+                 data-discount="30% off"
+                 data-description="Royal velvet feel with gold zari."
+                 data-colors="#800020, #D4AF37, #FFFFFF" <!-- Maroon, Gold, White --
+                 data-images="https://picsum.photos/seed/cordsets1/600/800,
+                              https://picsum.photos/seed/cordsets1a/600/800,
+                              https://picsum.photos/seed/cordsets1b/600/800,
+                              https://picsum.photos/seed/cordsets1c/600/800">
+
+                <div class="slider">
+                    <img src="https://th.bing.com/th/id/OIP.hncoJa-LlOvbByATzb8X6gHaLH?w=204&h=306&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3" class="active">
+                    <img src="https://tse1.explicit.bing.net/th/id/OIP.7P0X3S2VHsQsYbnCK76wWgHaJQ?pid=ImgDet&w=184&h=230&c=7&dpr=1.3&o=7&rm=3">
+                    <img src="https://th.bing.com/th/id/OIP.LdO119bK8R0PEnyJqX4ZiwHaLH?w=204&h=306&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3">
+                    <img src="https://th.bing.com/th/id/OIP.zFxBjrwihsTg2EfII9ISlAHaJ4?w=208&h=278&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Velvet Cord Set</div>
+                    <div class="prod-offer">₹3,500</div>
+                    <div class="prod-desc">Royal velvet with gold zari.</div>
+                </div>
+            </div>
+
+            <!-- Product 2 -->
+            <div class="product-card" 
+                 data-id="c2"
+                 data-title="Satin Silk Coords"
+                 data-price="₹2,800"
+                 data-oldprice="₹4,999"
+                 data-discount="44% off"
+                 data-description="Glossy satin blend for evening parties."
+                 data-colors="#C0C0C0, #B8860B, #C2B280" <!-- Silver, Bronze, Sand --
+                 data-images="https://picsum.photos/seed/cordsets2/600/800,
+                              https://picsum.photos/seed/cordsets2a/600/800,
+                              https://picsum.photos/seed/cordsets2b/600/800,
+                              https://picsum.photos/seed/cordsets2c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/cordsets2/300/400" class="active">
+                    <img src="https://picsum.photos/seed/cordsets2a/300/400">
+                    <img src="https://picsum.photos/seed/cordsets2b/300/400">
+                    <img src="https://picsum.photos/seed/cordsets2c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Satin Silk Coords</div>
+                    <div class="prod-offer">₹2,800</div>
+                    <div class="prod-desc">Glossy satin blend.</div>
+                </div>
+            </div>
+
+            <!-- Product 3 -->
+            <div class="product-card" 
+                 data-id="c3"
+                 data-title="Cotton Pastel Coords"
+                 data-price="₹1,999"
+                 data-oldprice="₹2,500"
+                 data-discount="20% off"
+                 data-description="Soft pastel colors for summer day."
+                 data-colors="#F0F8FF, #F5F5DC, #F0FFF0" <!-- Alice Blue, Mint, Honeydew --
+                 data-images="https://picsum.photos/seed/cordsets3/600/800,
+                              https://picsum.photos/seed/cordsets3a/600/800,
+                              https://picsum.photos/seed/cordsets3b/600/800,
+                              https://picsum.photos/seed/cordsets3c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/cordsets3/300/400" class="active">
+                    <img src="https://picsum.photos/seed/cordsets3a/300/400">
+                    <img src="https://picsum.photos/seed/cordsets3b/300/400">
+                    <img src="https://picsum.photos/seed/cordsets3c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Cotton Pastel Coords</div>
+                    <div class="prod-offer">₹1,999</div>
+                    <div class="prod-desc">Soft pastel summer colors.</div>
+                </div>
+            </div>
+
+            <!-- Product 4 -->
+            <div class="product-card" 
+                 data-id="c4"
+                 data-title="Linen Striped Set"
+                 data-price="₹2,200"
+                 data-oldprice="₹3,500"
+                 data-discount="37% off"
+                 data-description="Classic linen texture with stripes."
+                 data-colors="#FAF0E6, #F5DEB3, #DEB887" <!-- Linen shades --
+                 data-images="https://picsum.photos/seed/cordsets4/600/800,
+                              https://picsum.photos/seed/cordsets4a/600/800,
+                              https://picsum.photos/seed/cordsets4b/600/800,
+                              https://picsum.photos/seed/cordsets4c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/cordsets4/300/400" class="active">
+                    <img src="https://picsum.photos/seed/cordsets4a/300/400">
+                    <img src="https://picsum.photos/seed/cordsets4b/300/400">
+                    <img src="https://picsum.photos/seed/cordsets4c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Linen Striped Set</div>
+                    <div class="prod-offer">₹2,200</div>
+                    <div class="prod-desc">Classic linen texture stripes.</div>
+                </div>
+            </div>
+
+            <!-- Product 5 -->
+            <div class="product-card" 
+                 data-id="c5"
+                 data-title="Silk Blend Coords"
+                 data-price="₹4,500"
+                 data-oldprice="₹6,000"
+                 data-discount="25% off"
+                 data-description="Premium silk blend for festive wear."
+                 data-colors="#FFD700, #D4AF37, #FFFFFF" <!-- Gold shades --
+                 data-images="https://picsum.photos/seed/cordsets5/600/800,
+                              https://picsum.photos/seed/cordsets5a/600/800,
+                              https://picsum.photos/seed/cordsets5b/600/800,
+                              https://picsum.photos/seed/cordsets5c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/cordsets5/300/400" class="active">
+                    <img src="https://picsum.photos/seed/cordsets5a/300/400">
+                    <img src="https://picsum.photos/seed/cordsets5b/300/400">
+                    <img src="https://picsum.photos/seed/cordsets5c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Silk Blend Coords</div>
+                    <div class="prod-offer">₹4,500</div>
+                    <div class="prod-desc">Premium silk blend.</div>
+                </div>
+            </div>
+
+            <!-- Product 6 -->
+            <div class="product-card" 
+                 data-id="c6"
+                 data-title="Geometric Print Set"
+                 data-price="₹2,400"
+                 data-oldprice="₹3,500"
+                 data-discount="31% off"
+                 data-description="Modern geometric art print."
+                 data-colors="#000000, #808080, #F5F5F5" <!-- Monochromes --
+                 data-images="https://picsum.photos/seed/cordsets6/600/800,
+                              https://picsum.photos/seed/cordsets6a/600/800,
+                              https://picsum.photos/seed/cordsets6b/600/800,
+                              https://picsum.photos/seed/cordsets6c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/cordsets6/300/400" class="active">
+                    <img src="https://picsum.photos/seed/cordsets6a/300/400">
+                    <img src="https://picsum.photos/seed/cordsets6b/300/400">
+                    <img src="https://picsum.photos/seed/cordsets6c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Geometric Print Set</div>
+                    <div class="prod-offer">₹2,400</div>
+                    <div class="prod-desc">Modern geometric art.</div>
+                </div>
+            </div>
+
+            <!-- Product 7 -->
+            <div class="product-card" 
+                 data-id="c7"
+                 data-title="Floral Coords"
+                 data-price="₹1,800"
+                 data-oldprice="₹2,500"
+                 data-discount="28% off"
+                 data-description="Spring floral pattern."
+                 data-colors="#FFC0CB, #FFB6C1, #FFE4E1" <!-- Pinks --
+                 data-images="https://picsum.photos/seed/cordsets7/600/800,
+                              https://picsum.photos/seed/cordsets7a/600/800,
+                              https://picsum.photos/seed/cordsets7b/600/800,
+                              https://picsum.photos/seed/cordsets7c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/cordsets7/300/400" class="active">
+                    <img src="https://picsum.photos/seed/cordsets7a/300/400">
+                    <img src="https://picsum.photos/seed/cordsets7b/300/400">
+                    <img src="https://picsum.photos/seed/cordsets7c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Floral Coords</div>
+                    <div class="prod-offer">₹1,800</div>
+                    <div class="prod-desc">Spring floral pattern.</div>
+                </div>
+            </div>
+
+            <!-- Product 8 -->
+            <div class="product-card" 
+                 data-id="c8"
+                 data-title="Stripe Coords Set"
+                 data-price="₹2,299"
+                 data-oldprice="₹3,000"
+                 data-discount="23% off"
+                 data-description="Nautical stripe style."
+                 data-colors="#000080, #FFFFFF, #A9A9A9" <!-- Navy, White, Grey --
+                 data-images="https://picsum.photos/seed/cordsets8/600/800,
+                              https://picsum.photos/seed/cordsets8a/600/800,
+                              https://picsum.photos/seed/cordsets8b/600/800,
+                              https://picsum.photos/seed/cordsets8c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/cordsets8/300/400" class="active">
+                    <img src="https://picsum.photos/seed/cordsets8a/300/400">
+                    <img src="https://picsum.photos/seed/cordsets8b/300/400">
+                    <img src="https://picsum.photos/seed/cordsets8c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Stripe Coords Set</div>
+                    <div class="prod-offer">₹2,299</div>
+                    <div class="prod-desc">Nautical stripe style.</div>
+                </div>
+            </div>
+
+            <!-- Product 9 -->
+            <div class="product-card" 
+                 data-id="c9"
+                 data-title="Pastel Green Coords"
+                 data-price="₹1,600"
+                 data-oldprice="₹2,000"
+                 data-discount="20% off"
+                 data-description="Fresh pastel green."
+                 data-colors="#98FB98, #90EE90, #00FA9A" <!-- Greens --
+                 data-images="https://picsum.photos/seed/cordsets9/600/800,
+                              https://picsum.photos/seed/cordsets9a/600/800,
+                              https://picsum.photos/seed/cordsets9b/600/800,
+                              https://picsum.photos/seed/cordsets9c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/cordsets9/300/400" class="active">
+                    <img src="https://picsum.photos/seed/cordsets9a/300/400">
+                    <img src="https://picsum.photos/seed/cordsets9b/300/400">
+                    <img src="https://picsum.photos/seed/cordsets9c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Pastel Green Coords</div>
+                    <div class="prod-offer">₹1,600</div>
+                    <div class="prod-desc">Fresh pastel green.</div>
+                </div>
+            </div>
+
+            <!-- Product 10 -->
+            <div class="product-card" 
+                 data-id="c10"
+                 data-title="Party Wear Coords"
+                 data-price="₹5,000"
+                 data-oldprice="₹7,000"
+                 data-discount="28% off"
+                 data-description="Sparkly party outfit."
+                 data-colors="#FFD700, #C0C0C0, #DC143C" <!-- Gold, Silver, Red --
+                 data-images="https://picsum.photos/seed/cordsets10/600/800,
+                              https://picsum.photos/seed/cordsets10a/600/800,
+                              https://picsum.photos/seed/cordsets10b/600/800,
+                              https://picsum.photos/seed/cordsets10c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/cordsets10/300/400" class="active">
+                    <img src="https://picsum.photos/seed/cordsets10a/300/400">
+                    <img src="https://picsum.photos/seed/cordsets10b/300/400">
+                    <img src="https://picsum.photos/seed/cordsets10c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Party Wear Coords</div>
+                    <div class="prod-offer">₹5,000</div>
+                    <div class="prod-desc">Sparkly party outfit.</div>
+                </div>
+            </div>
+
+            <!-- Product 11 -->
+            <div class="product-card" 
+                 data-id="c11"
+                 data-title="Casual Cotton Set"
+                 data-price="₹1,299"
+                 data-oldprice="₹2,500"
+                 data-discount="48% off"
+                 data-description="Breathable cotton."
+                 data-colors="#A0522D, #8B4513, #D2691E" <!-- Browns --
+                 data-images="https://picsum.photos/seed/cordsets11/600/800,
+                              https://picsum.photos/seed/cordsets11a/600/800,
+                              https://picsum.photos/seed/cordsets11b/600/800,
+                              https://picsum.photos/seed/cordsets11c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/cordsets11/300/400" class="active">
+                    <img src="https://picsum.photos/seed/cordsets11a/300/400">
+                    <img src="https://picsum.photos/seed/cordsets11b/300/400">
+                    <img src="https://picsum.photos/seed/cordsets11c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Casual Cotton Set</div>
+                    <div class="prod-offer">₹1,299</div>
+                    <div class="prod-desc">Breathable cotton.</div>
+                </div>
+            </div>
+
+            <!-- Product 12 -->
+            <div class="product-card" 
+                 data-id="c12"
+                 data-title="Wedding Silk Coords"
+                 data-price="₹12,000"
+                 data-oldprice="₹15,000"
+                 data-discount="20% off"
+                 data-description="Heavy silk embroidery."
+                 data-colors="#D4AF37, #F1C40F, #FFFFFF" <!-- Golds and White --
+                 data-images="https://picsum.photos/seed/cordsets12/600/800,
+                              https://picsum.photos/seed/cordsets12a/600/800,
+                              https://picsum.photos/seed/cordsets12b/600/800,
+                              https://picsum.photos/seed/cordsets12c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/cordsets12/300/400" class="active">
+                    <img src="https://picsum.photos/seed/cordsets12a/300/400">
+                    <img src="https://picsum.photos/seed/cordsets12b/300/400">
+                    <img src="https://picsum.photos/seed/cordsets12c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Wedding Silk Coords</div>
+                    <div class="prod-offer">₹12,000</div>
+                    <div class="prod-desc">Heavy silk embroidery.</div>
+                </div>
+            </div>
+
+            <!-- Product 13 -->
+            <div class="product-card" 
+                 data-id="c13"
+                 data-title="Abstract Print Set"
+                 data-price="₹2,800"
+                 data-oldprice="₹3,500"
+                 data-discount="20% off"
+                 data-description="Abstract art print."
+                 data-colors="#9932CC, #C71585, #808000" <!-- Purple, Pink, Olive --
+                 data-images="https://picsum.photos/seed/cordsets13/600/800,
+                              https://picsum.photos/seed/cordsets13a/600/800,
+                              https://picsum.photos/seed/cordsets13b/600/800,
+                              https://picsum.photos/seed/cordsets13c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/cordsets13/300/400" class="active">
+                    <img src="https://picsum.photos/seed/cordsets13a/300/400">
+                    <img src="https://picsum.photos/seed/cordsets13b/300/400">
+                    <img src="https://picsum.photos/seed/cordsets13c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Abstract Print Set</div>
+                    <div class="prod-offer">₹2,800</div>
+                    <div class="prod-desc">Abstract art print.</div>
+                </div>
+            </div>
+
+            <!-- Product 14 -->
+            <div class="product-card" 
+                 data-id="c14"
+                 data-title="Solid Color Coords"
+                 data-price="₹1,100"
+                 data-oldprice="₹2,000"
+                 data-discount="45% off"
+                 data-description="Minimalist solid set."
+                 data-colors="#708090, #2F4F4F, #000000" <!-- Greys and Black --
+                 data-images="https://picsum.photos/seed/cordsets14/600/800,
+                              https://picsum.photos/seed/cordsets14a/600/800,
+                              https://picsum.photos/seed/cordsets14b/600/800,
+                              https://picsum.photos/seed/cordsets14c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/cordsets14/300/400" class="active">
+                    <img src="https://picsum.photos/seed/cordsets14a/300/400">
+                    <img src="https://picsum.photos/seed/cordsets14b/300/400">
+                    <img src="https://picsum.photos/seed/cordsets14c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Solid Color Coords</div>
+                    <div class="prod-offer">₹1,100</div>
+                    <div class="prod-desc">Minimalist solid set.</div>
+                </div>
+            </div>
+
+            <!-- Product 15 -->
+            <div class="product-card" 
+                 data-id="c15"
+                 data-title="Summer Floral Coords"
+                 data-price="₹2,500"
+                 data-oldprice="₹3,500"
+                 data-discount="28% off"
+                 data-description="Lightweight floral."
+                 data-colors="#FFB7B2, #FFE4C4, #FFDAB9" <!-- Peaches --
+                 data-images="https://picsum.photos/seed/cordsets15/600/800,
+                              https://picsum.photos/seed/cordsets15a/600/800,
+                              https://picsum.photos/seed/cordsets15b/600/800,
+                              https://picsum.photos/seed/cordsets15c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/cordsets15/300/400" class="active">
+                    <img src="https://picsum.photos/seed/cordsets15a/300/400">
+                    <img src="https://picsum.photos/seed/cordsets15b/300/400">
+                    <img src="https://picsum.photos/seed/cordsets15c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Summer Floral Coords</div>
+                    <div class="prod-offer">₹2,500</div>
+                    <div class="prod-desc">Lightweight floral.</div>
+                </div>
+            </div>
+
+            <!-- Product 16 -->
+            <div class="product-card" 
+                 data-id="c16"
+                 data-title="Office Wear Coords"
+                 data-price="₹2,999"
+                 data-oldprice="₹3,000"
+                 data-discount="0% off"
+                 data-description="Smart office look."
+                 data-colors="#FFD700, #000000, #808080" <!-- Gold, Black, Grey --
+                 data-images="https://picsum.photos/seed/cordsets16/600/800,
+                              https://picsum.photos/seed/cordsets16a/600/800,
+                              https://picsum.photos/seed/cordsets16b/600/800,
+                              https://picsum.photos/seed/cordsets16c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/cordsets16/300/400" class="active">
+                    <img src="https://picsum.photos/seed/cordsets16a/300/400">
+                    <img src="https://picsum.photos/seed/cordsets16b/300/400">
+                    <img src="https://picsum.photos/seed/cordsets16c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Office Wear Coords</div>
+                    <div class="prod-offer">₹2,999</div>
+                    <div class="prod-desc">Smart office look.</div>
+                </div>
+            </div>
+
+            <!-- Product 17 -->
+            <div class="product-card" 
+                 data-id="c17"
+                 data-title="Layered Kurta Set"
+                 data-price="₹3,500"
+                 data-oldprice="₹4,500"
+                 data-discount="22% off"
+                 data-description="Double layer design."
+                 data-colors="#8B4513, #A0522D, #D2B48C" <!-- Browns --
+                 data-images="https://picsum.photos/seed/cordsets17/600/800,
+                              https://picsum.photos/seed/cordsets17a/600/800,
+                              https://picsum.photos/seed/cordsets17b/600/800,
+                              https://picsum.photos/seed/cordsets17c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/cordsets17/300/400" class="active">
+                    <img src="https://picsum.photos/seed/cordsets17a/300/400">
+                    <img src="https://picsum.photos/seed/cordsets17b/300/400">
+                    <img src="https://picsum.photos/seed/cordsets17c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Layered Kurta Set</div>
+                    <div class="prod-offer">₹3,500</div>
+                    <div class="prod-desc">Double layer design.</div>
+                </div>
+            </div>
+
+            <!-- Product 18 -->
+            <div class="product-card" 
+                 data-id="c18"
+                 data-title="Bandhgala Set"
+                 data-price="₹8,500"
+                 data-oldprice="₹10,000"
+                 data-discount="15% off"
+                 data-description="Colorful tie-dye."
+                 data-colors="#FF4500, #32CD32, #FFFF00" <!-- Primary Colors --
+                 data-images="https://picsum.photos/seed/cordsets18/600/800,
+                              https://picsum.photos/seed/cordsets18a/600/800,
+                              https://picsum.photos/seed/cordsets18b/600/800,
+                              https://picsum.photos/seed/cordsets18c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/cordsets18/300/400" class="active">
+                    <img src="https://picsum.photos/seed/cordsets18a/300/400">
+                    <img src="https://picsum.photos/seed/cordsets18b/300/400">
+                    <img src="https://picsum.photos/seed/cordsets18c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Bandhgala Set</div>
+                    <div class="prod-offer">₹8,500</div>
+                    <div class="prod-desc">Colorful tie-dye.</div>
+                </div>
+            </div>
+
+            <!-- Product 19 -->
+            <div class="product-card" 
+                 data-id="c19"
+                 data-title="Ikat Print Set"
+                 data-price="₹3,200"
+                 data-oldprice="₹4,500"
+                 data-discount="28% off"
+                 data-description="Blurred ikat pattern."
+                 data-colors="#9932CC, #C71585, #808000" <!-- Purple, Pink, Olive --
+                 data-images="https://picsum.photos/seed/cordsets19/600/800,
+                              https://picsum.photos/seed/cordsets19a/600/800,
+                              https://picsum.photos/seed/cordsets19b/600/800,
+                              https://picsum.photos/seed/cordsets19c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/cordsets19/300/400" class="active">
+                    <img src="https://picsum.photos/seed/cordsets19a/300/400">
+                    <img src="https://picsum.photos/seed/cordsets19b/300/400">
+                    <img src="https://picsum.photos/seed/cordsets19c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Ikat Print Set</div>
+                    <div class="prod-offer">₹3,200</div>
+                    <div class="prod-desc">Blurred ikat pattern.</div>
+                </div>
+            </div>
+
+            <!-- Product 20 -->
+            <div class="product-card" 
+                 data-id="c20"
+                 data-title="Tassel Detail Set"
+                 data-price="₹4,100"
+                 data-oldprice="₹5,500"
+                 data-discount="25% off"
+                 data-description="Festive tassel detail."
+                 data-colors="#FF6347, #FFD700, #D2691E" <!-- Red, Gold, Orange --
+                 data-images="https://picsum.photos/seed/cordsets20/600/800,
+                              https://picsum.photos/seed/cordsets20a/600/800,
+                              https://picsum.photos/seed/cordsets20b/600/800,
+                              https://picsum.photos/seed/cordsets20c/600/800">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/cordsets20/300/400" class="active">
+                    <img src="https://picsum.photos/seed/cordsets20a/300/400">
+                    <img src="https://picsum.photos/seed/cordsets20b/300/400">
+                    <img src="https://picsum.photos/seed/cordsets20c/300/400">
+                </div>
+
+                <div class="prod-info">
+                    <div class="prod-title">Tassel Detail Set</div>
+                    <div class="prod-offer">₹4,100</div>
+                    <div class="prod-desc">Festive tassel detail.</div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+    <footer>
+        <div class="footer-logo">A&M <span>Fashion</span></div>
+        <div class="footer-links"><a href="index.html">Home</a><a href="#">Contact</a><a href="#">Terms</a></div>
+        <div>© 2024 A&M Fashion & Jewels.</div>
+    </footer>
+    <script>
+document.querySelectorAll(".product-card").forEach(card => {
+    card.addEventListener("click", () => {
+        const id = card.dataset.id;
+        window.location.href = "product.html?id=" + id;
+    });
+});
+</script>
+</body>
+</html>
