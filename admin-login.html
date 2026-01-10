@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Access | A&M Fashion</title>
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        :root {
+            --primary-black: #000000;
+            --primary-gold: #D4AF37;
+            --primary-gold-dark: #b5942b;
+            --text-dark: #1a1a1a;
+            --text-grey: #888888;
+            --white: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
+
+        body {
+            background-color: var(--primary-black);
+            /* Subtle pattern background */
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.1) 0%, transparent 40%),
+                linear-gradient(45deg, #000 25%, #111 25%, #111 50%, #000 50%, #000 75%, #111 75%, #111 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Animated Particles/Sparks Background */
+        .bg-particle {
+            position: absolute;
+            background: var(--primary-gold);
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: floatUp 10s infinite linear;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            50% { opacity: 0.2; }
+            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+        }
+
+        /* Glass Card */
+        .login-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 50px;
+            width: 400px;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            position: relative;
+            z-index: 10;
+            animation: cardEntrance 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        @keyframes cardEntrance {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Logo Section */
+        .brand-logo {
+            text-align: center;
+            margin-bottom: 40px;
+            cursor: default;
+        }
+        .logo-top {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo-text { 
+            font-family: 'Playfair Display', serif; 
+            color: var(--primary-gold); 
+            font-size: 36px; 
+            font-weight: 700; 
+            letter-spacing: 2px;
+        }
+        .diamond-icon { color: var(--primary-gold); font-size: 28px; }
+        .logo-sub { 
+            font-family: 'Playfair Display', serif; 
+            color: var(--text-grey); 
+            font-size: 12px; 
+            letter-spacing: 4px; 
+            text-transform: uppercase; 
+            margin-top: 5px;
+        }
+
+        /* Inputs */
+        .input-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-gold);
+            font-size: 20px;
+            pointer-events: none;
+            transition: 0.3s;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px 15px 15px 45px; /* Left padding clears icon */
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--white);
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        /* Floating Label Effect */
+        input::placeholder { color: transparent; }
+        
+        .input-label {
+            position: absolute;
+            left: 45px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+            pointer-events: none;
+            transition: 0.3s ease;
+        }
+
+        /* Focus States */
+        input:focus {
+            border-color: var(--primary-gold);
+            background: rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
+        }
+
+        input:focus + .input-label,
+        input:not(:placeholder-shown) + .input-label {
+            top: 0;
+            transform: translateY(-130%);
+            font-size: 11px;
+            color: var(--primary-gold);
+            background: var(--primary-black);
+            padding: 0 5px;
+        }
+
+        /* Button */
+        .btn-login {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary-gold);
+            color: var(--primary-black);
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-login:hover {
+            background: var(--primary-gold-dark);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+            letter-spacing: 2px;
+        }
+
+        .btn-login:active { transform: scale(0.98); }
+
+        .btn-login i { font-size: 18px; }
+
+        /* Error Message */
+        .error-msg {
+            color: #ff4444;
+            font-size: 13px;
+            text-align: center;
+            height: 20px;
+            margin-top: 10px;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: 0.3s;
+        }
+        .error-msg.show { opacity: 1; transform: translateY(0); }
+
+        /* Back to Home */
+        .back-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: rgba(255, 255, 255, 0.4);
+            text-decoration: none;
+            font-size: 13px;
+            transition: 0.3s;
+            z-index: 5;
+        }
+        .back-link:hover { color: var(--primary-gold); }
+
+        /* Spinner for loading */
+        .ph-spinner { animation: spin 1s infinite linear; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .login-card { padding: 30px; width: 90%; }
+            .logo-text { font-size: 28px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Animated Background Particles -->
+    <div class="bg-particle" style="left: 10%; top: 20%; width: 4px; height: 4px; animation-delay: 0s;"></div>
+    <div class="bg-particle" style="left: 30%; top: 80%; width: 6px; height: 6px; animation-delay: 2s;"></div>
+    <div class="bg-particle" style="left: 70%; top: 10%; width: 3px; height: 3px; animation-delay: 4s;"></div>
+    <div class="bg-particle" style="left: 90%; top: 60%; width: 5px; height: 5px; animation-delay: 1s;"></div>
+    <div class="bg-particle" style="left: 50%; top: 90%; width: 4px; height: 4px; animation-delay: 3s;"></div>
+
+    <a href="index.html" class="back-link">← Back to Store</a>
+
+    <div class="login-card">
+        <!-- Logo -->
+        <div class="brand-logo">
+            <div class="logo-top">
+                <div class="logo-text">A&M</div>
+                <i class="ph ph-diamond-fill diamond-icon"></i>
+            </div>
+            <div class="logo-sub">Admin Portal</div>
+        </div>
+
+        <!-- Form -->
+        <form id="adminForm" onsubmit="return false;">
+            <!-- Username -->
+            <div class="input-group">
+                <i class="ph ph-user"></i>
+                <input type="text" id="username" placeholder="Username" required autocomplete="off">
+                <label for="username" class="input-label">Username</label>
+            </div>
+
+            <!-- Password -->
+            <div class="input-group">
+                <i class="ph ph-lock-key"></i>
+                <input type="password" id="password" placeholder="Password" required>
+                <label for="password" class="input-label">Password</label>
+            </div>
+
+            <!-- Error Message -->
+            <div class="error-msg" id="errorMsg">Invalid credentials</div>
+
+            <!-- Submit Button -->
+            <button type="button" class="btn-login" id="loginBtn" onclick="loginAdmin()">
+                <span class="btn-text">Secure Login</span>
+                <i class="ph ph-lock-key"></i>
+            </button>
+        </form>
+
+        <div style="text-align: center; margin-top: 20px; color: #444; font-size: 12px;">
+            Protected by A&M Security Systems
+        </div>
+    </div>
+
+<script>
+function loginAdmin() {
+    const user = document.getElementById("username").value;
+    const pass = document.getElementById("password").value;
+    const btn = document.getElementById("loginBtn");
+    const errorDiv = document.getElementById("errorMsg");
+    const btnText = btn.querySelector(".btn-text");
+
+    // Hardcoded Credentials (Change this in production!)
+    const ADMIN_USER = "admin";
+    const ADMIN_PASS = "12345";
+
+    // Loading Animation
+    btn.disabled = true;
+    btnText.innerText = "Verifying...";
+    btn.style.opacity = "0.7";
+    
+    // Simulate Network Delay for "Creative" feel
+    setTimeout(() => {
+        if (user === ADMIN_USER && pass === ADMIN_PASS) {
+            // Success Animation
+            btn.style.background = "#2ecc71"; // Success Green
+            btnText.innerText = "Access Granted";
+            btn.innerHTML = `<i class="ph-bold ph-check"></i> Access Granted`;
+
+            setTimeout(() => {
+                localStorage.setItem("adminLoggedIn", "true");
+                window.location.href = "admin-orders.html";
+            }, 800);
+
+        } else {
+            // Error Animation
+            btn.style.background = "#e74c3c"; // Error Red
+            btnText.innerText = "Access Denied";
+            
+            // Shake Effect
+            const card = document.querySelector(".login-card");
+            card.style.animation = "shake 0.5s ease";
+            
+            setTimeout(() => {
+                card.style.animation = "";
+                btn.style.background = "var(--primary-gold)";
+                btnText.innerText = "Secure Login";
+                btn.disabled = false;
+                btn.style.opacity = "1";
+                
+                // Show Error Message
+                errorDiv.innerText = "Invalid username or password";
+                errorDiv.classList.add("show");
+            }, 500);
+        }
+    }, 1000);
+}
+
+// Handle Floating Label Logic on typing
+document.querySelectorAll("input").forEach(input => {
+    input.addEventListener("keyup", () => {
+        if(input.value.length > 0) {
+            input.setAttribute("placeholder", "");
+        }
+    });
+});
+</script>
+
+<style>
+/* Add shake animation for errors */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+</style>
+
+</body>
+</html>
