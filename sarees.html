@@ -1,0 +1,1639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A&M Fashion | Sarees Collection</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        :root {
+            --primary-black: #000000;
+            --primary-gold: #D4AF37;
+            --secondary-gold: #F1C40F;
+            --text-light: #ffffff;
+            --bg-light: #f5f5f5;
+            --white: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
+        body { background-color: var(--bg-light); padding-top: 85px; }
+
+        header {
+            background-color: var(--primary-black);
+            height: 85px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            border-bottom: 2px solid var(--primary-gold);
+        }
+
+        .header-container {
+            max-width: 1300px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            gap: 30px;
+        }
+
+        .logo-box { display: flex; flex-direction: column; cursor: pointer; text-align: left; padding-right: 20px; border-right: 1px solid #333; }
+        .logo-top { display: flex; gap: 8px; align-items: baseline; }
+        .logo-text { font-family: 'Playfair Display', serif; color: var(--text-light); font-size: 32px; font-weight: 700; }
+        .diamond-icon { color: var(--primary-gold); font-size: 20px; margin-bottom: 6px; }
+        .logo-fashion { font-family: 'Playfair Display', serif; font-size: 12px; letter-spacing: 6px; color: var(--primary-gold); }
+
+        .search-box {
+            flex-grow: 1; max-width: 500px; background: #1a1a1a; border: 1px solid #333; border-radius: 4px; display: flex; align-items: center; padding: 0 15px;
+        }
+        .search-box input { width: 100%; border: none; outline: none; padding: 12px 0; font-size: 14px; color: var(--text-light); background: transparent; }
+        .search-btn { background: none; border: none; cursor: pointer; color: var(--primary-gold); font-size: 20px; }
+
+        .nav-items { display: flex; align-items: center; gap: 30px; color: var(--text-light); font-size: 14px; }
+        .login-btn { background-color: var(--primary-gold); color: var(--primary-black); padding: 8px 30px; font-weight: 700; border: 1px solid var(--primary-gold); cursor: pointer; border-radius: 2px; text-transform: uppercase; font-size: 13px; }
+        .nav-link { color: var(--text-light); text-decoration: none; display: flex; align-items: center; gap: 5px;position: relative; }
+        .cart-icon { font-size: 22px; position: relative; }
+
+        /* Category Nav */
+        .category-nav { background: var(--white); padding: 15px 0; display: flex; justify-content: center; margin-bottom: 20px; border-bottom: 1px solid #eee; }
+        .cat-container { max-width: 1300px; width: 100%; display: flex; justify-content: space-between; padding: 0 20px; gap: 30px; min-width: 800px; }
+        .cat-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: inherit; cursor: pointer; gap: 8px; transition: transform 0.3s; }
+        .cat-item:hover { transform: translateY(-3px); color: var(--primary-gold); }
+        .cat-img { width: 60px; height: 60px; object-fit: contain; }
+        .cat-text { font-size: 13px; font-weight: 500; color: var(--primary-black); text-transform: uppercase; letter-spacing: 1px; }
+        .cat-item.active .cat-text { color: var(--primary-gold); font-weight: 700; }
+
+        main { max-width: 1300px; margin: 0 auto; padding: 0 10px; }
+        
+        .section-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 10px 15px; border-bottom: 1px solid var(--primary-gold); margin-bottom: 20px; }
+        .section-title { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; }
+        .back-btn { text-decoration: none; color: var(--primary-black); font-weight: 600; border: 1px solid #333; padding: 8px 15px; transition: 0.3s; }
+        .back-btn:hover { border-color: var(--primary-gold); color: var(--primary-gold); }
+
+        /* Product Grid */
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; padding: 10px 0 40px; }
+        
+        /* Product Card */
+        .product-card { 
+            background: var(--white); 
+            padding: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            border: 1px solid #eee; 
+            overflow: hidden; 
+            position: relative;
+        }
+        .product-card:hover { box-shadow: 0 10px 20px rgba(0,0,0,0.1); transform: translateY(-5px); border-color: var(--primary-gold); }
+        
+        /* Slider Animation CSS */
+        .slider { width: 100%; height: 260px; position: relative; overflow: hidden; background: #f3f3f3; }
+        .slider img { width: 100%; height: 260px; object-fit: cover; position: absolute; top: 0; left: 0; opacity: 0; transition: left 1s linear, opacity 1s ease-in-out; }
+        
+        /* State: Only 'active' class image is visible by default */
+        .slider img.active { opacity: 1; left: 0; z-index: 2; }
+
+        /* Animation Keyframes - Slides images Right to Left */
+        @keyframes slideShow {
+            0% { left: 0; opacity: 1; z-index: 2; }
+            20% { left: -100%; opacity: 0; z-index: 1; } 
+            
+            25% { left: 100%; opacity: 0; z-index: 1; } 
+            
+            40% { left: 0; opacity: 1; z-index: 2; }   
+
+            45% { left: -100%; opacity: 0; z-index: 1; } 
+            
+            50% { left: 100%; opacity: 0; z-index: 1; } 
+            
+            65% { left: -100%; opacity: 0; z-index: 1; } 
+            
+            70% { left: 100%; opacity: 0; z-index: 1; }   
+            
+            90% { left: 0; opacity: 0; z-index: 0; } 
+            
+            100% { left: 0; opacity: 0; z-index: 0; }
+        }
+
+        /* Apply animation on Hover */
+        .product-card:hover .slider img {
+            animation: slideShow 8s infinite;
+        }
+
+        /* --- END SLIDER CSS --- */
+
+        .prod-info { padding: 15px; width: 100%; text-align: center; }
+        .prod-title { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; margin-bottom: 5px; color: var(--primary-black); }
+        .prod-offer { color: #c0392b; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+        .prod-desc { font-size: 12px; color: #777; line-height: 1.4; margin-top: 5px; }
+
+        footer { background-color: var(--primary-black); color: #888; padding: 60px 0 30px; margin-top: 50px; text-align: center; border-top: 4px solid var(--primary-gold); }
+        .footer-logo { font-family: 'Playfair Display', serif; font-size: 28px; color: white; margin-bottom: 20px; }
+        .footer-logo span { color: var(--primary-gold); }
+        .footer-links { display: flex; justify-content: center; gap: 30px; margin-bottom: 30px; }
+        .footer-links a { color: white; text-decoration: none; font-weight: 500; }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo-box" onclick="window.location.href='index.html'">
+                <div class="logo-top">
+                    <div class="logo-text">A&M</div>
+                    <i class="ph ph-diamond-fill diamond-icon"></i>
+                </div>
+                <div class="logo-fashion">Fashion</div>
+                <div class="logo-decoration"></div>
+            </div>
+            <div class="search-box">
+                <input type="text" placeholder="Search Sarees...">
+                <button class="search-btn"><i class="ph ph-magnifying-glass"></i></button>
+            </div>
+            <div class="nav-items">
+    <button class="login-btn" onclick="window.location.href='admin-login.html'">
+        Admin Login
+    </button>
+
+    <div class="nav-link" onclick="window.location.href='cart.html'">
+        <i class="ph ph-shopping-bag cart-icon"></i>
+        <span class="cart-count" id="cartCount">0</span>
+    </div>
+</div>
+
+            </div>
+        </div>
+    </header>
+
+    <!-- Nav (Sarees Active) -->
+    <nav class="category-nav">
+        <div class="cat-container">
+            <a href="sarees.html" class="cat-item active">
+                <img src="https://picsum.photos/seed/saree/60/60" class="cat-img" alt="Sarees">
+                <span class="cat-text">Sarees</span>
+            </a>
+            <a href="kurtas.html" class="cat-item">
+                <img src="https://picsum.photos/seed/kurta/60/60" class="cat-img" alt="Kurtas">
+                <span class="cat-text">Kurtas</span>
+            </a>
+            <a href="westerntop.html" class="cat-item">
+                <img src="https://picsum.photos/seed/westerntop/60/60" class="cat-img" alt="Western Tops">
+                <span class="cat-text">Western Tops</span>
+            </a>
+            <a href="jeans.html" class="cat-item">
+                <img src="https://picsum.photos/seed/jeans/60/60" class="cat-img" alt="Jeans">
+                <span class="cat-text">Jeans</span>
+            </a>
+            <a href="cordset.html" class="cat-item">
+                <img src="https://picsum.photos/seed/coordsset/60/60" class="cat-img" alt="Coords Sets">
+                <span class="cat-text">Coords Sets</span>
+            </a>
+        </div>
+    </nav>
+
+    <main>
+        <div class="section-header">
+            <div class="section-title">Sarees Collection</div>
+            <a href="index.html" class="back-btn">← Back to Home</a>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="product-grid">
+
+           <!-- Product 1: Banarasi Silk (Colors: Red, Maroon, Green) -->
+           <div class="product-card"
+                 data-id="s1"
+                 data-title="Banarasi Silk Saree"
+                 data-price="₹9,999"
+                 data-oldprice="₹12,999"
+                 data-discount="23% off"
+                 data-description="Traditional heavy silk saree with gold zari work. Perfect for weddings."
+                 data-colors="#800000, #8B0000, #006400" <!-- Dark Red, Maroon, Green --
+                 data-images="https://picsum.photos/seed/s1/600/800,
+                              https://picsum.photos/seed/s1a/600/800,
+                              https://picsum.photos/seed/s1b/600/800,
+                              https://picsum.photos/seed/s1c/600/800">
+
+            <div class="slider">
+                <img src="data:image/webp;base64,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" class="active">
+                <img src="data:image/webp;base64,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">
+                <img src="data:image/webp;base64,UklGRiRDAABXRUJQVlA4IBhDAADwAQGdASoOAXIBPp1Cmkolo6Ihq1c7KLATiWNqvMm6EGGiYwnfGb9AYMwvNgPiJI/yT5Ghnuo4HvUd/lOnr6gvMv5nvqG6Jz1weihvCOUz592D/nmyZCueIee3t9/Yc4fuh6EHvT+B8v38rz++2XsA/0PzY/5XjHfbP95+4XwCfz3/Ff+/2hf9Px0fXHsD/0b/Kemt/+/bt+4P/990D9jv/0f9gEVnf4q0lL9Lk7joi7aNb154Jc0A9uis3i6x34iDNuyHoKYrlPkF/rx7O///C1HtsMnN+uKLLaHlvgxTv9jcpGHa4MakrDTZnOiBG461wqMMx7P+TS0IQ7Qyk/D5+0AxuaXKydRUFJ8yB3MZXN8XKH3w2Mtxg0GWlSg+My1ziBzYHqy9FLaocr8GSLueY3F8Ell8dZpQuduRdSuETNcQGyBio1y9yBJoWmbFbBo/ccEA6WcDsateTbmNICOqXpHg0ZePr2UfyuCJuVXGn37AZKT3oYOzPiXLQKc6zyjwMh9DTdjhZGLzUga6hPN2CQlXyH23EcP7OE2xYBLHl8oAY88k42sP1zqH5go+D8Tftyx99z0wxX8WqtP223bcvLzYbL/pUnWD4QpquDPDYBYj3pMKZlQMipwSJdqU2ibj34fWESFaRGhPue6MVxOV51vK06wmwXRyMW3tIsDXTetJc5s0C8DVa2kRlLBSGvgfsgYdHyVvYxj45GPnD1Lg9rL4NJ4TZ2TC4bnonta6jgIH3s9uykqQ8F/cL8AvCs171OTTMJi7neCKWfUPPptfDde+uQnZqDWweX6fzLqd1qUpf0Rn3wfAnq8dpOlGQxYSt8m1dZhVVbKnWDCdALVOZ/in2dGX3Z8ZwdXDStWu79RVkOJ3Upj03ju+EkDEdDCIpufmta8ZvN6xp+pu4LzTNQ8MWe6dUFWMwV0zBH9g18uqXepVuqu1YdBm/cn0veZ9Eob6LJrujaUQeoIt/85fnQla945TcmsHG+QPakaa20Dm8bLYQ3618rxaDEydqMLS+Cnt56hr9oHr2ZmYqAc/5f6ZN36gpxxvBHNpCWS+yhXpq6dR9jrodfSmFHLnRljopqlB/iEuM39VoJV9rv0LmFREZlk3KDzmgdgAgNcveqhza40rjrwe6IOJPrd75J1TWS5oCMZEYgDilxACmb9wf547+LFBv8t0IX1mV284uzYoC42bSmZ9NXWKEz1H1OOh8lSpFx/mUOP252f0uRWlgVv1/yDy3BaDqRrHjW+f1l3dYh4UQ6BfUqBWG6GxRgXbe/Oaa/25dMPV9PPA5FPttpxMPK01CsuuQP6OA4kdx36Uh1/wtQ65bbZKp7vKCyGbGsjDgP5pthV5wK1/qi2S0bxEVIxpnseUAn/6WlylHnyyW3yKK/rQminzK2T+gFrhTNokr9fKbNX1v69yovFQfdt5ufdZ5TgN6Wn56l2mXBgbflT33riU7hbRsfMP+SOsBHq3zBKeWHV10r7pLahzybz5VFRyDLTxKkygE5Ah+CqfkBjRgDih45Vk6lR0pSa989jQCrDj6PtwqpRShUiwLdWRPouvoUZRJU8lr41qmZLay4n7j54GYg+QF8oqRg/eH4ED2IerI0esIhDMFRscDNzEawqujTTTqXudsatmqW8p7KiyGW5QeyTrFF7nnQUtu7QFDCfFyO7KBTsDBaEVtJHU6SUPOus3jda5z+4Nanchn5JuktvejHQwCNxKfO3jBR1HJhgf5ZFcyeBJZyN3jfgiWGH01uy9JTpX0mu5I+/M/9QjZ9CSc6/XbRQ+6hDhshskbvuLoDkLO8u1IINaRHtmMhckTjz6OWtxgNRMyKnc4YDYnaHh+0BwtWRUZNiax24uihodSyybzYsCtb8h7gG2I8IAbuWxHlFvs3usbPFRltvz+NWdbDnzbz6o9ym871RtukuvZ7YnfTX6BvGGaVXHRrRRrfhBa78V4F2UxftDmC0tIxvt1IpjvOEmFFFzNcrWJUifNras2ygbuoONfoqZp/uyu6m5sVIyGIYJtpZxM909O7wReyCNEohFU1dAqm1ds4M4CmckLMN/mH3SQDbrFYxyrynMxN6fHPQkV6YDEMWF7vtry4A0XjBDHJWUZXYIFnfmWvB6fnYWpjwOhXzrBlsT9il9oLyIQrEjPA++XNXf8eytjBDhTZ03m9IDR+xUvLXaeua9DbLR4+W/CdEZg8h+N/IQCGJI8YaZIFcKRYjbQKGAnzlj10N+0t/Aqg+r84OfLViYgFV5mLZADm+FNkWACj/9KrLQVCwCE6bvkWmHTmqUCHKhtMgnJr8FL/eDaSThQN5o2IC3u7EIiiSiFriQg5mzX+jycSMaxIfKQvnJ4ePemRBhkeWMAdYgJOp3TJgpSL1Ou7UWfKpR+nsPJM+acbXOERxm6ibSFsDe8rhUUIJR0k61UhgasXQLvpqOi/tX4gCoSqWMd22/490FgMQ/Hlt6ve4DvmHNSk1dHtjubZ92SHzKWrjUS73gp4wEMHped9QyuUB0p78pW6oOPHyBdNcTh6TfATfIYTK1k7Q1WF9EhdlFvEdyWoTXm7QXPB76Z69HEuu2CFWqpZRlbxZyK/rSzIwKx0ta/uQjYgPSjWQmQmdVpd9wha3hJa3pXV7egr1oNqtP8fVSAf4DyEQIASSIpETmIeWeNgA/xjbsHG61eY713OVGBW3BNR/P1Og046+wtdgrwi40+VY//voRFxGO0LUx3EXy8EoeidW4utmmTl2S++oS/vSMEQFNuNAAoAD+8wO/PT/rYn48WPUiOCmLnU5UUTbpOKSkPaBw4N66nQp6Wq+oYPY2RAGCv7LtBwoRz9Dqu3co4DjKrelL2meSfjcWDUkdBBRxuDJHed5Gr5KezIuF2N/q4eFaIL1X9I112PyQSxnSCJXX6xdKfCadWYxzxNtE01Ewk+TWHX1CWeK4q90TdGk60+Oh9Zn/RRumsuyiFXi1pUppoCc2UthSBuQYRnrnw0B5gJtAG0JhKGbvSBnzXrsdOUu3NS6l4aT1FrJo8/qi2l8xW8a+eD9pYOHbJYN9Fep/6Om2VAieeZg3zaxTESCodyu9uOyUz5nGqsi5ACELdO4dNelZkl9PXqvzSmxnfOBMcxYO9Y2AFoaY0aIKmb8w4Qi9Wv4H4K8UtzKpydvxhEqZ/++BYZuwD7RUkHF8M0yZJ6iuDFkNOfd5V7odEW01iq8rJVILg5wkj43SfEcMgE5KCuNDRORo5TLx2iFxkHpfXZTsd2CtRavCtOIQeI56xgniiC63L6ovLHv+WyPULHAWL60OTRKi7dIQIdjs6RFcM28hIRioRxlBsycGS6AH3k5yNGzfyTaLI/k0J2iHoAmzxrLN1VJLL1K0sorkygsVeN3FrJCWHt+HIK5rX6e38QVRpTI1lUG5PMNmOY/virKOlSlHEbvlmoUV6nyAFEtvn3BD/LNF0f6YEhonZ83CacsBabFnWeu2S8OnPaOE3Jl1eMkE4xwFGVdQMQfzY+5c24suwoo33PBAtH8YSxyCgx849n5DkT5aL6PSYgvh0Hdiijz0LEllKXWpdb9YymBu4rIB07FuTDirYv0HXMXWBxZiwxguhczPvBEXBVZK8hpkBoe8i+F4Xg0fwjMmx/JY4jjAu5SegZWJ3At1tXZ0G6YjJNyHn1zPYT4ZaCyD0zi4chvkQgTbW7owGI9eCYwP5jEr0h6j56Cndddd7xtcaaBhNA2eB8t70HnMRfl4k4AUiafDmF13IpRFktYHOIqpAgJxmF7MxYoJo00VDNJ6agAgFqhS35onwaR5joEbCbnA6EN+TDKsNnjDyGAThfaylXNwtw+rnEqEWr9BvC/La6RJYk3TNB5/jPGylt5bkKlK3D67YnyZ3GhnRFFIIPh3bbgSzajx22BTplDbybPblvVtL09unY4+1G4/nPU+djxcSqdlm0QckiFeFWxpOkx5wJPnHOIRqmu1LY0jvggPqhMYN/FThhaEIZ3u9YFLNolGlJiRM80TM64Kdds/DkUdzJqi0qU3gB+kGsZh3xU7UdzAlv6rKwLNCH6B3kcr7pyWViz0m3GiB9uqlLsLYYM/8ECNPbGtXqS+jH6mDjGBRGVaJphRY2mnVGlfJ9AJ966TlbBdRyuOEb628y6OgDcT3amjsn40ncyhcCUsDIMfVDLrXEgaaSC2tkEcDSjxhS6RtCFHKa+rph5T6hLbWQgoY/XNpedUwj8FohmiJAZrvmUWb9veChNtm0yPc1BU2pzgFWwJ32IjViWeVZoM7pT8TjWccdbk5YgYOz+bDPF/5uZ0npqWE5poXbEgJA4j14XOIeZ3pnqTwl6/ORVJybDf6wFy/ean7NdrXqbEzunZ1ALro6GN5CglCL7AL+0UEqvJmlgBgvk8spzg+YgldAfYw+9ys98qpaVWv4gp0ifmDgTCLnC66DSO7CIVGpI1AnpJldi1JBWqC2NXMT6PrAZGZaMcT0hpB6w4yVoRi3el6NF3Qo9QQsRg3yCFnKWg4vwaEneAKSIuKzrw6cUDbZJm8oQn9Go6NJestl4qlqXo80jFD5mnt8I3c5jFVmoiKAUB6T+w55vhiIJ8mH7dtQL3ikCQZBGlLnwgrcaOs/4e5iahjrD8G1gvXcQ2eJzTdk5xVIiJAqDvepBitw/p9jfu6KWxWb8vSSfMcJJadaFGj3gaAS0K99x7JbXzjDWfRUYqhAPTQwdYLcpRURN6PSdbTtGvJHUimWynBggnGMeOSpxBkZBlVl3mrk1Mpwt8oE0LsKkXsywpo+4ryKd9tWw++0pIYMOOaZScdv8fmfINB51nDUe8zFolDv+o6w6XWVLOgi4ks0asqcOq5K9PUv0fHZU/6do2YulkeTIW7qbN98farN/ZdeJ0uS23F5Z4oQPwv/keSNFIzkM6MDmyfjbIr5NBEE7fwE0q/xz9+qXJAGxxDBAed7pfgN6nPP6F02Men2bDGfBU3VlC4RhK17McnDRKDonUeKguswQ3xWk/2XySVuGWzuLav2pi3ZN4Wlz/RYkGgH3DQAkLweF32XJ/OaJK8iupxTyQS+c+OBnW0Txi4pEPcwo0pIOkaa6WlvZ3vzaSD0GgTxuB+WNz4eHoD/UffNQAy8SgL15czV/VwS95qDkxgSyKVazdPYkdJ2BGcFOzNyEdExkcVCzRDWNEnv15EE+bijFCNht10Meh2KNvhWHqrMtJqnWVKGooStlgdmffQhr7dWt373gi/awoeRbAOF+Vk9Q1Dk+A8/3ufAys2cOXwalv0x2ERpJIlBYQeo3xeIIDy6b9Gb1HxT6tiCfdJwbU1Al7+sm27w0DKDfCliC4bq/YGPhW+ISUcwMEOtDdQIJmDwFx8Q+0sTkULip5Hu3qcI0c5P1BnuJOub3ntAC3MAgwJAXJ59ibk20+mck/wsqCohJzAAUN6UebI1BjyDJ6BZuVfv7Mo2/Hd4QMwJDATYUKAoDo+3cK43ZYCtlzWv7XJarFn9ma4IGs1eq1YMukmA3l1dqzhilV7xzPWD2+CINZtGPx8AJAAeMOkAWfF2jRiphYvjClbSuny20W7SIFUs1/7Bw8mo5VriCcfku5qZRfx1xArnh9zDV4otQxuZ/zq4Wqq2KM83gI5FClV1YJ2641ouV7wqaTV8DkPIku5P13nw03aEg4SjZ9m+tYS1i0AHifcLE3N5lWcYmSlxFKexbGTNBk4zJFrS6dj6y+iQtr3IxX+HuQg/xXUSj45N2x5iGSq2FEfBBMA6B88dt8bbIwQiAoX43WWVzwI2LZp5ImjEfC6b4iJe70DcZrHLV6CcYKo2Hv+ikxFVHNIViVHxrJMEJVwvekTMZwsE6V3vJm52hnJmWTRuiw3lywUV0S3YUNzEyb8pzM+01QQwU2Ibg4jRYFaWIFJzmWn1Cx4S7Ru/iFQ/zRceLheUFJVhQKdR3PAOU3l23/TVSDsyhDUF+tBcTI9wdrlA0/ytKoMyrzHpf0j6L/y39PP9UXsXX2M67Oh4Trw71eHAVAm1JvjlTGd0ywxS3KXiKhQBPmhzFWNNrGS987lrGw5hhfxOCmx1ZsblXmfYi96DISbSDZy77SlwEmCZhIJUPihAtuGlBdmlMwr5IHklYsU0PglrFJZrl074yuC4TzWLE+DvgcvlLXvLCqnTH86d+JGedQJPR16EYs4YtVhSahNMqNYHaMexi9LGdl7lez/kxGy5/riecJvwEer56/jUgbURNEDMTwhWQmhfzu2svJ3jOr+qbny/QD4iCP3bFPMPzstHwml2VnvR9KFVowqqZGsLb2rEYwt7EwO8pNHBm7yI1/fdYFv8W5zRRZNmEVmFxjMsq3G+XALagvKULXA1Kzuow+DhjEKcyCa2V4q4z4H1PaPQUm/0KKLElxGox8gzN4LvNCLRGMlLOUfv2XkE7Cw4AFXhwCzNctw2TH/ubN3lQIML03SsGNizP8UfUsd26t6addfkkF1SGYvRBQf/nhSMzjh+Oq20f4BWyG6S7yss1w/tfKP2FAzv0khckk8O5jYNUlzKQw6LLWTNTXL2j2TOSH+pb6GV7HE2YpjNa5YT7uR332w6I0dOnyEklcqPlMwKL60Uj4ERCOLD6vNoSachlhka7nexc6C4VUuIakJgvz7+uSsZAOEQfT1/n0TjSighTx7sbG7J1Feg6vu++vvchlfPlNrDF5OBj6sMbm7oi1T5ShuLmZxzpDyfDujX4GYAGcCb2V9eCQELQGWPusoRYAC76mcdLgZvcszLNZEUhS34vgEqRejk6R2s48eqEKl0qulZvmWN2CH0uCuT/g/bTZN37JUqElR5bSdxpb0ABg6bvf/bprflMA0DSQtVZoj43rwI4GWeyw49tJvgYE3j9oDYaXLtru4tOT1/xB7GxIgdE7K9nHMPgmfUfAMtcs5fy4K6wlWp2yZZj1Kf9KqU5l/K5UECTJaCJlwD8E/5KRziFKozjaor7kf4u50OtYqHuJHIldjGBZONycCczYKGTb2IeEdYV4ctMB4ZiAQLRAqZn3keyNoyj40RMOx2hztdrGNhI7RlHWJgEK+50J1eAkYjEHr6wGPQ0ytlgPRKeue7jGdzx/VU0hNfrmXVZIymTu0LeAuVIuCEzMmVm1b5uZJG/kscr+AeKhS8P3stYmK9vMi70IoGUci7DAxZ+u18Q5IgPKuPjuEIS9ryhWrg59X04JppwQro7syRaIWKZt7sZds90JxyTYTeOnSd6CHDR1AoMUMpjMksX2eiPjQ+vaQtczCurwfFpCSaBIr/1J24x1nnC9CY24KFNHpRSC66wvGS0l69zUz9TWRbiwxriWOl9Un1nPBE+1wn+QZx6W483tgalKSZKoUfuwTq3xGT5UvCVVY8EEhq3Zce29jNRZTWmeuF0PXpf9ZkSBtko7P9e+TfWo9yZcM8HAwLyrlMwOIgI2FEJl0XNNjF1MwI0rQuFqU0ba0Ad1yMFaV9raKIq1cvte6Qp/+cNLMwnhYWXkY4/UaJdG18Q8KCWa1r6UuBbIpOdJd8vVSwbIkS41JnNlxAuUwPEQv4S5lJJh1ZMi33ph1ezQ1N79hx3aSbzq+2fQEHHFWBUOkN9FtHd7Kj3iZApbvLalIOVj1o6ozjDuRd3VKTM7NMYBtpRnVLJVHqn/65QvuZQzQLadoj1I8zNU3mlqYtMAv97CQrutfqbtPmFC13zoiggBshyIFltUz5APS0vQFDE34kZenkasrLCk8KxMx9Lz3EV0ul0HNDoBnrCHdUiBBwAUnZnQHizICynNlHgLmFKi7Iv50QOncLiJtDaUI+AflFDJqEUiZR3pgeanJl5dgtxmMe1Xofs+4xTZIaleBIS15jnwkNeS1yidp19v6O3BkxtKixO+mSHlGYIcZX34RPEE26jXZq7QlYW+rd0Lel17xgOxzE5Tlh2EYuRbaucvNzVNTgRyZsPYR6Ew6Lhaots8h7EPvHu3jreFo1NxQ5JWkX+rKR8yjVwUSJqeX2C1Ck6t41ZvuSvjR4uFXsHXMdKC1dPEuT2E75BAfEWHl8SxGh+ed0KYyZVniAAHYCNzSuqpbGVZP3ECzbzErhY6rqG3PgztrlxHpWUfYNVLdau/lxUggUfiwoPil/hqFlJW/5iWa9j0WKAN1vh6jl3cV/d/oSCePce8frPalV9PdC1dqp4D8PXg51q0XYA8D4yynIG0LcvYBqZdy197Khb8ScvW71gr3fO8dT87PK01x5cfWhcS18XwlzSQ8MdgFsq9nVSvwtwBzjoaW71JudI13ZlB8X1zhAbUx4S62tgQxc853vHGsfv5WJyU/UH5m8YUOFMpAeKI746U3vZBorC3q+5kr1+EugaZxDhNBonew0A1euYyn0kgSbfQYzT0sfpkV0em4+UDBwe3oGRnqfnORwsPE56kdPhleX8a2+deVW2ujD9u7ug35xnAikwMoW9D5r6no8WZTqeh+VCDweH4vlNMsGNPdKkN65v42JMoAHAnS+UnT8HV7cuun+gDlseJIZtZaFRWF6bdF4ZECDawR8GAH1ALOrAEZkHqGkP0r5ImNUxqHbjFqw77CryjK+49aUG2lBv0ECwcGx6WRWff0fW25TVh8lnNZClII2XMy5q6eOnR55VZTOP6MXAaGRzhK83LpgX3iU8cFAI2/UL3M8XEjloqTmNlACKO9IwR2zXje76tNE6KqaYffjyeuIfZvgy4HNBFfW8Xr1mclJELQF/FgLnyCGI+XkTtoSI6Auh1SU/wbr1ew6ywLqpF3nrU7tf6H1pAhVOPuM/7OQPs/Z5CpzIR1A4sLnAh0Y3X0qyha5SndRCMJGJIC8PMHVObp4tRsPDzazJd/zy23mQAbmiKtVS8dqo6X7EFqIljJ2lQOulMUXP8ETrbB8UtVP1UksuvQDCFpwxwBrdeok0kv8ka1jtjR4PjZfil2q452ZWbINNcfjLikG+w3orDJj1TKaO8rNkJq1BUQfhXYfZI+ANTaoW8DyrwQXV6s5pIytc5omDeVkMnHFHShD3Ih3Xot9cvZTof747fff4ZpWo7Y/NBMu9SzG/zxKtajv1VNc03muocQliNMDb+IEP4qQVjQlfPt49QVaiMpT3rDpJLGeMrE8PeFc7kY3L2kI5I6objiLL7miBCr6hHUFBe0VN6Xc7xXe+gfJrlkJibAvjELQE39+x55NWXIju0z/c/gdmV16UDRkP5HChd20dXLTraX+g1U3WawxaHttQUxFolDH496wHWhiYwCG4612bQLTjhP4APzFedf1kQUyfQ23B0CL8o3E3Tz+WzSCgWyi4a7S70a+AbX/eD9vfD1Bt2lfkkSaSuS2RwgaJ1MCAFYr+rydWFi+8u0aPNAdPhExM284vJs633qE1zE2Vhp7Hu0nOkLet8uI0KUPmTJeP9o/MdLtVepqdEKj243M/6CKxZc0rau2IduSz1otaqepoPdbPFPDSK3hLcwll0+omsbm111cTZd8m+nQPvNnVOD5Kzz2Of/PUXzdFjK4vpjvm4hPHFh5oxTojsjGrD2udMqLjqLip4+egTVc6w2CN5bnv1FrHjrpjPU0mzxp67HyXFWEApDVkQahso/W7o0vpEhLpS/FqqgnBQyFuib9ACgPsmjEdUI8B0rDYnzbtDNv0isp7021VusYkpZ5pBcEnRZeQ0LwGSC6Itmy/6qGwFOeU16g8m/YcvAXP3p0NMc5SISn049maYmgh463uQl7O7RZPJWGz6B/4QNETOJs93n6SZT5zz/hQcHQgnB8Sepz9QKhzW8G83h1PI3uUcx0W/4PC11/nvDXb9bzC3SvRRT9MNU7CGZv5ri7WY3FZoi5oeUaPW4uBgVicAnXquFJSK3OTs8LTwt3bpo5tPGO4sgpL1FByQ99e+lPDfM/Ez3BP7reLP86K+2Znt5fq4UBgdNnXtW8OVQt4rcgZOL+nzHyvPfAS1vVdWVX1mnuPIvK4MRtupRHArOxs56ljw8vuorTR+bTdwKlOc+Z/iOazkzpeiOUoEfn9xbbncX1KQlaWjojUOpE5y306eyFjsvMvBSUWmNQKsTxHREcM2Ums25TRHEBmyhIcuCBEFOGM3ODGI6Do00r9qW5r3fHmYeWQAlkgbhJ4Za2hEDzfW6MhQY6NcluYFEm6MWjfnGbh17ujzGJnetTQ6/ddAamfRiWp4ORnV++t4ZW70/kY92QfmuUA/4xbcC5bhSSAXrJsjGyVLyBa1cTqOG/lfseDjhRi+Vz2ZDVMLePNRsM12FQoHH2vZo+B07P400ys4xbSDKbaa2cR58NJvPRip4D120CfUNtjA8Y8+514ZNsVQAtPYam9jwRMilyt+WUZFRejVj9wqC4wDH1oMuHsTTGuM0xlYudjfB7B1jNYaeheOZVe8tWv+skbysh+Yt0HqgZNjsg4rMqzGWNdzmVdmZIK7K6BngEPSEMcHZlPeOrnU58zqBITst0QkYpcJB4WTMBgwujqeQF42a1CekMI5DKGQOlhJQ5XynSjdufxGuhHSvE4nE6Fd16ILQlweihbNLIChrAN00i4PXxX3DiHh894qBWd8SYInWmLaNNwUhfOwd6adT1PDTDkZRpPBycUGyERBCTuMiHKbEv9vsvUPYD4GLYD/IiDUgcU/ZiZd3D6Di1UIEIbjnwaEYze09DQ3pt/Op3J84fiOLZK6oH80oHOtDpx0jB0t2rmmuPUbdEdNdCIjMlZXU7XKijVQH7VpdTIErKOCDXu/y7ZDz+JHMHnW0yUvZsl+RjeZ/5TQm7AB4QJULkmnldLStObQvHcY4wZqvRAwmkobmhEeO+fpgqIR3amptPq8J/F1ZgZBH1iebELN4nPkUzlyVrjxHp7YN+NN0qh1X6QiWRVCeCziaTlPjuqu/3332x2cDH3HhSC+OcuqDKWG2K7jojN9UzE/1gudNHUbmCgepaZG9D23tSvrsCK8eWFDH929loh9nCN3+jTYwAJ9zJNjfUZLUO6ZecSrqOHx+34w+tkvNr5pIxJxBDEb3Wauyfbdj2/TSZZlA1mU1EXcSYI/CvWLNvnE/lTB4FEE/RlKYV8MRBSiUidajkhCdwnhw6lxHj5bBLMvuuVqZQtlZHKAzd0ORCSxtDbIrD2L5qiRr5XQGWvswBuhRBQyCtrB4BZRxeV3rZlte+7JafgHpSZx8uhLuZY2A2tJj7KYeUx6RhPDHxwkZRM9JLJHi+vxJTS7J6jZfeWeJy4pIbxwS4dDHJt61allu5a1o+7vNGwk6cv5i2Iprg/LfAgNvh00NXHlnSjM4gc8U7K7VStpBNW7Stmg0s/m0IIf7cQJ0xyJCK97arkzFpV2GgfvEYWEzoUJsu9+4n/gzI7j6nCzj650e5ehupnl7+426cBEQaEifgk/tjzXeuOGkXnGXxDUYAlAbEQUx2tKUl3tX406zjgJYDLnhXri9dveXGtNzABGUGSOtJ37LJFjWUMQqsttvyTdTmyq+wFInlOW1vNE9hpFpfmkYwxLR7AWQX8T9NL1TExqas5HjPp4FVKD2Y+PrarqZCsAgtz0yO4KIX5hjjJ9LgLdhN58Ql2Yi4CBMFHRcCcD/SkSkFwc1ks5TMC/z1jylQUBz46CTAp7ChgWwGeklOUFuKbZenC3wiNMDJ9ZR8TymqA2oKtSZFAQLBpjCxtUwduWS7VkES13lcwg3DStVuSnG8wDJEPBzIqUWEk9mj2mARmfF0VxIfRTk1qziYtfjVrjZ2ZM0Y6HriwtKe0mplH4yvT8disi1ThGcM6+mjwp6twP/szMac0Nbe1LYy9jC26FOT741oMf3rpoey4e+exuUhivRObeFsPnniSx2S0YOyP45R9ym7AoaqzdNmK7aj5pUrIt7nEgZJfkOdl6/OIo7yo6COC+L5oAmo3h9ov2LVE65rXHNiwS9On3wwD0R2/7rs4F4/4+ewhN6Rd+24CODxyOaNmEAOD4rdsQ7/sYUYrP2QXMEenyDoD/QAtXUIx85UJlHqPjzfXgbpUlbCp0nrAR29NYvPwB16tublyfJGvEZ0AhUtbUzqVsnhp6IswZEMDIiI0r8doDLcIg6KNOO26d6ZsmfCgabkvMZZf9rjlFT8CP+fTPmB5oqo/X6S+i3E4Sar3j3idSBH/ETxhthJz5V8hqLBXG12WbrJjzI8HiwGluEK4Ly6jwiNUQXjxPvhJVPvM9bPRysonRmzmNS0qw5pX4QfneJ55q319roRlA1H6bWxXWgagjZ8XD5T1lUQagEn0hM9d3ydMItiW+VrwZKU/us4GoUhzSZ+lZ6zp1S4kmBb6zCrPYGwNrtCyFJk87jfaNFL//RIRZR8vD4SnC5bvT8Jiun4eDEwVmyBZCnFdFLzjSRF+7RXarYB4Fjl2NXyUEBGvko5B/D0cGRouN2XAomZa5r3cfpA1usqBLoRPsg3Nleyhx8BEI/pV2zX5kVM5x0rLfiTeJaVWX1ZmfGtv3kpKGAiINEkzBj+93Bfqzyoh/mr2g6zKp6JHkNi3TNLUovu9Y7cgf6CGfz1JCFwEjeNdqpRU5AWxgBWTzK0n7B9a5+xjULxCvP3HOlAXNdXpFEifdtA5bgzNsaWfg+RE5gnG8CK8bwWQ9odG1Q1JgGhSFyrfxVPMi5EN/uOZiIiLUFrtJw18+oJhzH9PIXnhzejWnB1UqRmUHALk9xBSq5ZdrdqXwz2N0Kccy4Cpj4icNAXq5yvvRWfGrnjrfs5nGCEn8xGt6/QklSymGkNB87F7/ba32WuSoQAMkps/OCdBMFQjuI9DtoHh5M7fa/onxA9xBsI6WjAU1wWoHDM2DpLQBObwpXPhWecURvpflmj9aMcPCWVoC4fglEWpi/aOPYsmvmfQI5H09IT5rRzgV755i9llE85yVb0Li+eD6ya+rx0SYvS96zB2iT6UefFNHlVTKRmBrRmYf7b1XxSzoHt8xJnBHTh2nLE2+Jhymvegcw843G3UwrCWlWhNfaJOEX9GbgirCe+Am+nwoSCfjam2JqeErFGfbiiml0iJehviIr4u0QL29vUagYBqcibpcJj2VHGF/IWVnsoeobjwnhB5UOZNYVn3xvipN4b9Wub32KmBcSrAGsRjAJsZ0Hpoj1XQOVXCLOwEtPqyHxPeDrFH2y2PMIx4R/Tu0SwdPaaJ9vkNpf0jHksDpmTiMDvLp7AcFpA+uqAy+DwjU31B+S2hDClWonYR2pZwnh2VFhDoD066EkMq+5s5qEQwYUfQnHt+n/ulPdgGKyi2OoU8mt3WfVyG+GP3LaL3VkPkLO6g0zZ3pWg3SCaWoxGnWPM3k6gEqLh8zeRqIXtqr1n9c0O7N1wGSAsZZ0phyTLgTDc0zie6UZdE//AaD2KuKbDZfMyRq6axyVYycKkmDMCbtuLPmi5+APyuJMK0jdPDaqMPAuCrGJZ4sag1eHOF38mR8Al+zt/i90oDmyf6tL/Eu3AtEalq2v2Pe/SyhjqglaxAtP8Xf71E7atYAYavh0+K/i1mduogOP156oDW//YZ4fAEPShEMV/dpM1J1JTqqsLYFh0NHSiq7JEG5dqkS+g6qvINAU0FnsX9KRdQ9VO3OMRXFxdcqv2ixEPRC9qgRUQWxa6kL1ZX909vfV61u9Sf59QTjo3sSLONnN4uNc+LsE4pDGY/ftOQEGkOxNdlsRRo+BdijTNPM5QiacMCH9wPSdFvfdC+gh0zLsbJFobc9hnGxFYyZNlBegOnj+QcG5ImkgYL4Gk2d4IUbjjikyNoeHKll0ikuxV7bhrDE4WpdFO3py6qx793aQ/zoh4z5MS81TEgLv/zk8cn2J8AAEq96LONV8DS4YRVjOyGklQ2mdo3H64utGL95jxEZoxlbpeyQz3XUlRhjgQ1JPRK324nGM6yyIz6ORDz9TvuPJ/KABAacMViUJBOK9qI3PUMIg5GuJ57PDKMRi5lT43jL3AWRAErMnQvPTpAVIhfWS22Tp401nV/YqeP4owSoaTKE7TaMT4MkwQRElnf1AekvtHePaQeZlzgSb923M7pm9TG+AAe0gwbaY8mtbY11bkSN0KZzliW4/vo75i5rqLKW/Vu85NipgLbK6i4SK/NyWaE/yUoNBZZqvCRMXH/MVTcCL/GetGzsvB8juicbTtm+jAN0Ju0WgmrwEpRkR6FIzjx8LTLOyPZVl6tpe/Dmn5exqomee7b6UrDAwStwKd+1gJktBHax0TgZrDCxcfiuJzt/mnR1Oxw4BHuIYvgUbkdkRYrwEcCyxTlpnVC4mEjRDGiS5y18Hkt4zYF5MD5h6H/OZswz9c6DSZGgzyOsD4vCoKIVt0Zs2K595CzxlMYqOlg3CNf1nObBQg8NiJ5mRIwIix/3rGsELSvzlEr6ZEd3NtDGWOzXly7muJZPwDRX7Vtu5mWl9Y5Ba2zFN13Rq+dxqU4i9vDpZU1lgqPES4isYtLtTdPGuw/pF2+9K2SV5KqpAWIQ82tQscGw62Wws+i7Kp7ifbyH+YYzL1RKRhdjyu7PXPfex/79LTpjPE8fzpVKuDbzi2YwepfjKml2f561nT5uePejYLfuwt5FIxL4Rs6CwmxrJvb0+lyumHKd/CVnvOLAQXRcpk6xbJI/xki8j7nz35gg60J6hNrBw6qJVJ3ARSb8+J9bWSp4TOTRwt6kseQ1brc7Pv6VN5Tpx2IK5cJs2DB44sxSGkF4BGAo9XeZje3Gs/gfkonJQxnMDR7ffvSarVrlKZ96K3Z3NKkEV9ms4q01EBUwwReUMpSiepNGo9Esxb4GoTaSBA17KgV6eXedImU/kteqRujXGc+WzLYuPpg6eBG9aA9UN8wrjiqUHKuX7QsMFIY/iQDsWSUmMdjPpxbTgfZB3fw2Qpu6Yh8exEpz8N04ETVFN+h7ZEmWh6fehfAsLzOIoDQlyxnAd810g7k/yCXjcf5oPqJVAhTCXDcGmagx+U1flKPcmN8/mPc0tgc9c8/n4keDD2333LKE6GZVlUOWKfSa/vTcHtg34yzqWPVdNbhJRDY4Jeg1WoyqkPBary9n8LIhZeH2oWxmlBRM7IawGOrubNQO/Y93kWQa1r2bQ7t22BZSjCnNdr12DMD5b/0++Cp7PpZW/no18Ebuzr39LPObi5Dr3X+HlyZBD24FAvW7EKWCQyxGbmXxv3JsnuahH8Om2/nxT2ZT+xS4kAgd9jM/AW0fE4x9MwLXHFHFr4ncaUN3tgPz9720G3MAc1k8XIAFlBO9t8GP0DDAQuNbLsAq/uTkUDQENBuhBdgjq9TgrPrhCR/tVNQsPADg9ITixVwMcvhS4JDnlXSkFB1NGacZ60wchrsJkxoTM2We8gcU8bJEj7d3zLTm2QcEk6eBxCNwa5INNbIA4iyPRTmUSeo638BxhaKn8aQwB/NoasoWFJ4lFt56SQvGUUe8G2mBIHEKH9dUclVO0U8V3ruX2sbfCmUg1DgCkJO9SJh6/BuTwm9GZFb01XfabOAErWs9KdVu0S3LZM4B0ENqpi3UTvNz47hNcC724Py2o1h+qD0toCARmFVDKWKNiAieyMesrbQb/Wb5D3LvsfRkTthBtBcnJWgXK/4gEoURCw7x4LD+sarl0xv+HKeTonlIeREIQeTA/msFANlNRTZV6dbLwvTGQiOXWWMtcDMnxyQUIJwMGd/iEuFn+/ab0sopY55iHxDdpi6jWg/7LRqabsiwZNcILEwk9csMxh1SREUzIlYjrdsBavp+hJOqa2QgkYnkMMyniLmFiVpcnPMvGg/9X5znfakWiy+DtmuZq6oOZzkJfMhyRV7R6KtLHAFJysKYECd4Nw85zd3TQ07Yofy2QrAn7lflXnsV6AOnfJ/Z7vinLslwgT/H7kJI4xJLx8E3rxYG2AIncdQt+GA/hOb6aii6TUOGuFrXe5UXG6uu5qIPnjGbLS1tOMw6TFvsaPvk/YRtA0tywL4TEGTajUAQxugakuE/WhZgnNXqFah3qua6hSSbDYGY4JUohtNKzyeGKPmwHA5zTlVjnZRnOppTNEcpGemJtjwQAWUZFrTprnwHjvuUlVl02XEUthZNJXWRpXWE76/IgAsW1zMW//duPGV0wGrDOCWk5R18n9cOCN4qoeo4nNuDAcVjT+yZoPBncKljf2AgmgbgMYAj63Y4GrMSzAfXKLSjG1OQClg9i653HW8lkFPvthDpRN1pMkB78MWwpscUN7ivqYBM7/MusGr2hsIuFX0qOYi6N7nsXWc1YB+XH3a12e2b1uY46OvTFranjxkBtncxpJDDCze171qq8MDxVoxeufp65W8XOQXHlyEGUh2q/NGWxfq8HoWo3UUpqJfYzDdAOJNxF6k9ELdTeJcliKC7B+VjO5NGm4WCYvofO6wQHmMNwBGm+W3w6Zbmg5JDE0axaU0ko9ud4ovbXfWBEp0FxMKoqF1nZRHcyrAEzEQqrs2PiJOBsl6MO8HBA9LRMoy1YD6kMkHNG9uJYJoCE6frm/dnJOlRIuvaWutF/OmrARS+RZ1TQirJ9y5dzQdUPdeV2IER8mmhPh6xxKePDKvL/rSnqyKu50TPSRNbevpXaHROlTW6iPqGfRPnj0coypXArvor7L0A5berT3P9rx5kfbS+inoAb0BVkDw/pQLntfzP5/Dx2F9iqoRKHG9WspDS4BUGNrwHT+NSJdjOb3Fg/yuPzAfOkJYo74m7gLad2Js9PGGtDSBqKQqwFYHUmi3SIebWPEYyFyMWxx+KdO0GFmnf+E1asSeu5co1cP2AKCfcKLnddN6vgWuzFEQWwirw539Ba1oQH9ly6WfuCUx0EKS9xQ5BQTMJTA4epPx8JyerDjoFbS8KhCiIo55Sa9O7F7h9LduUgR5GoG6IosgIWkDen3MOgnpUcLcLmvcc7hywb2RO3yatQCoTsS2W9byBMPcYNsJ16Sa3owDg+jM/GhYwHauT+QLvueo3Srz3Asg+9DPDkgPdmcuOtYa01L3WZolgPcfHj8FsFI6UPZmSIJKeNa6PxOZNLQ2Gs5KUb9y33xECnlDDAWi8S4p/y45PVQXlusxlG3N2DnTaGx5a2luOs9nFoIDqfV5oyykx4QZfqCuii9yfP4MTnMn1T4qEsAkfcNK6RdvhOQhBPSbEUfky9sXs/Et73fOJoei/0aNWanJT0u17mnwfjU5JfHfWAamlyuVlhEqvz7Ed++LIbGM4dJZQwKsOQycvsb2yea1l6JzmsQWhPUYHboC/butIRD9NMU4McR6dKVplHquImGwRiA+D4R3Vo/0Una+gqYtPMIQFFZq2RD32JE2n+izLP8KJ+YbAUot5VvzThkZlvmvZN1w1s/lVxfwMLuym553jdfjqhbukzcVYEB2QBgx6o1BzTmCKmcgEn5jwEKyCEd6hhTJsqc9BHm67H/uW3C2j9gD82sDHZ1f1SWuuYER4MdDSkBqsAzupcPBd5zgWnfpxj7dSenABT09/sEJatmBmwPOqUkyvjyOEGdzxX68C7Tf37N4io2dKZNPB1p/dq+YIMfJ7PD7bs+fEfJyKzAhwhoARUh2FaLj+UsU9zQLYP8iljPSAFsrHRZadFhf0HayLNMm113jZVEoezEqsi9Aacwu5zOappOcYsBzQHKrn4z5EWCSXpXlJ8fwGEfzZ5nyAOsiLJlu/L4UsUZaqKKtlMs+D0LshblzHyb9eIcxHrzPKGG2a/LwPve/HdztofW/wzFMlKn5Zrg+MHJIRqFbRLTmTF+sm+qO68BgY4nIEI7PQENHsOo18ufTRE/v4hoxkeIbWtKhRj6NEFkLvnROORZJFnVpMYbi4t1blN3t8OWMY/XLSLrruDczWy0EIj63dBjGaScREWEN72dUJtRBXOrhITEED1Ecja4k3lCgOOHXQVIFGT3IoTnOJ3RZIfE6QjF9Uzn5UYKZqFv11frZ4RD6xr7lyuB4NcQsS3feEJisoZfrKNOeYQ6gf3Lg55oYyE9F6hVHJ2pyG7H05btn8Le03U6Th3NBLL8IyBgK0MccfK5FaAh41VpAGCCNImnmblo3HsQ5ytGbvXYamdjzSunnt4GC4LDDyp8UMCWx0eQ6aIbPA6onAa5/Y8NSXIbsRe+K/6rqX2AxZrLta1DNJ/d1p/hbBrVh6Lhf6nsCT9g/OivDFhy9foubW7Nk4C+u//Tb0uBo1Zpm6yPK4yZCS1pY+qE8yeatQqcnq9IVUiRMsAMr8yDV5zbN0TC9BW+L1d9eusx4GRiBEfae2DMQZf2E9jSRolhZ0mWuBZUq7fo6Jv0daBL+pZw1WU8cuqZcyJnCoazmJIhCEx3vks8h6ysxoBZWfV73MkdMXcF7JhFAahxQEmNbSG+J5SrKXbCdspF4O6kJK7OrUf2D9fgjpWA4XqdxkuiV2FcodmrxQCVscOHUIhX3SsXPt/O4CFtrzdtkyNqbW2rrNISNYTdMRH8Jq1YbwtOT86jw7hXat57dl7xeuo65ChVAKpEV/ErzdvEet4v+PRG3RRpCNFROzFKVJyODo7mZEsC/w+I1Yn/ZkIBSKmt1mJgctsiadCuv1VsQz6IVonpv8CX3C/zACChrzcMeIPoagO90PwJ0aIEERM+CXMnCl7o+7+Rr+6sFBRYSBN4Es25Ehur7/hVuydaIP1DB4ZPKBiXMji6Jszx06plllhdBX1JQwQcd9TUG4C1gYZjv63AY/8f5ryiYqElSQjX2vgdDXhbsBtMiQAGNylGBvQ53k15iMYf2SouX7zKz3QWXxk0mq4kYXyBK/WeXRLa3+LWnBmt9APpLFA9l3iIDl4KXSdSuNxcej2a0dKu4lpWVp8yX17s3SWYNIjJugutTFzgs1TSf+MSHRfDScudmNGDmFk6SpVALPmHnCcTetYHzXOvVbP06iue/zCczO9Tt1EBcVRSU1IgGCt4UyEDXXOP8hDqgTGkBSl88I7o9Fsso8rWNdPdT148GH0C/2FsXI9L7HKpX0iyTomR6wLwBNuHJoo/k1706xzqFElvYXLVjm2XLSfQ7GqIX+J/nHb9/CPHXkgYnijDP6OExVqdQ+FHqPPauW8Wwx2qtWQnleEPV8GRg65RjMm9XkIK0YDG6rX8DWc/iFGBArB6rmO7NTNXiruJrDEq5zxTloMlC3ROc/iUEZNmB6ShEUSy9G6+sCy1lRwzMvys4e+4M+/cDFy7c6ck+tzU5sWcMTkCzACw8z6s2VpoFpVxGEDJeyFv6vR7JRjFJy8B+D7VdgiOBZ7NCz31LR8LfGWVV57wFnqSuX7z+3AUWvVlpKY8nPwpqTRcTRhABrMIf2bwfmQXOWQte8vNceVEskPabUA/5tii101PNwRa03Pvx6ohxvjIdwDvXgS8ZOV5K6pmHF+qQwCFVw/0nyn/HX3KWO6Tb1Ip86TA8zS7KyWtaS/XtyPSr0Z+TauHsyPEBg5oqQLsELGU2V2o1ZHSPDRYjP6wOk/WRH2ccsG490/bOG5TdIfNyo34jtYS61TXXftZvXvcHVTEIlVDCDQvhDTm3DNVktzj/KONzJ8gL9gYLgDmchVPMoOx6vr9994tearo1bBdPZrLcbZH1oHkmNVLynuhnfuKY+L1dbpV9aPcZYpYK2htjsVl1CQaAAwSG0wgSVgnMRr5bMSWIGyEiZnE1QTWrKHzEfHDmkI/BvwTUs74CPPB6GDkhztagwPYgQ3mtBRhbK10/ea8OjF08S/uoAHJdb7Gpwi+wLgLTTGNvjeAEDuQZLBnFHY7yimJKSq3m/xYL/nPXqdvaz1ufSi/0+8s+VB6DBW7ecfgMBfEbD5QYENMeusK2pHqR+wCF/QFYh0rMVPLzsCowqkIomsCSIcWE3/fmxH6TJhFJpjL1GbJ20CyXiQpcOLgeydELBkHnadx+P06nZ0aq6+qQUR4zK4M0EIlWLVmbodA97W4UuHkZLvOXFcc/ME2UYpO6E7/+MtGVoCWPUk2lX97AKd8JHW/tAnj6NYAzjfT4qWJ3kzEAczJ/PyM717bbR95OcZv+T6+Ibc9Wz13Mazdz0LNQlu6n1uFClD8o92MNWt+NDLtUkQL1iEmXSprDfAUVC7i1pwkXe0E5zA1PmrujTpt43ucq3J38MTla9T5PxSNC64CjCyTKFqFNqpSLKmuYIqiMfFPbkdIQGzeuHw+phDvUbKhc4ENAJZAJ/yvDpKkAFDuMWQE6v6Pg+dZKTmpXC/38JxAD44vglCVUK7AaJSOnQhkT+8MljxjqD/F4QpxT1LUBsnOGkIt9WNqG7CNuOufVV82wWGKaB/i31GsfslauOfmta+eiiRX+ncjYiXiFMedR8Nr1N8nDPA7BzBUmpLNNsgmAkm/l9tTkTZVtc+oZLXM8d6Aeaov5s1fk0WnBv8Yiuy4CRSbQn2xp8Bvo8GApDixgTCwLjkeVSwRlZqYWxvr2iqr2hdiAzPnU6Et+h4Qo99dBRow0+apgWcjVMnPSvLFDradVYCTnskuWrvXI1MjQFnucQlCBOEKiMFAQYiY/25FBRBLXZiQaTVrJQaVRxAG1uvuURtv2XR7GiWynkmccQ1z5d+MHAb/CotVIpDVDw+ALLWRYYPbJoAGChAByYkC2l9nFQXZabmId1WCCwUhsfGhIIBCCRuZlKELpfAW6cbnSgQlsESrW4/cRx5o1diyn6J7Yk+S0HZVFv9RezJV73WZ4FrIW/BzPO7CODCWdflUnH8Ms9FRmTNQXV3DZGAA+H2vzhnoW17KiNmjweTIUGVlm264Uosewn85yx8dkYCaPvqvSSISQN2FjhvDImou7g31oXpRPFWqTBOM2aebAjKELSLPi5aaxIFJIzhyDnaspbSXe4xrpNggxb9IOpV9+G7lbVtfn00Z48JQ4rUwyoR3XRbF2PnhfFWYHOAv8oM4X5e5Te5USQTMN6MvGo+BAQeLSyJP04hqXYo8nrFSurnI8kXryjtoAlyju6Hn27Ub5WSMzLEEku8i6NtcN7TlMThkWlBA+BqG7YijK9kmXVftB/19EYUWlalHtJ06SWG02pSxE1lqudqbaZZh5fPqd32Xjmmt5UP2DPlsbz0bw52IGYk7r4u1u+kAtX0E38yqoYG7pO5rnUkXfMGu/ZSIq0sa+AnvCk9NTjoHS8McPJ81GzM4Cll3foPuRiGkFb5zhvK1EXGfIHewOIV3qaHwOGAmbxVP5jKvBGbnN9SH3eTDWsDUbBK+CcRKhrfm+V9QRd9V/JpKlyZsNyJuBWoPziXqQaqa78V+7IGmP7APU0x1yUwkLqTEtSSMdIHYHmTREMyWIE9YXjybmpKZFdlTF8HEjoElcfWjUuKLLPwTxKGYxwOkEjP3akC2i5v0d2ViXQNcJuhFtt0AsU1VBweBc54yfS4U1JsRssfDfof5AhQ+i99aagemlP4K/NzAfuh9K12oFxW3lB9Yzu3GePqNyIyLLUwuURm+fuEBjL1OqZROIowyomXGItwMDDVfv3u0NmOALenpQO2qAN6YOILw+QKtIp7E9fEx+3EhYMqUOcwCf3ckLPENB66g3b+Bd5eD3lgaWKU5/UEaUwRowAd6kY88fyvQg4Hra3jooE5Jlo9q9dN7rDCBQpZN8mudtuDsNu6HTM9G1PHLqfdbw8a8iTn/O0k9vZKWCIV4i3kGupPZCCv4SkLtzBIrd2b80wHRXGwSBHroxLlrIjsnNsC0xdo5WE3YgK0yweIr19qsWSE9RWP78F1ijWcZa/oCe4WaHS0r61vw74ZjwKvyZSh3uJsuic/JO6Oy+2s8nPmjGR7v9F3Tw7lb1qg3HE54oq9+jFfCWkNpU+6fb0+YQKfXZ6ZvBsP3gPDku7fPd4/8wtIJz4WTJVgUuS2pQuVZbfL6oOuUxqBgQP0yGnGjaufxLioF2bv1vPLUyeMes7q9paJSTvYJpKM0R4Wvw/qzB/6j5vbQbyi1UWhmaJ/dk8sfA7A8onHsY2JH+H6VK1FTRUV5OO+7FQLlMmTwfMxwfiBYbKFBqe1EFitpzWbx/JBZWjZHKlFLf7wmjDRoPy5yA0K1szpba3txqMQq1TfVQPl0J18dCK2QQS5b8xf+251F8ZABMqw4cbV7zZC4bGujC5Vl+csHjkvZ3okN/31XeKTfm7tvpu/U+etUTagsLnPb7vjHJMxujFMnqqmPe6P0ROVFTWo7JQ1QwDAgj+uts6MJG/leHQABbrXwJxM1PLu/V+uV6aow4kuL5Qc8bGZZk3CJGvIVZb/I+KjLIevWBwP7TGq6+bfP3Q7AnZzqG2UE3Irapr5wPCdhrhadYHisWBt6QSSR+YYEeiDS6HSG63/1LZ0L0QHlZC28ZD84Ssh8gMl7VSWl/sbfbiPa5iic9QEWGBMWmQops4Gk4P2PPS1Y/ywhhrHzpJYJ85Q054GmLQLI7QChT2+aRMPoOVwXkAS7B2Cm6IFYdRJEuE+ZpQ/Eh8Sx1doJWX0coPb4kfJyhlkltDNPxpmi/WH6XEnIf/z5az30GOqIdgBBXUqFY4uCvMCU9LTexapkUF4XwoGpP6aWGJIUWTVSpRpYA/YA760NikADLRXWvMezpLQl18ZfBXypWLga4jT4tA6rHmLARakUrypkFShRKadOKxNwJXuvlRE9JVfuuzT5IQNWfC/wtKWViOaLsLfiMEt/VSQ3xpfx/WBYX18UcBdAMq3rWosMLlWd4iuXH1Guv/pF8FrfxrFjSkdH6C1MddmjeInlyV8wa0eEgAIYo8OjZVWvdy57kizrAh3kwvi9WPSEDE2AjtWgB+AvqVYqb7MUQ1ql9H/vFseOy0nd84nl3t+coYsjvfcgAJAj1tRz0DIjn97g/oVuZwSFakoSxdc8djaaWGshBP1pkdq8HjyDFmEIh+S/pjifrHb8BhnmoDY4utSz9iF4KRxJAoIGw1H8lK71YIP9D42K5OzBxts2gDBCC/XiN4G61mnC/oy6FmIe2Ar2V9O3/DijgARCZYXkBbaWfmjUoXD+TAmvHG3lHhpcP7A67tsAAA">
+                <img src="https://getethnic.com/wp-content/uploads/2020/04/13-kanjeevaram-saree-inspiration-for-south-indian-brides3-820x1024.jpg">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Banarasi Silk Saree</div>
+                <div class="prod-offer">₹9,999</div>
+                <div class="prod-desc">Traditional heavy silk with gold zari.</div>
+            </div>
+        </div>
+
+            <!-- Product 2: Kanjivaram (Colors: Royal Blue, Gold, Pink) -->
+           <div class="product-card"
+                 data-id="s2"
+                 data-title="Kanjivaram Silk Saree"
+                 data-price="₹15,000"
+                 data-oldprice="₹18,500"
+                 data-discount="18% off"
+                 data-description="Classic South Indian Kanjivaram silk with temple border design."
+                 data-colors="#00008B, #FFD700, #FFC0CB" <!-- Royal Blue, Gold, Pink --
+                 data-images="https://picsum.photos/seed/s2/600/800,
+                              https://picsum.photos/seed/s2a/600/800,
+                              https://picsum.photos/seed/s2b/600/800,
+                              https://picsum.photos/seed/s2c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s2/300/400" class="active">
+                <img src="https://picsum.photos/seed/s2a/300/400">
+                <img src="https://picsum.photos/seed/s2b/300/400">
+                <img src="https://picsum.photos/seed/s2c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Kanjivaram Silk Saree</div>
+                <div class="prod-offer">₹15,000</div>
+                <div class="prod-desc">Classic South Indian temple border.</div>
+            </div>
+        </div>
+
+            <!-- Product 3: Georgette Party Wear (Colors: Light Blue, Yellow, Orange) -->
+           <div class="product-card"
+                 data-id="s3"
+                 data-title="Georgette Party Wear Saree"
+                 data-price="₹1,299"
+                 data-oldprice="₹2,499"
+                 data-discount="48% off"
+                 data-description="Soft georgette fabric with stylish lace border."
+                 data-colors="#ADD8E6, #FFD700, #FFA500" <!-- Light Blue, Yellow, Orange --
+                 data-images="https://picsum.photos/seed/s3/600/800,
+                              https://picsum.photos/seed/s3a/600/800,
+                              https://picsum.photos/seed/s3b/600/800,
+                              https://picsum.photos/seed/s3c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s3/300/400" class="active">
+                <img src="https://picsum.photos/seed/s3a/300/400">
+                <img src="https://picsum.photos/seed/s3b/300/400">
+                <img src="https://picsum.photos/seed/s3c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Georgette Party Wear</div>
+                <div class="prod-offer">₹1,299</div>
+                <div class="prod-desc">Soft georgette with lace border.</div>
+            </div>
+        </div>
+
+            <!-- Product 4: High Waist Mom (Colors: Olive, Brown, Beige) -->
+           <div class="product-card"
+                 data-id="s4"
+                 data-title="High Waist Mom Jeans"
+                 data-price="₹1,099"
+                 data-oldprice="₹2,199"
+                 data-discount="50% off"
+                 data-description="Retro style high waist mom jeans with relaxed fit."
+                 data-colors="#556B2F, #8B4513, #F5F5DC" <!-- Olive, Brown, Beige --
+                 data-images="https://picsum.photos/seed/s4/600/800,
+                              https://picsum.photos/seed/s4a/600/800,
+                              https://picsum.photos/seed/s4b/600/800,
+                              https://picsum.photos/seed/s4c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s4/300/400" class="active">
+                <img src="https://picsum.photos/seed/s4a/300/400">
+                <img src="https://picsum.photos/seed/s4b/300/400">
+                <img src="https://picsum.photos/seed/s4c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">High Waist Mom Jeans</div>
+                <div class="prod-offer">₹1,099</div>
+                <div class="prod-desc">Retro style with relaxed thigh fit.</div>
+            </div>
+        </div>
+
+            <!-- Product 5: Light Blue Wash (Colors: Cyan, White, Grey) -->
+           <div class="product-card"
+                 data-id="s5"
+                 data-title="Light Blue Wash Jeans"
+                 data-price="₹799"
+                 data-oldprice="₹1,999"
+                 data-discount="60% off"
+                 data-description="Summer essential light blue washed denim."
+                 data-colors="#00FFFF, #FFFFFF, #808080" <!-- Cyan, White, Grey --
+                 data-images="https://picsum.photos/seed/s5/600/800,
+                              https://picsum.photos/seed/s5a/600/800,
+                              https://picsum.photos/seed/s5b/600/800,
+                              https://picsum.photos/seed/s5c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s5/300/400" class="active">
+                <img src="https://picsum.photos/seed/s5a/300/400">
+                <img src="https://picsum.photos/seed/s5b/300/400">
+                <img src="https://picsum.photos/seed/s5c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Light Blue Wash Jeans</div>
+                <div class="prod-offer">₹799</div>
+                <div class="prod-desc">Summer essential light blue wash.</div>
+            </div>
+        </div>
+
+            <!-- Product 6: Cargo Utility (Colors: Army Green, Black, Tan) -->
+           <div class="product-card"
+                 data-id="s6"
+                 data-title="Cargo Utility Jeans"
+                 data-price="₹1,499"
+                 data-oldprice="₹2,999"
+                 data-discount="50% off"
+                 data-description="Functional cargo jeans with side pockets."
+                 data-colors="#4B5320, #000000, #D2B48C" <!-- Army Green, Black, Tan --
+                 data-images="https://picsum.photos/seed/s6/600/800,
+                              https://picsum.photos/seed/s6a/600/800,
+                              https://picsum.photos/seed/s6b/600/800,
+                              https://picsum.photos/seed/s6c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s6/300/400" class="active">
+                <img src="https://picsum.photos/seed/s6a/300/400">
+                <img src="https://picsum.photos/seed/s6b/300/400">
+                <img src="https://picsum.photos/seed/s6c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Cargo Utility Jeans</div>
+                <div class="prod-offer">₹1,499</div>
+                <div class="prod-desc">Functional side pockets.</div>
+            </div>
+        </div>
+
+            <!-- Product 7: Baggy Boyfriend (Colors: Light Denim, Black, Indigo) -->
+           <div class="product-card"
+                 data-id="s7"
+                 data-title="Baggy Boyfriend Jeans"
+                 data-price="₹1,199"
+                 data-oldprice="₹2,399"
+                 data-discount="50% off"
+                 data-description="Oversized boyfriend fit for a street style look."
+                 data-colors="#87CEEB, #000000, #4B0082" <!-- Light Denim, Black, Indigo --
+                 data-images="https://picsum.photos/seed/s7/600/800,
+                              https://picsum.photos/seed/s7a/600/800,
+                              https://picsum.photos/seed/s7b/600/800,
+                              https://picsum.photos/seed/s7c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s7/300/400" class="active">
+                <img src="https://picsum.photos/seed/s7a/300/400">
+                <img src="https://picsum.photos/seed/s7b/300/400">
+                <img src="https://picsum.photos/seed/s7c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Baggy Boyfriend Jeans</div>
+                <div class="prod-offer">₹1,199</div>
+                <div class="prod-desc">Oversized street style fit.</div>
+            </div>
+        </div>
+
+            <!-- Product 8: Dark Indigo Slim (Colors: Purple, Maroon, Black) -->
+           <div class="product-card"
+                 data-id="s8"
+                 data-title="Dark Indigo Slim Jeans"
+                 data-price="₹999"
+                 data-oldprice="₹1,999"
+                 data-discount="0% off"
+                 data-description="Rich dark indigo color with stretchable fabric."
+                 data-colors="#800080, #800000, #000000" <!-- Purple, Maroon, Black --
+                 data-images="https://picsum.photos/seed/s8/600/800,
+                              https://picsum.photos/seed/s8a/600/800,
+                              https://picsum.photos/seed/s8b/600/800,
+                              https://picsum.photos/seed/s8c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s8/300/400" class="active">
+                <img src="https://picsum.photos/seed/s8a/300/400">
+                <img src="https://picsum.photos/seed/s8b/300/400">
+                <img src="https://picsum.photos/seed/s8c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Dark Indigo Slim Jeans</div>
+                <div class="prod-offer">₹999</div>
+                <div class="prod-desc">Rich indigo stretchable fabric.</div>
+            </div>
+        </div>
+
+            <!-- Product 9: Mid Rise Regular (Colors: Sky Blue, Teal, Grey) -->
+           <div class="product-card"
+                 data-id="s9"
+                 data-title="Mid Rise Regular Jeans"
+                 data-price="₹1,099"
+                 data-oldprice="₹2,199"
+                 data-discount="50% off"
+                 data-description="Comfortable mid rise jeans for all day wear."
+                 data-colors="#87CEEB, #008080, #808080" <!-- Sky Blue, Teal, Grey --
+                 data-images="https://picsum.photos/seed/s9/600/800,
+                              https://picsum.photos/seed/s9a/600/800,
+                              https://picsum.photos/seed/s9b/600/800,
+                              https://picsum.photos/seed/s9c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s9/300/400" class="active">
+                <img src="https://picsum.photos/seed/s9a/300/400">
+                <img src="https://picsum.photos/seed/s9b/300/400">
+                <img src="https://picsum.photos/seed/s9c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Mid Rise Regular Jeans</div>
+                <div class="prod-offer">₹1,099</div>
+                <div class="prod-desc">Comfortable mid rise.</div>
+            </div>
+        </div>
+
+            <!-- Product 10: Vintage Wash (Colors: Dusty Pink, Cream, Blue) -->
+           <div class="product-card"
+                 data-id="s10"
+                 data-title="Vintage Wash Jeans"
+                 data-price="₹1,299"
+                 data-oldprice="₹2,599"
+                 data-discount="50% off"
+                 data-description="Heavily washed vintage look with unique fade."
+                 data-colors="#FFDAB9, #FFFDD, #ADD8E6" <!-- Dusty Pink, Cream, Blue --
+                 data-images="https://picsum.photos/seed/s10/600/800,
+                              https://picsum.photos/seed/s10a/600/800,
+                              https://picsum.photos/seed/s10b/600/800,
+                              https://picsum.photos/seed/s10c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s10/300/400" class="active">
+                <img src="https://picsum.photos/seed/s10a/300/400">
+                <img src="https://picsum.photos/seed/s10b/300/400">
+                <img src="https://picsum.photos/seed/s10c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Vintage Wash Jeans</div>
+                <div class="prod-offer">₹1,299</div>
+                <div class="prod-desc">Heavily washed vintage look.</div>
+            </div>
+        </div>
+
+            <!-- Product 11: Grey Stretch (Colors: Silver, Light Grey, Charcoal) -->
+           <div class="product-card"
+                 data-id="s11"
+                 data-title="Grey Stretch Jeans"
+                 data-price="₹899"
+                 data-oldprice="₹1,799"
+                 data-discount="50% off"
+                 data-description="Modern grey stretch denim for a smart look."
+                 data-colors="#C0C0C0, #D3D3D3, #36454F" <!-- Silver, Light Grey, Charcoal --
+                 data-images="https://picsum.photos/seed/s11/600/800,
+                              https://picsum.photos/seed/s11a/600/800,
+                              https://picsum.photos/seed/s11b/600/800,
+                              https://picsum.photos/seed/s11c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s11/300/400" class="active">
+                <img src="https://picsum.photos/seed/s11a/300/400">
+                <img src="https://picsum.photos/seed/s11b/300/400">
+                <img src="https://picsum.photos/seed/s11c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Grey Stretch Jeans</div>
+                <div class="prod-offer">₹899</div>
+                <div class="prod-desc">Modern grey stretch.</div>
+            </div>
+        </div>
+
+            <!-- Product 12: White Skinny (Colors: White, Ivory, Pearl) -->
+           <div class="product-card"
+                 data-id="s12"
+                 data-title="White Skinny Jeans"
+                 data-price="₹999"
+                 data-oldprice="₹1,999"
+                 data-discount="0% off"
+                 data-description="Clean white skinny jeans for a crisp look."
+                 data-colors="#FFFFFF, #FFFFF0, #EAE0C8" <!-- White, Ivory, Pearl --
+                 data-images="https://picsum.photos/seed/s12/600/800,
+                              https://picsum.photos/seed/s12a/600/800,
+                              https://picsum.photos/seed/s12b/600/800,
+                              https://picsum.photos/seed/s12c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s12/300/400" class="active">
+                <img src="https://picsum.photos/seed/s12a/300/400">
+                <img src="https://picsum.photos/seed/s12b/300/400">
+                <img src="https://picsum.photos/seed/s12c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">White Skinny Jeans</div>
+                <div class="prod-offer">₹999</div>
+                <div class="prod-desc">Clean white skinny jeans.</div>
+            </div>
+        </div>
+
+            <!-- Product 13: Tapered Fit (Colors: Navy, Green, Red) -->
+           <div class="product-card"
+                 data-id="s13"
+                 data-title="Tapered Fit Jeans"
+                 data-price="₹1,199"
+                 data-oldprice="₹2,399"
+                 data-discount="50% off"
+                 data-description="Relaxed thigh with tapered ankle cut."
+                 data-colors="#000080, #228B22, #FF0000" <!-- Navy, Green, Red --
+                 data-images="https://picsum.photos/seed/s13/600/800,
+                              https://picsum.photos/seed/s13a/600/800,
+                              https://picsum.photos/seed/s13b/600/800,
+                              https://picsum.photos/seed/s13c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s13/300/400" class="active">
+                <img src="https://picsum.photos/seed/s13a/300/400">
+                <img src="https://picsum.photos/seed/s13b/300/400">
+                <img src="https://picsum.photos/seed/s13c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Tapered Fit Jeans</div>
+                <div class="prod-offer">₹1,199</div>
+                <div class="prod-desc">Relaxed thigh, tapered ankle.</div>
+            </div>
+        </div>
+
+            <!-- Product 14: Distressed Black (Colors: Black, Grey, Gold) -->
+           <div class="product-card"
+                 data-id="s14"
+                 data-title="Distressed Black Jeans"
+                 data-price="₹1,399"
+                 data-oldprice="₹2,799"
+                 data-discount="50% off"
+                 data-description="Edgy black jeans with heavy distress details."
+                 data-colors="#000000, #333333, #D4AF37" <!-- Black, Dark Grey, Gold --
+                 data-images="https://picsum.photos/seed/s14/600/800,
+                              https://picsum.photos/seed/s14a/600/800,
+                              https://picsum.photos/seed/s14b/600/800,
+                              https://picsum.photos/seed/s14c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s14/300/400" class="active">
+                <img src="https://picsum.photos/seed/s14a/300/400">
+                <img src="https://picsum.photos/seed/s14b/300/400">
+                <img src="https://picsum.photos/seed/s14c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Distressed Black Jeans</div>
+                <div class="prod-offer">₹1,399</div>
+                <div class="prod-desc">Edgy heavy distress details.</div>
+            </div>
+        </div>
+
+            <!-- Product 15: Bootcut Retro (Colors: Blue, Brown, Khaki) -->
+           <div class="product-card"
+                 data-id="s15"
+                 data-title="Bootcut Retro Jeans"
+                 data-price="₹1,099"
+                 data-oldprice="₹2,199"
+                 data-discount="50% off"
+                 data-description="Classic 90s style bootcut fit denim."
+                 data-colors="#00008B, #8B4513, #F0E68C" <!-- Blue, Brown, Khaki --
+                 data-images="https://picsum.photos/seed/s15/600/800,
+                              https://picsum.photos/seed/s15a/600/800,
+                              https://picsum.photos/seed/s15b/600/800,
+                              https://picsum.photos/seed/s15c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s15/300/400" class="active">
+                <img src="https://picsum.photos/seed/s15a/300/400">
+                <img src="https://picsum.photos/seed/s15b/300/400">
+                <img src="https://picsum.photos/seed/s15c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Bootcut Retro Jeans</div>
+                <div class="prod-offer">₹1,099</div>
+                <div class="prod-desc">Classic 90s style bootcut.</div>
+            </div>
+        </div>
+
+            <!-- Product 16: Light Acid Wash (Colors: Teal, Purple, Pink) -->
+           <div class="product-card"
+                 data-id="s16"
+                 data-title="Light Acid Wash Jeans"
+                 data-price="₹799"
+                 data-oldprice="₹1,499"
+                 data-discount="46% off"
+                 data-description="Bold acid wash pattern for statement style."
+                 data-colors="#008080, #800080, #FFC0CB" <!-- Teal, Dark Purple, Pink --
+                 data-images="https://picsum.photos/seed/s16/600/800,
+                              https://picsum.photos/seed/s16a/600/800,
+                              https://picsum.photos/seed/s16b/600/800,
+                              https://picsum.photos/seed/s16c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s16/300/400" class="active">
+                <img src="https://picsum.photos/seed/s16a/300/400">
+                <img src="https://picsum.photos/seed/s16b/300/400">
+                <img src="https://picsum.photos/seed/s16c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Light Acid Wash Jeans</div>
+                <div class="prod-offer">₹799</div>
+                <div class="prod-desc">Bold acid wash pattern.</div>
+            </div>
+        </div>
+
+            <!-- Product 17: Relaxed Fit Denim (Colors: Black, Blue, White) -->
+           <div class="product-card"
+                 data-id="s17"
+                 data-title="Relaxed Fit Denim"
+                 data-price="₹999"
+                 data-oldprice="₹1,999"
+                 data-discount="0% off"
+                 data-description="Loose comfortable fit for casual outings."
+                 data-colors="#000000, #1E90FF, #FFFFFF" <!-- Black, Blue, White --
+                 data-images="https://picsum.photos/seed/s17/600/800,
+                              https://picsum.photos/seed/s17a/600/800,
+                              https://picsum.photos/seed/s17b/600/800,
+                              https://picsum.photos/seed/s17c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s17/300/400" class="active">
+                <img src="https://picsum.photos/seed/s17a/300/400">
+                <img src="https://picsum.photos/seed/s17b/300/400">
+                <img src="https://picsum.photos/seed/s17c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Relaxed Fit Denim</div>
+                <div class="prod-offer">₹999</div>
+                <div class="prod-desc">Loose comfortable fit.</div>
+            </div>
+        </div>
+
+            <!-- Product 18: 5 Pocket Basic (Colors: Navy, Grey, Black) -->
+           <div class="product-card"
+                 data-id="s18"
+                 data-title="5 Pocket Basic Jeans"
+                 data-price="₹699"
+                 data-oldprice="₹1,399"
+                 data-discount="50% off"
+                 data-description="Essential 5 pocket blue jeans for everyone."
+                 data-colors="#000080, #808080, #000000" <!-- Navy, Grey, Black --
+                 data-images="https://picsum.photos/seed/s18/600/800,
+                              https://picsum.photos/seed/s18a/600/800,
+                              https://picsum.photos/seed/s18b/600/800,
+                              https://picsum.photos/seed/s18c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s18/300/400" class="active">
+                <img src="https://picsum.photos/seed/s18a/300/400">
+                <img src="https://picsum.photos/seed/s18b/300/400">
+                <img src="https://picsum.photos/seed/s18c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">5 Pocket Basic Jeans</div>
+                <div class="prod-offer">₹699</div>
+                <div class="prod-desc">Essential 5 pocket blue jeans.</div>
+            </div>
+        </div>
+
+            <!-- Product 19: Embroidered Detail (Colors: Gold, Silver, Bronze) -->
+           <div class="product-card"
+                 data-id="s19"
+                 data-title="Embroidered Detail Jeans"
+                 data-price="₹1,499"
+                 data-oldprice="₹2,999"
+                 data-discount="50% off"
+                 data-description="Stylish jeans with intricate back pocket embroidery."
+                 data-colors="#FFD700, #C0C0C0, #CD7F32" <!-- Gold, Silver, Bronze --
+                 data-images="https://picsum.photos/seed/s19/600/800,
+                              https://picsum.photos/seed/s19a/600/800,
+                              https://picsum.photos/seed/s19b/600/800,
+                              https://picsum.photos/seed/s19c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s19/300/400" class="active">
+                <img src="https://picsum.photos/seed/s19a/300/400">
+                <img src="https://picsum.photos/seed/s19b/300/400">
+                <img src="https://picsum.photos/seed/s19c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Embroidered Detail Jeans</div>
+                <div class="prod-offer">₹1,499</div>
+                <div class="prod-desc">Intricate back pocket embroidery.</div>
+            </div>
+        </div>
+
+            <!-- Product 20: Jogger Style (Colors: Black, Grey, White) -->
+           <div class="product-card"
+                 data-id="s20"
+                 data-title="Jogger Style Jeans"
+                 data-price="₹1,099"
+                 data-oldprice="₹2,199"
+                 data-discount="50% off"
+                 data-description="Comfort of joggers with the look of denim."
+                 data-colors="#000000, #808080, #FFFFFF" <!-- Black, Grey, White --
+                 data-images="https://picsum.photos/seed/s20/600/800,
+                              https://picsum.photos/seed/s20a/600/800,
+                              https://picsum.photos/seed/s20b/600/800,
+                              https://picsum.photos/seed/s20c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s20/300/400" class="active">
+                <img src="https://picsum.photos/seed/s20a/300/400">
+                <img src="https://picsum.photos/seed/s20b/300/400">
+                <img src="https://picsum.photos/seed/s20c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Jogger Style Jeans</div>
+                <div class="prod-offer">₹1,099</div>
+                <div class="prod-desc">Jogger comfort, denim look.</div>
+            </div>
+        </div>
+
+             <!-- Product 21: Slim Fit (Colors: Blue, Red, Grey) -->
+           <div class="product-card"
+                 data-id="s21"
+                 data-title="Slim Fit Jeans"
+                 data-price="₹1,099"
+                 data-oldprice="₹2,199"
+                 data-discount="50% off"
+                 data-description="Classic slim fit blue jeans with comfort stretch."
+                 data-colors="#000080, #FF0000, #A9A9A9" <!-- Blue, Red, Grey --
+                 data-images="https://picsum.photos/seed/s21/600/800,
+                              https://picsum.photos/seed/s21a/600/800,
+                              https://picsum.photos/seed/s21b/600/800,
+                              https://picsum.photos/seed/s21c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s21/300/400" class="active">
+                <img src="https://picsum.photos/seed/s21a/300/400">
+                <img src="https://picsum.photos/seed/s21b/300/400">
+                <img src="https://picsum.photos/seed/s21c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Slim Fit Jeans</div>
+                <div class="prod-offer">₹1,099</div>
+                <div class="prod-desc">Classic slim fit stretch.</div>
+            </div>
+        </div>
+
+            <!-- Product 22: Regular Fit (Colors: Brown, Blue, Black) -->
+           <div class="product-card"
+                 data-id="s22"
+                 data-title="Regular Fit Jeans"
+                 data-price="₹1,099"
+                 data-oldprice="₹2,199"
+                 data-discount="50% off"
+                 data-description="Durable regular fit denim for daily use."
+                 data-colors="#8B4513, #000080, #000000" <!-- Brown, Blue, Black --
+                 data-images="https://picsum.photos/seed/s22/600/800,
+                              https://picsum.photos/seed/s22a/600/800,
+                              https://picsum.photos/seed/s22b/600/800,
+                              https://picsum.photos/seed/s22c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s22/300/400" class="active">
+                <img src="https://picsum.photos/seed/s22a/300/400">
+                <img src="https://picsum.photos/seed/s22b/300/400">
+                <img src="https://picsum.photos/seed/s22c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Regular Fit Jeans</div>
+                <div class="prod-offer">₹1,099</div>
+                <div class="prod-desc">Durable regular fit.</div>
+            </div>
+        </div>
+
+            <!-- Product 23: Wide Leg (Colors: Yellow, Black, Teal) -->
+           <div class="product-card"
+                 data-id="s23"
+                 data-title="Wide Leg Jeans"
+                 data-price="₹1,299"
+                 data-oldprice="₹2,199"
+                 data-discount="40% off"
+                 data-description="Wide leg jeans for a comfortable, relaxed fit."
+                 data-colors="#FFD700, #000000, #008080" <!-- Yellow, Black, Teal --
+                 data-images="https://picsum.photos/seed/s23/600/800,
+                              https://picsum.photos/seed/s23a/600/800,
+                              https://picsum.photos/seed/s23b/600/800,
+                              https://picsum.photos/seed/s23c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s23/300/400" class="active">
+                <img src="https://picsum.photos/seed/s23a/300/400">
+                <img src="https://picsum.photos/seed/s23b/300/400">
+                <img src="https://picsum.photos/seed/s23c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Wide Leg Jeans</div>
+                <div class="prod-offer">₹1,299</div>
+                <div class="prod-desc">Wide leg, comfortable fit.</div>
+            </div>
+        </div>
+
+            <!-- Product 24: Flare Fit (Colors: Pink, White, Blue) -->
+           <div class="product-card"
+                 data-id="s24"
+                 data-title="Flare Fit Jeans"
+                 data-price="₹999"
+                 data-oldprice="₹1,999"
+                 data-discount="0% off"
+                 data-description="Classic flare fit jeans for a trendy look."
+                 data-colors="#FFC0CB, #FFFFFF, #000080" <!-- Pink, White, Blue --
+                 data-images="https://picsum.photos/seed/s24/600/800,
+                              https://picsum.photos/seed/s24a/600/800,
+                              https://picsum.photos/seed/s24b/600/800,
+                              https://picsum.photos/seed/s24c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s24/300/400" class="active">
+                <img src="https://picsum.photos/seed/s24a/300/400">
+                <img src="https://picsum.photos/seed/s24b/300/400">
+                <img src="https://picsum.photos/seed/s24c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Flare Fit Jeans</div>
+                <div class="prod-offer">₹999</div>
+                <div class="prod-desc">Classic flare fit.</div>
+            </div>
+        </div>
+
+            <!-- Product 25: Low Rise (Colors: Cyan, Black, White) -->
+           <div class="product-card"
+                 data-id="s25"
+                 data-title="Low Rise Jeans"
+                 data-price="₹1,099"
+                 data-oldprice="₹2,199"
+                 data-discount="50% off"
+                 data-description="Trendy low rise jeans for a modern fit."
+                 data-colors="#00FFFF, #000000, #FFFFFF" <!-- Cyan, Black, White --
+                 data-images="https://picsum.photos/seed/s25/600/800,
+                              https://picsum.photos/seed/s25a/600/800,
+                              https://picsum.photos/seed/s25b/600/800,
+                              https://picsum.photos/seed/s25c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s25/300/400" class="active">
+                <img src="https://picsum.photos/seed/s25a/300/400">
+                <img src="https://picsum.photos/seed/s25b/300/400">
+                <img src="https://picsum.photos/seed/s25c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Low Rise Jeans</div>
+                <div class="prod-offer">₹1,099</div>
+                <div class="prod-desc">Trendy low rise modern.</div>
+            </div>
+        </div>
+
+            <!-- Product 26: Raw Denim (Colors: Purple, Blue, Orange) -->
+           <div class="product-card"
+                 data-id="s26"
+                 data-title="Raw Denim Jeans"
+                 data-price="₹1,499"
+                 data-oldprice="₹2,199"
+                 data-discount="30% off"
+                 data-description="High quality raw denim fabric for a premium feel."
+                 data-colors="#800080, #00008B, #FFA500" <!-- Purple, Blue, Orange --
+                 data-images="https://picsum.photos/seed/s26/600/800,
+                              https://picsum.photos/seed/s26a/600/800,
+                              https://picsum.photos/seed/s26b/600/800,
+                              https://picsum.photos/seed/s26c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s26/300/400" class="active">
+                <img src="https://picsum.photos/seed/s26a/300/400">
+                <img src="https://picsum.photos/seed/s26b/300/400">
+                <img src="https://picsum.photos/seed/s26c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Raw Denim Jeans</div>
+                <div class="prod-offer">₹1,499</div>
+                <div class="prod-desc">High quality raw denim.</div>
+            </div>
+        </div>
+
+            <!-- Product 27: Ripped Style (Colors: White, Black, Grey) -->
+           <div class="product-card"
+                 data-id="s27"
+                 data-title="Ripped Style Jeans"
+                 data-price="₹1,099"
+                 data-oldprice="₹2,199"
+                 data-discount="50% off"
+                 data-description="Cool ripped style jeans with knee rips."
+                 data-colors="#FFFFFF, #000000, #808080" <!-- White, Black, Grey --
+                 data-images="https://picsum.photos/seed/s27/600/800,
+                              https://picsum.photos/seed/s27a/600/800,
+                              https://picsum.photos/seed/s27b/600/800,
+                              https://picsum.photos/seed/s27c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s27/300/400" class="active">
+                <img src="https://picsum.photos/seed/s27a/300/400">
+                <img src="https://picsum.photos/seed/s27b/300/400">
+                <img src="https://picsum.photos/seed/s27c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Ripped Style Jeans</div>
+                <div class="prod-offer">₹1,099</div>
+                <div class="prod-desc">Cool knee rips.</div>
+            </div>
+        </div>
+
+            <!-- Product 28: Corduroy Texture (Colors: Maroon, Green, Brown) -->
+           <div class="product-card"
+                 data-id="s28"
+                 data-title="Corduroy Texture Jeans"
+                 data-price="₹999"
+                 data-oldprice="₹1,999"
+                 data-discount="0% off"
+                 data-description="Classic corduroy jeans with soft texture and warmth."
+                 data-colors="#800000, #006400, #8B4513" <!-- Maroon, Green, Brown --
+                 data-images="https://picsum.photos/seed/s28/600/800,
+                              https://picsum.photos/seed/s28a/600/800,
+                              https://picsum.photos/seed/s28b/600/800,
+                              https://picsum.photos/seed/s28c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s28/300/400" class="active">
+                <img src="https://picsum.photos/seed/s28a/300/400">
+                <img src="https://picsum.photos/seed/s28b/300/400">
+                <img src="https://picsum.photos/seed/s28c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Corduroy Texture Jeans</div>
+                <div class="prod-offer">₹999</div>
+                <div class="prod-desc">Classic corduroy texture.</div>
+            </div>
+        </div>
+
+            <!-- Product 29: Matka Silk (Colors: White, Blue, Black) -->
+           <div class="product-card"
+                 data-id="s29"
+                 data-title="Matka Silk Saree"
+                 data-price="₹3,100"
+                 data-oldprice="₹3,600"
+                 data-discount="13% off"
+                 data-description="Durable and heavy Matka silk fibers."
+                 data-colors="#FFFFFF, #00008B, #000000" <!-- White, Blue, Black --
+                 data-images="https://picsum.photos/seed/s29/600/800,
+                              https://picsum.photos/seed/s29a/600/800,
+                              https://picsum.photos/seed/s29b/600/800,
+                              https://picsum.photos/seed/s29c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s29/300/400" class="active">
+                <img src="https://picsum.photos/seed/s29a/300/400">
+                <img src="https://picsum.photos/seed/s29b/300/400">
+                <img src="https://picsum.photos/seed/s29c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Matka Silk Saree</div>
+                <div class="prod-offer">₹3,100</div>
+                <div class="prod-desc">Durable and heavy Matka silk.</div>
+            </div>
+        </div>
+
+            <!-- Product 30: Tanchoi Saree (Colors: Red, Maroon, Black) -->
+           <div class="product-card"
+                 data-id="s30"
+                 data-title="Tanchoi Saree"
+                 data-price="₹2,900"
+                 data-oldprice="₹4,500"
+                 data-discount="35% off"
+                 data-description="Striped silk saree with brocade patterns."
+                 data-colors="#FF0000, #800000, #000000" <!-- Red, Maroon, Black --
+                 data-images="https://picsum.photos/seed/s30/600/800,
+                              https://picsum.photos/seed/s30a/600/800,
+                              https://picsum.photos/seed/s30b/600/800,
+                              https://picsum.photos/seed/s30c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s30/300/400" class="active">
+                <img src="https://picsum.photos/seed/s30a/300/400">
+                <img src="https://picsum.photos/seed/s30b/300/400">
+                <img src="https://picsum.photos/seed/s30c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Tanchoi Saree</div>
+                <div class="prod-offer">₹2,900</div>
+                <div class="prod-desc">Striped silk with brocade.</div>
+            </div>
+        </div>
+
+             <!-- Product 31: Munga Silk (Colors: Gold, Cream, Pink) -->
+           <div class="product-card"
+                 data-id="s31"
+                 data-title="Munga Silk Saree"
+                 data-price="₹3,100"
+                 data-oldprice="₹3,800"
+                 data-discount="18% off"
+                 data-description="Natural golden hue with luxurious sheen."
+                 data-colors="#FFD700, #FFFDD, #FFB6C1" <!-- Gold, Cream, Pink --
+                 data-images="https://picsum.photos/seed/s31/600/800,
+                              https://picsum.photos/seed/s31a/600/800,
+                              https://picsum.photos/seed/s31b/600/800,
+                              https://picsum.photos/seed/s31c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s31/300/400" class="active">
+                <img src="https://picsum.photos/seed/s31a/300/400">
+                <img src="https://picsum.photos/seed/s31b/300/400">
+                <img src="https://picsum.photos/seed/s31c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Munga Silk Saree</div>
+                <div class="prod-offer">₹3,100</div>
+                <div class="prod-desc">Natural golden hue.</div>
+            </div>
+        </div>
+
+             <!-- Product 32: Raw Silk (Colors: Indigo, Maroon, Green) -->
+           <div class="product-card"
+                 data-id="s32"
+                 data-title="Raw Silk Saree"
+                 data-price="₹4,500"
+                 data-oldprice="₹4,999"
+                 data-discount="10% off"
+                 data-description="Untreated silk fibers with a crisp, rustic feel."
+                 data-colors="#4B0082, #800000, #006400" <!-- Indigo, Maroon, Green --
+                 data-images="https://picsum.photos/seed/s32/600/800,
+                              https://picsum.photos/seed/s32a/600/800,
+                              https://picsum.photos/seed/s32b/600/800,
+                              https://picsum.photos/seed/s32c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s32/300/400" class="active">
+                <img src="https://picsum.photos/seed/s32a/300/400">
+                <img src="https://picsum.photos/seed/s32b/300/400">
+                <img src="https://picsum.photos/seed/s32c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Raw Silk Saree</div>
+                <div class="prod-offer">₹4,500</div>
+                <div class="prod-desc">Untreated silk rustic.</div>
+            </div>
+        </div>
+
+             <!-- Product 33: Mashru Saree (Colors: Blue, Red, Green) -->
+           <div class="product-card"
+                 data-id="s33"
+                 data-title="Mashru Saree"
+                 data-price="₹2,200"
+                 data-oldprice="₹2,800"
+                 data-discount="21% off"
+                 data-description="Silk surface with cotton back, versatile and durable."
+                 data-colors="#000080, #FF0000, #008000" <!-- Blue, Red, Green --
+                 data-images="https://picsum.photos/seed/s33/600/800,
+                              https://picsum.photos/seed/s33a/600/800,
+                              https://picsum.photos/seed/s33b/600/800,
+                              https://picsum.photos/seed/s33c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s33/300/400" class="active">
+                <img src="https://picsum.photos/seed/s33a/300/400">
+                <img src="https://picsum.photos/seed/s33b/300/400">
+                <img src="https://picsum.photos/seed/s33c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Mashru Saree</div>
+                <div class="prod-offer">₹2,200</div>
+                <div class="prod-desc">Silk surface, cotton back.</div>
+            </div>
+        </div>
+
+             <!-- Product 34: Matka Silk (Colors: Yellow, Cream, Maroon) -->
+           <div class="product-card"
+                 data-id="s34"
+                 data-title="Matka Silk Saree"
+                 data-price="₹3,800"
+                 data-oldprice="₹4,999"
+                 data-discount="24% off"
+                 data-description="Durable and heavy Matka silk fibers."
+                 data-colors="#FFD700, #FFFDD, #800000" <!-- Yellow, Cream, Maroon --
+                 data-images="https://picsum.photos/seed/s34/600/800,
+                              https://picsum.photos/seed/s34a/600/800,
+                              https://picsum.photos/seed/s34b/600/800,
+                              https://picsum.photos/seed/s34c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s34/300/400" class="active">
+                <img src="https://picsum.photos/seed/s34a/300/400">
+                <img src="https://picsum.photos/seed/s34b/300/400">
+                <img src="https://picsum.photos/seed/s34c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Matka Silk Saree</div>
+                <div class="prod-offer">₹3,800</div>
+                <div class="prod-desc">Durable and heavy Matka silk.</div>
+            </div>
+        </div>
+
+             <!-- Product 35: Tanchoi Saree (Colors: Teal, Orange, Black) -->
+           <div class="product-card"
+                 data-id="s35"
+                 data-title="Tanchoi Saree"
+                 data-price="₹2,500"
+                 data-oldprice="₹4,999"
+                 data-discount="50% off"
+                 data-description="Striped silk saree with brocade patterns."
+                 data-colors="#008080, #FFA500, #000000" <!-- Teal, Orange, Black --
+                 data-images="https://picsum.photos/seed/s35/600/800,
+                              https://picsum.photos/seed/s35a/600/800,
+                              https://picsum.photos/seed/s35b/600/800,
+                              https://picsum.photos/seed/s35c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s35/300/400" class="active">
+                <img src="https://picsum.photos/seed/s35a/300/400">
+                <img src="https://picsum.photos/seed/s35b/300/400">
+                <img src="https://picsum.photos/seed/s35c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Tanchoi Saree</div>
+                <div class="prod-offer">₹2,500</div>
+                <div class="prod-desc">Striped silk with brocade.</div>
+            </div>
+        </div>
+
+             <!-- Product 36: Raw Silk (Colors: Maroon, Gold, Grey) -->
+           <div class="product-card"
+                 data-id="s36"
+                 data-title="Raw Silk Saree"
+                 data-price="₹4,500"
+                 data-oldprice="₹4,999"
+                 data-discount="10% off"
+                 data-description="Untreated silk fibers with a crisp, rustic feel."
+                 data-colors="#800000, #FFD700, #808080" <!-- Maroon, Gold, Grey --
+                 data-images="https://picsum.photos/seed/s36/600/800,
+                              https://picsum.photos/seed/s36a/600/800,
+                              https://picsum.photos/seed/s36b/600/800,
+                              https://picsum.photos/seed/s36c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s36/300/400" class="active">
+                <img src="https://picsum.photos/seed/s36a/300/400">
+                <img src="https://picsum.photos/seed/s36b/300/400">
+                <img src="https://picsum.photos/seed/s36c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Raw Silk Saree</div>
+                <div class="prod-offer">₹4,500</div>
+                <div class="prod-desc">Untreated silk rustic.</div>
+            </div>
+        </div>
+
+             <!-- Product 37: Garad Saree (Colors: White, Black, Green) -->
+           <div class="product-card"
+                 data-id="s37"
+                 data-title="Garad Saree"
+                 data-price="₹5,200"
+                 data-oldprice="₹4,999"
+                 data-discount="0% off"
+                 data-description="Traditional coarse silk saree with premium gold zari."
+                 data-colors="#FFFFFF, #000000, #006400" <!-- White, Black, Green --
+                 data-images="https://picsum.photos/seed/s37/600/800,
+                              https://picsum.photos/seed/s37a/600/800,
+                              https://picsum.photos/seed/s37b/600/800,
+                              https://picsum.photos/seed/s37c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s37/300/400" class="active">
+                <img src="https://picsum.photos/seed/s37a/300/400">
+                <img src="https://picsum.photos/seed/s37b/300/400">
+                <img src="https://picsum.photos/seed/s37c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Garad Saree</div>
+                <div class="prod-offer">₹5,200</div>
+                <div class="prod-desc">Premium gold zari.</div>
+            </div>
+        </div>
+
+             <!-- Product 38: Murshidabad (Colors: Blue, White, Pink) -->
+           <div class="product-card"
+                 data-id="s38"
+                 data-title="Murshidabad Saree"
+                 data-price="₹4,000"
+                 data-oldprice="₹4,999"
+                 data-discount="20% off"
+                 data-description="Lightweight silk saree from Murshidabad, West Bengal."
+                 data-colors="#000080, #FFFFFF, #FFC0CB" <!-- Blue, White, Pink --
+                 data-images="https://picsum.photos/seed/s38/600/800,
+                              https://picsum.photos/seed/s38a/600/800,
+                              https://picsum.photos/seed/s38b/600/800,
+                              https://picsum.photos/seed/s38c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s38/300/400" class="active">
+                <img src="https://picsum.photos/seed/s38a/300/400">
+                <img src="https://picsum.photos/seed/s38b/300/400">
+                <img src="https://picsum.photos/seed/s38c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Murshidabad Saree</div>
+                <div class="prod-offer">₹4,000</div>
+                <div class="prod-desc">Lightweight silk.</div>
+            </div>
+        </div>
+
+             <!-- Product 39: Kanjivaram (Colors: Red, Gold, Green) -->
+           <div class="product-card"
+                 data-id="s39"
+                 data-title="Kanjivaram Saree"
+                 data-price="₹9,999"
+                 data-oldprice="₹12,999"
+                 data-discount="23% off"
+                 data-description="Classic South Indian Kanjivaram silk with temple border design."
+                 data-colors="#FF0000, #FFD700, #006400" <!-- Red, Gold, Green --
+                 data-images="https://picsum.photos/seed/s39/600/800,
+                              https://picsum.photos/seed/s39a/600/800,
+                              https://picsum.photos/seed/s39b/600/800,
+                              https://picsum.photos/seed/s39c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s39/300/400" class="active">
+                <img src="https://picsum.photos/seed/s39a/300/400">
+                <img src="https://picsum.photos/seed/s39b/300/400">
+                <img src="https://picsum.photos/seed/s39c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Kanjivaram Saree</div>
+                <div class="prod-offer">₹9,999</div>
+                <div class="prod-desc">Classic South Indian temple border.</div>
+            </div>
+        </div>
+
+             <!-- Product 40: Assam Silk (Colors: Brown, Cream, Gold) -->
+           <div class="product-card"
+                 data-id="s40"
+                 data-title="Assam Silk Saree"
+                 data-price="₹4,000"
+                 data-oldprice="₹4,999"
+                 data-discount="20% off"
+                 data-description="Golden Muga silk from Assam, India. Very expensive and fine."
+                 data-colors="#8B4513, #FFFDD, #FFD700" <!-- Brown, Cream, Gold --
+                 data-images="https://picsum.photos/seed/s40/600/800,
+                              https://picsum.photos/seed/s40a/600/800,
+                              https://picsum.photos/seed/s40b/600/800,
+                              https://picsum.photos/seed/s40c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s40/300/400" class="active">
+                <img src="https://picsum.photos/seed/s40a/300/400">
+                <img src="https://picsum.photos/seed/s40b/300/400">
+                <img src="https://picsum.photos/seed/s40c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Assam Silk Saree</div>
+                <div class="prod-offer">₹4,000</div>
+                <div class="prod-desc">Golden Muga silk.</div>
+            </div>
+        </div>
+
+             <!-- Product 41: Phulkari (Colors: Purple, Pink, Yellow) -->
+           <div class="product-card"
+                 data-id="s41"
+                 data-title="Phulkari Saree"
+                 data-price="₹9,999"
+                 data-oldprice="₹12,999"
+                 data-discount="23% off"
+                 data-description="Traditional heavy silk saree with gold zari work."
+                 data-colors="#800080, #FFC0CB, #FFD700" <!-- Purple, Pink, Yellow --
+                 data-images="https://picsum.photos/seed/s41/600/800,
+                              https://picsum.photos/seed/s41a/600/800,
+                              https://picsum.photos/seed/s41b/600/800,
+                              https://picsum.photos/seed/s41c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s41/300/400" class="active">
+                <img src="https://picsum.photos/seed/s41a/300/400">
+                <img src="https://picsum.photos/seed/s41b/300/400">
+                <img src="https://picsum.photos/seed/s41c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Phulkari Saree</div>
+                <div class="prod-offer">₹9,999</div>
+                <div class="prod-desc">Traditional heavy silk.</div>
+            </div>
+        </div>
+
+             <!-- Product 42: Baluchari (Colors: Teal, White, Red) -->
+           <div class="product-card"
+                 data-id="s42"
+                 data-title="Baluchari Saree"
+                 data-price="₹9,999"
+                 data-oldprice="₹12,999"
+                 data-discount="23% off"
+                 data-description="Traditional heavy silk saree with gold zari work."
+                 data-colors="#008080, #FFFFFF, #FF0000" <!-- Teal, White, Red --
+                 data-images="https://picsum.photos/seed/s42/600/800,
+                              https://picsum.photos/seed/s42a/600/800,
+                              https://picsum.photos/seed/s42b/600/800,
+                              https://picsum.photos/seed/s42c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s42/300/400" class="active">
+                <img src="https://picsum.photos/seed/s42a/300/400">
+                <img src="https://picsum.photos/seed/s42b/300/400">
+                <img src="https://picsum.photos/seed/s42c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Baluchari Saree</div>
+                <div class="prod-offer">₹9,999</div>
+                <div class="prod-desc">Traditional heavy silk.</div>
+            </div>
+        </div>
+
+             <!-- Product 43: Handloom Cotton (Colors: Blue, Green, Grey) -->
+           <div class="product-card"
+                 data-id="s43"
+                 data-title="Handloom Cotton Saree"
+                 data-price="₹1,299"
+                 data-oldprice="₹2,499"
+                 data-discount="48% off"
+                 data-description="Soft georgette fabric with stylish lace border."
+                 data-colors="#000080, #008000, #808080" <!-- Blue, Green, Grey --
+                 data-images="https://picsum.photos/seed/s43/600/800,
+                              https://picsum.photos/seed/s43a/600/800,
+                              https://picsum.photos/seed/s43b/600/800,
+                              https://picsum.photos/seed/s43c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s43/300/400" class="active">
+                <img src="https://picsum.photos/seed/s43a/300/400">
+                <img src="https://picsum.photos/seed/s43b/300/400">
+                <img src="https://picsum.photos/seed/s43c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Handloom Cotton Saree</div>
+                <div class="prod-offer">₹1,299</div>
+                <div class="prod-desc">Soft georgette lace border.</div>
+            </div>
+        </div>
+
+             <!-- Product 44: Jute Silk (Colors: Olive, Gold, Grey) -->
+           <div class="product-card"
+                 data-id="s44"
+                 data-title="Jute Silk Saree"
+                 data-price="₹2,500"
+                 data-oldprice="₹2,499"
+                 data-discount="0% off"
+                 data-description="Eco-friendly blend of silk and jute fibers."
+                 data-colors="#556B2F, #FFD700, #808080" <!-- Olive, Gold, Grey --
+                 data-images="https://picsum.photos/seed/s44/600/800,
+                              https://picsum.photos/seed/s44a/600/800,
+                              https://picsum.photos/seed/s44b/600/800,
+                              https://picsum.photos/seed/s44c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s44/300/400" class="active">
+                <img src="https://picsum.photos/seed/s44a/300/400">
+                <img src="https://picsum.photos/seed/s44b/300/400">
+                <img src="https://picsum.photos/seed/s44c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Jute Silk Saree</div>
+                <div class="prod-offer">₹2,500</div>
+                <div class="prod-desc">Eco-friendly jute blend.</div>
+            </div>
+        </div>
+
+             <!-- Product 45: Kota Silk (Colors: White, Blue, Pink) -->
+           <div class="product-card"
+                 data-id="s45"
+                 data-title="Kota Silk Saree"
+                 data-price="₹2,400"
+                 data-oldprice="₹2,499"
+                 data-discount="4% off"
+                 data-description="Sheer square checks weave. Light and airy fabric."
+                 data-colors="#FFFFFF, #000080, #FFC0CB" <!-- White, Blue, Pink --
+                 data-images="https://picsum.photos/seed/s45/600/800,
+                              https://picsum.photos/seed/s45a/600/800,
+                              https://picsum.photos/seed/s45b/600/800,
+                              https://picsum.photos/seed/s45c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s45/300/400" class="active">
+                <img src="https://picsum.photos/seed/s45a/300/400">
+                <img src="https://picsum.photos/seed/s45b/300/400">
+                <img src="https://picsum.photos/seed/s45c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Kota Silk Saree</div>
+                <div class="prod-offer">₹2,400</div>
+                <div class="prod-desc">Sheer square checks.</div>
+            </div>
+        </div>
+
+             <!-- Product 46: Zardozi (Colors: Maroon, Gold, Silver) -->
+           <div class="product-card"
+                 data-id="s46"
+                 data-title="Zardozi Silk Saree"
+                 data-price="₹2,900"
+                 data-oldprice="₹2,499"
+                 data-discount="0% off"
+                 data-description="Kashmiri silk embroidery on gold zari. Very heavy."
+                 data-colors="#800000, #FFD700, #C0C0C0" <!-- Maroon, Gold, Silver --
+                 data-images="https://picsum.photos/seed/s46/600/800,
+                              https://picsum.photos/seed/s46a/600/800,
+                              https://picsum.photos/seed/s46b/600/800,
+                              https://picsum.photos/seed/s46c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s46/300/400" class="active">
+                <img src="https://picsum.photos/seed/s46a/300/400">
+                <img src="https://picsum.photos/seed/s46b/300/400">
+                <img src="https://picsum.photos/seed/s46c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Zardozi Silk Saree</div>
+                <div class="prod-offer">₹2,900</div>
+                <div class="prod-desc">Kashmiri embroidery.</div>
+            </div>
+        </div>
+
+             <!-- Product 47: Gota Work (Colors: Blue, Black, Yellow) -->
+           <div class="product-card"
+                 data-id="s47"
+                 data-title="Gota Work Saree"
+                 data-price="₹2,500"
+                 data-oldprice="₹2,499"
+                 data-discount="0% off"
+                 data-description="Golden and silver threads work on fabric borders."
+                 data-colors="#000080, #000000, #FFD700" <!-- Blue, Black, Yellow --
+                 data-images="https://picsum.photos/seed/s47/600/800,
+                              https://picsum.photos/seed/s47a/600/800,
+                              https://picsum.photos/seed/s47b/600/800,
+                              https://picsum.photos/seed/s47c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s47/300/400" class="active">
+                <img src="https://picsum.photos/seed/s47a/300/400">
+                <img src="https://picsum.photos/seed/s47b/300/400">
+                <img src="https://picsum.photos/seed/s47c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Gota Work Saree</div>
+                <div class="prod-offer">₹2,500</div>
+                <div class="prod-desc">Golden and silver threads.</div>
+            </div>
+        </div>
+
+             <!-- Product 48: Patola (Colors: Pink, Red, Teal) -->
+           <div class="product-card"
+                 data-id="s48"
+                 data-title="Patola Silk Saree"
+                 data-price="₹9,999"
+                 data-oldprice="₹12,999"
+                 data-discount="23% off"
+                 data-description="Ikat patterns woven into silk yarn. Very time consuming."
+                 data-colors="#FFC0CB, #FF0000, #008080"
+                 data-images="https://picsum.photos/seed/s48/600/800,
+                              https://picsum.photos/seed/s48a/600/800,
+                              https://picsum.photos/seed/s48b/600/800,
+                              https://picsum.photos/seed/s48c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s48/300/400" class="active">
+                <img src="https://picsum.photos/seed/s48a/300/400">
+                <img src="https://picsum.photos/seed/s48b/300/400">
+                <img src="https://picsum.photos/seed/s48c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Patola Silk Saree</div>
+                <div class="prod-offer">₹9,999</div>
+                <div class="prod-desc">Ikat woven silk yarn.</div>
+            </div>
+        </div>
+
+             <!-- Product 49: Bandhani (Colors: Black, Red, Yellow) -->
+           <div class="product-card"
+                 data-id="s49"
+                 data-title="Bandhani Silk Saree"
+                 data-price="₹9,999"
+                 data-oldprice="₹12,999"
+                 data-discount="23% off"
+                 data-description="Tie-dyed fabric with vibrant geometric patterns."
+                 data-colors="#000000, #FF0000, #FFD700" 
+                 data-images="https://picsum.photos/seed/s49/600/800,
+                              https://picsum.photos/seed/s49a/600/800,
+                              https://picsum.photos/seed/s49b/600/800,
+                              https://picsum.photos/seed/s49c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s49/300/400" class="active">
+                <img src="https://picsum.photos/seed/s49a/300/400">
+                <img src="https://picsum.photos/seed/s49b/300/400">
+                <img src="https://picsum.photos/seed/s49c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Bandhani Silk Saree</div>
+                <div class="prod-offer">₹9,999</div>
+                <div class="prod-desc">Tie-dyed geometric patterns.</div>
+            </div>
+        </div>
+
+             <!-- Product 50: Chanderi (Colors: Orange, White, Purple) -->
+           <div class="product-card"
+                 data-id="s50"
+                 data-title="Chanderi Silk Saree"
+                 data-price="₹2,900"
+                 data-oldprice="₹4,500"
+                 data-discount="35% off"
+                 data-description="Saree with gold and silver zari work, very light."
+                 data-colors="#FFA500, #FFFFFF, #800080" <!-- Orange, White, Purple --
+                 data-images="https://picsum.photos/seed/s50/600/800,
+                              https://picsum.photos/seed/s50a/600/800,
+                              https://picsum.photos/seed/s50b/600/800,
+                              https://picsum.photos/seed/s50c/600/800">
+
+            <div class="slider">
+                <img src="https://picsum.photos/seed/s50/300/400" class="active">
+                <img src="https://picsum.photos/seed/s50a/300/400">
+                <img src="https://picsum.photos/seed/s50b/300/400">
+                <img src="https://picsum.photos/seed/s50c/300/400">
+            </div>
+
+            <div class="prod-info">
+                <div class="prod-title">Chanderi Silk Saree</div>
+                <div class="prod-offer">₹2,900</div>
+                <div class="prod-desc">Gold and silver zari.</div>
+            </div>
+        </div>
+
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-logo">A&M <span>Fashion</span></div>
+        <div class="footer-links"><a href="index.html">Home</a><a href="#">Contact</a><a href="#">Terms</a></div>
+        <div>© 2024 A&M Fashion & Jewels.</div>
+    </footer>
+    <script>
+        document.querySelectorAll(".product-card").forEach(card => {
+            card.addEventListener("click", () => {
+                const id = card.dataset.id;
+                window.location.href = "product.html?id=" + id;
+            });
+        });
+    </script>
+    <script>
+function updateCartCount() {
+    let cart = JSON.parse(localStorage.getItem("cartItems")) || [];
+    document.getElementById("cartCount").innerText = cart.length;
+}
+
+// Load the count immediately after page loads
+updateCartCount();
+</script>
+
+</body>
+</html>

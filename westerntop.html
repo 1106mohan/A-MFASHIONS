@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A&M Fashion | Western Tops Collection</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        :root {
+            --primary-black: #000000;
+            --primary-gold: #D4AF37;
+            --secondary-gold: #F1C40F;
+            --text-light: #ffffff;
+            --bg-light: #f5f5f5;
+            --white: #ffffff;
+            --shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
+        body { background-color: var(--bg-light); padding-top: 85px; }
+
+        header {
+            background-color: var(--primary-black);
+            height: 85px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            border-bottom: 2px solid var(--primary-gold);
+        }
+
+        .header-container {
+            max-width: 1300px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            gap: 30px;
+        }
+
+        /* Logo */
+        .logo-box { display: flex; flex-direction: column; cursor: pointer; text-align: left; padding-right: 20px; border-right: 1px solid #333; }
+        .logo-top { display: flex; align-items: baseline; gap: 8px; }
+        .logo-text { font-family: 'Playfair Display', serif; color: var(--text-light); font-size: 32px; font-weight: 700; }
+        .diamond-icon { color: var(--primary-gold); font-size: 20px; margin-bottom: 6px; }
+        .logo-fashion { font-family: 'Playfair Display', serif; color: var(--primary-gold); font-size: 12px; letter-spacing: 6px; text-transform: uppercase; font-weight: 400; margin-left: 2px; }
+        .logo-decoration { width: 40px; height: 2px; background-color: var(--primary-gold); margin-top: 5px; }
+
+        /* Search */
+        .search-box { flex-grow: 1; max-width: 500px; background: #1a1a1a; border: 1px solid #333; border-radius: 4px; display: flex; align-items: center; padding: 0 15px; position: relative; }
+        .search-box input { width: 100%; border: none; outline: none; padding: 12px 0; font-size: 14px; color: var(--white); background: transparent; }
+        .search-btn { background: none; border: none; cursor: pointer; color: var(--primary-gold); font-size: 20px; }
+
+        /* Nav Items */
+        .nav-items { display: flex; align-items: center; gap: 30px; color: var(--text-light); font-size: 14px; }
+        .login-btn { background-color: var(--primary-gold); color: var(--primary-black); padding: 8px 30px; font-weight: 700; border: 1px solid var(--primary-gold); cursor: pointer; border-radius: 2px; text-transform: uppercase; font-size: 13px; }
+        .nav-link { color: var(--text-light); text-decoration: none; display: flex; align-items: center; gap: 5px; position: relative;}
+        .cart-icon { font-size: 22px; position: relative; }
+        .cart-count { position: absolute; top: -8px; right: -8px; background-color: var(--primary-gold); color: var(--primary-black); font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 10px; }
+
+        /* Category Nav */
+        .category-nav { background: var(--white); padding: 15px 0; display: flex; justify-content: center; margin-bottom: 20px; border-bottom: 1px solid #eee; }
+        .cat-container { max-width: 1300px; width: 100%; display: flex; justify-content: space-between; padding: 0 20px; gap: 30px; min-width: 800px; }
+        .cat-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: inherit; cursor: pointer; gap: 8px; transition: transform 0.3s; }
+        .cat-item:hover { transform: translateY(-3px); }
+        .cat-img { width: 60px; height: 60px; object-fit: contain; }
+        .cat-text { font-size: 13px; font-weight: 500; color: var(--primary-black); text-transform: uppercase; letter-spacing: 1px; }
+        .cat-item.active .cat-text { color: var(--primary-gold); font-weight: 700; }
+
+        main { max-width: 1300px; margin: 0 auto; padding: 0 10px; }
+        
+        .section-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 10px 15px; border-bottom: 1px solid var(--primary-gold); margin-bottom: 20px; }
+        .section-title { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; }
+        .back-btn { text-decoration: none; color: var(--primary-black); font-weight: 600; border: 1px solid #333; padding: 8px 15px; transition: 0.3s; }
+        .back-btn:hover { border-color: var(--primary-gold); color: var(--primary-gold); }
+
+        /* Product Grid */
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; padding: 10px 0 40px; }
+        
+        /* Product Card */
+        .product-card { 
+            background: var(--white); 
+            padding: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            border: 1px solid #eee; 
+            overflow: hidden; /* Important to clip sliding images */
+            position: relative;
+        }
+        .product-card:hover { box-shadow: 0 10px 20px rgba(0,0,0,0.1); transform: translateY(-5px); border-color: var(--primary-gold); }
+        
+        /* --- SLIDER ANIMATION CSS --- */
+        .slider { 
+            width: 100%; 
+            height: 260px; 
+            position: relative; 
+            overflow: hidden; 
+            background: #f3f3f3;
+        }
+
+        .slider img {
+            width: 100%;
+            height: 260px;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0; /* All images hidden initially */
+            transition: left 1s linear, opacity 1s ease-in-out;
+        }
+.category-nav {
+    position: relative;
+    z-index: 1;
+}
+
+.product-grid {
+    position: relative;
+    z-index: 2;
+}
+
+        /* State: Only the 'active' class image is visible by default */
+        .slider img.active {
+            opacity: 1;
+            left: 0;
+            z-index: 2;
+        }
+
+        /* Animation Keyframes - Slides images Right to Left */
+        @keyframes slideShow {
+            0% { left: 0; opacity: 1; z-index: 2; }
+            20% { left: -100%; opacity: 0; z-index: 1; } /* Image 1 exits left */
+            
+            25% { left: 100%; opacity: 0; z-index: 1; } /* Image 2 enters from right */
+            40% { left: 0; opacity: 1; z-index: 2; }    /* Image 2 visible */
+
+            45% { left: -100%; opacity: 0; z-index: 1; } /* Image 2 exits */
+            
+            50% { left: 100%; opacity: 0; z-index: 1; } /* Image 3 enters */
+            60% { left: 0; opacity: 1; z-index: 2; }    /* Image 3 visible */
+
+            65% { left: -100%; opacity: 0; z-index: 1; } /* Image 3 exits */
+            
+            70% { left: 100%; opacity: 0; z-index: 1; } /* Image 4 enters */
+            85% { left: 0; opacity: 1; z-index: 2; }    /* Image 4 visible */
+            
+            90% { left: 0; opacity: 0; z-index: 0; } /* Fade out */
+            100% { left: 0; opacity: 0; z-index: 0; }
+        }
+
+        /* Apply animation on Hover */
+        .product-card:hover .slider img {
+            animation: slideShow 8s infinite;
+        }
+
+        /* --- END SLIDER CSS --- */
+
+        .prod-info { padding: 15px; width: 100%; text-align: left; }
+        .prod-title { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; margin-bottom: 5px; color: var(--primary-black); }
+        .prod-offer { color: #c0392b; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+        .prod-desc { font-size: 12px; color: #777; line-height: 1.4; margin-top: 5px; }
+
+        footer { background-color: var(--primary-black); color: #888; padding: 60px 0 30px; margin-top: 50px; text-align: center; border-top: 4px solid var(--primary-gold); }
+        .footer-logo { font-family: 'Playfair Display', serif; font-size: 28px; color: white; margin-bottom: 20px; }
+        .footer-logo span { color: var(--primary-gold); }
+        .footer-links { display: flex; justify-content: center; gap: 30px; margin-bottom: 30px; }
+        .footer-links a { color: white; text-decoration: none; font-weight: 500; }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo-box" onclick="window.location.href='index.html'">
+                <div class="logo-top">
+                    <div class="logo-text">A&M</div>
+                    <i class="ph ph-diamond-fill diamond-icon"></i>
+                </div>
+                <div class="logo-fashion">Fashion</div>
+                <div class="logo-decoration"></div>
+            </div>
+            <div class="search-box">
+                <input type="text" placeholder="Search Western Tops...">
+                <button class="search-btn"><i class="ph ph-magnifying-glass"></i></button>
+            </div>
+           <div class="nav-items">
+    <button class="login-btn" onclick="window.location.href='admin-login.html'">
+        Admin Login
+    </button>
+
+    <div class="nav-link" onclick="window.location.href='cart.html'">
+        <i class="ph ph-shopping-bag cart-icon"></i>
+        <span class="cart-count" id="cartCount">0</span>
+    </div>
+</div>
+
+        </div>
+    </header>
+
+    <!-- Nav (Western Tops Active) -->
+    <nav class="category-nav">
+        <div class="cat-container">
+            <!-- 1. Sarees -->
+            <a href="sarees.html" class="cat-item">
+                <img src="https://picsum.photos/seed/saree/60/60" class="cat-img" alt="Sarees">
+                <span class="cat-text">Sarees</span>
+            </a>
+            
+            <!-- 2. Kurtas -->
+            <a href="kurtas.html" class="cat-item">
+                <img src="https://picsum.photos/seed/kurta/60/60" class="cat-img" alt="Kurtas">
+                <span class="cat-text">Kurtas</span>
+            </a>
+            
+            <!-- 3. Western Tops (Active) -->
+            <a href="westerntop.html" class="cat-item active">
+                <img src="https://picsum.photos/seed/westerntop/60/60" class="cat-img" alt="Western Tops">
+                <span class="cat-text">Western Tops</span>
+            </a>
+            
+            <!-- 4. Jeans -->
+            <a href="jeans.html" class="cat-item">
+                <img src="https://picsum.photos/seed/jeans/60/60" class="cat-img" alt="Jeans">
+                <span class="cat-text">Jeans</span>
+            </a>
+            
+            <!-- 5. Coords Sets -->
+            <a href="cordset.html" class="cat-item">
+                <img src="https://picsum.photos/seed/coordsset/60/60" class="cat-img" alt="Coords Sets">
+                <span class="cat-text">Coords Sets</span>
+            </a>
+            
+        </div>
+    </nav>
+
+    <main>
+        <div class="section-header">
+            <div class="section-title">Western Tops Collection</div>
+            <a href="index.html" class="back-btn">← Back to Home</a>
+        </div>
+
+        <!-- 20 Products Grid -->
+        <div class="product-grid">
+
+            <!-- Product 1 -->
+            <div class="product-card" data-id="w1">
+
+                <div class="slider">
+                    <img src="https://th.bing.com/th/id/OIP.WuudsUUD2lMqdu3-bnu2dAHaJ3?w=208&h=277&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3" class="active">
+                    <img src="https://th.bing.com/th/id/OIP.d28TWdmnWF60dvJuhQlvnQAAAA?w=208&h=297&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3">
+                    <img src="https://th.bing.com/th/id/OIP.pZzaozfFwJbuNeUd-TwOeQHaHa?w=208&h=208&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3">
+                    <img src="https://th.bing.com/th/id/OIP.pZzaozfFwJbuNeUd-TwOeQHaHa?w=208&h=208&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3">
+                </div>
+                <div class="prod-info">
+                    <div class="prod-title">Floral Crop Top</div>
+                    <div class="prod-offer">₹899</div>
+                    <div class="prod-desc">Lightweight cotton blend.</div>
+                </div>
+            </div>
+
+            <!-- Product 2 -->
+            <div class="product-card" data-id="w2">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/western2/300/400" class="active">
+                    <img src="https://picsum.photos/seed/western2a/300/400">
+                    <img src="https://picsum.photos/seed/western2b/300/400">
+                    <img src="https://picsum.photos/seed/western2c/300/400">
+                </div>
+                <div class="prod-info">
+                    <div class="prod-title">Denim Jacket</div>
+                    <div class="prod-offer">₹2,499</div>
+                    <div class="prod-desc">Stylish denim material.</div>
+                </div>
+            </div>
+
+            <!-- Product 3 -->
+            <div class="product-card" data-id="w3">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/western3/300/400" class="active">
+                    <img src="https://picsum.photos/seed/western3a/300/400">
+                    <img src="https://picsum.photos/seed/western3b/300/400">
+                    <img src="https://picsum.photos/seed/western3c/300/400">
+                </div>
+                <div class="prod-info">
+                    <div class="prod-title">Satin Blouse</div>
+                    <div class="prod-offer">₹1,299</div>
+                    <div class="prod-desc">Glossy shine texture.</div>
+                </div>
+            </div>
+
+            <!-- Product 4 -->
+            <div class="product-card" data-id="w4">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/western4/300/400" class="active">
+                    <img src="https://picsum.photos/seed/western4a/300/400">
+                    <img src="https://picsum.photos/seed/western4b/300/400">
+                    <img src="https://picsum.photos/seed/western4c/300/400">
+                </div>
+                <div class="prod-info">
+                    <div class="prod-title">Casual Tee</div>
+                    <div class="prod-offer">₹699</div>
+                    <div class="prod-desc">Comfortable daily wear.</div>
+                </div>
+            </div>
+
+            <!-- Product 5 -->
+            <div class="product-card" data-id="w5">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/western5/300/400" class="active">
+                    <img src="https://picsum.photos/seed/western5a/300/400">
+                    <img src="https://picsum.photos/seed/western5b/300/400">
+                    <img src="https://picsum.photos/seed/western5c/300/400">
+                </div>
+                <div class="prod-info">
+                    <div class="prod-title">Tie-Dye Top</div>
+                    <div class="prod-offer">₹1,500</div>
+                    <div class="prod-desc">Artistic tie-dye.</div>
+                </div>
+            </div>
+
+            <!-- Product 6 -->
+            <div class="product-card" data-id="w6">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/western6/300/400" class="active">
+                    <img src="https://picsum.photos/seed/western6a/300/400">
+                    <img src="https://picsum.photos/seed/western6b/300/400">
+                    <img src="https://picsum.photos/seed/western6c/300/400">
+                </div>
+                <div class="prod-info">
+                    <div class="prod-title">Peplum Top</div>
+                    <div class="prod-offer">₹1,299</div>
+                    <div class="prod-desc">Trendy peplum cut.</div>
+                </div>
+            </div>
+
+            <!-- Product 7 -->
+            <div class="product-card" data-id="w7">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/western7/300/400" class="active">
+                    <img src="https://picsum.photos/seed/western7a/300/400">
+                    <img src="https://picsum.photos/seed/western7b/300/400">
+                    <img src="https://picsum.photos/seed/western7c/300/400">
+                </div>
+                <div class="prod-info">
+                    <div class="prod-title">Wrap Top</div>
+                    <div class="prod-offer">₹2,200</div>
+                    <div class="prod-desc">Flattering wrap style.</div>
+                </div>
+            </div>
+
+            <!-- Product 8 -->
+            <div class="product-card" data-id="w8">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/western8/300/400" class="active">
+                    <img src="https://picsum.photos/seed/western8a/300/400">
+                    <img src="https://picsum.photos/seed/western8b/300/400">
+                    <img src="https://picsum.photos/seed/western8c/300/400">
+                </div>
+                <div class="prod-info">
+                    <div class="prod-title">Striped Tee</div>
+                    <div class="prod-offer">₹1,100</div>
+                    <div class="prod-desc">Classic stripe pattern.</div>
+                </div>
+            </div>
+
+            <!-- Product 9 -->
+            <div class="product-card" data-id="w9">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/western9/300/400" class="active">
+                    <img src="https://picsum.photos/seed/western9a/300/400">
+                    <img src="https://picsum.photos/seed/western9b/300/400">
+                    <img src="https://picsum.photos/seed/western9c/300/400">
+                </div>
+                <div class="prod-info">
+                    <div class="prod-title">Boho Blouse</div>
+                    <div class="prod-offer">₹1,800</div>
+                    <div class="prod-desc">Bohemian chic vibe.</div>
+                </div>
+            </div>
+
+            <!-- Product 10 -->
+            <div class="product-card" data-id="w10">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/western10/300/400" class="active">
+                    <img src="https://picsum.photos/seed/western10a/300/400">
+                    <img src="https://picsum.photos/seed/western10b/300/400">
+                    <img src="https://picsum.photos/seed/western10c/300/400">
+                </div>
+                <div class="prod-info">
+                    <div class="prod-title">Ruffle Top</div>
+                    <div class="prod-offer">₹2,500</div>
+                    <div class="prod-desc">Elegant ruffle details.</div>
+                </div>
+            </div>
+
+            <!-- Product 11 -->
+            <div class="product-card" data-id="w11">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/western11/300/400" class="active">
+                    <img src="https://picsum.photos/seed/western11a/300/400">
+                    <img src="https://picsum.photos/seed/western11b/300/400">
+                    <img src="https://picsum.photos/seed/western11c/300/400">
+                </div>
+                <div class="prod-info">
+                    <div class="prod-title">Off-Shoulder Top</div>
+                    <div class="prod-offer">₹1,600</div>
+                    <div class="prod-desc">Summer off-shoulder.</div>
+                </div>
+            </div>
+
+            <!-- Product 12 -->
+            <div class="product-card" data-id="w12">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/western12/300/400" class="active">
+                    <img src="https://picsum.photos/seed/western12a/300/400">
+                    <img src="https://picsum.photos/seed/western12b/300/400">
+                    <img src="https://picsum.photos/seed/western12c/300/400">
+                </div>
+                <div class="prod-info">
+                    <div class="prod-title">Lace Overlay</div>
+                    <div class="prod-offer">₹3,200</div>
+                    <div class="prod-desc">Delicate lace overlay.</div>
+                </div>
+            </div>
+
+            <!-- Product 13 -->
+            <div class="product-card" data-id="w13">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/western13/300/400" class="active">
+                    <img src="https://picsum.photos/seed/western13a/300/400">
+                    <img src="https://picsum.photos/seed/western13b/300/400">
+                    <img src="https://picsum.photos/seed/western13c/300/400">
+                </div>
+                <div class="prod-info">
+                    <div class="prod-title">Puff Sleeve</div>
+                    <div class="prod-offer">₹1,299</div>
+                    <div class="prod-desc">Puff sleeve detail.</div>
+                </div>
+            </div>
+
+            <!-- Product 14 -->
+            <div class="product-card" data-id="w14">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/western14/300/400" class="active">
+                    <img src="https://picsum.photos/seed/western14a/300/400">
+                    <img src="https://picsum.photos/seed/western14b/300/400">
+                    <img src="https://picsum.photos/seed/western14c/300/400">
+                </div>
+                <div class="prod-info">
+                    <div class="prod-title">Camisole</div>
+                    <div class="prod-offer">₹899</div>
+                    <div class="prod-desc">Simple spaghetti strap.</div>
+                </div>
+            </div>
+
+            <!-- Product 15 -->
+            <div class="product-card" data-id="w15">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/western15/300/400" class="active">
+                    <img src="https://picsum.photos/seed/western15a/300/400">
+                    <img src="https://picsum.photos/seed/western15b/300/400">
+                    <img src="https://picsum.photos/seed/western15c/300/400">
+                </div>
+                <div class="prod-info">
+                    <div class="prod-title">Printed Tee</div>
+                    <div class="prod-offer">₹1,499</div>
+                    <div class="prod-desc">Abstract print design.</div>
+                </div>
+            </div>
+
+            <!-- Product 16 -->
+            <div class="product-card" data-id="w16">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/western16/300/400" class="active">
+                    <img src="https://picsum.photos/seed/western16a/300/400">
+                    <img src="https://picsum.photos/seed/western16b/300/400">
+                    <img src="https://picsum.photos/seed/western16c/300/400">
+                </div>
+                <div class="prod-info">
+                    <div class="prod-title">Crop Cardigan</div>
+                    <div class="prod-offer">₹2,200</div>
+                    <div class="prod-desc">Cozy knit cardigan.</div>
+                </div>
+            </div>
+
+            <!-- Product 17 -->
+            <div class="product-card" data-id="w17">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/western17/300/400" class="active">
+                    <img src="https://picsum.photos/seed/western17a/300/400">
+                    <img src="https://picsum.photos/seed/western17b/300/400">
+                    <img src="https://picsum.photos/seed/western17c/300/400">
+                </div>
+                <div class="prod-info">
+                    <div class="prod-title">Halter Neck</div>
+                    <div class="prod-offer">₹1,299</div>
+                    <div class="prod-desc">Stylish halter neck.</div>
+                </div>
+            </div>
+
+            <!-- Product 18 -->
+            <div class="product-card" data-id="w18">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/western18/300/400" class="active">
+                    <img src="https://picsum.photos/seed/western18a/300/400">
+                    <img src="https://picsum.photos/seed/western18b/300/400">
+                    <img src="https://picsum.photos/seed/western18c/300/400">
+                </div>
+                <div class="prod-info">
+                    <div class="prod-title">Tube Top</div>
+                    <div class="prod-offer">₹999</div>
+                    <div class="prod-desc">Simple tube design.</div>
+                </div>
+            </div>
+
+            <!-- Product 19 -->
+            <div class="product-card" data-id="w19">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/western19/300/400" class="active">
+                    <img src="https://picsum.photos/seed/western19a/300/400">
+                    <img src="https://picsum.photos/seed/western19b/300/400">
+                    <img src="https://picsum.photos/seed/western19c/300/400">
+                </div>
+                <div class="prod-info">
+                    <div class="prod-title">Chiffon Blouse</div>
+                    <div class="prod-offer">₹1,600</div>
+                    <div class="prod-desc">Light chiffon fabric.</div>
+                </div>
+            </div>
+
+            <!-- Product 20 -->
+            <div class="product-card" data-id="w20">
+
+                <div class="slider">
+                    <img src="https://picsum.photos/seed/western20/300/400" class="active">
+                    <img src="https://picsum.photos/seed/western20a/300/400">
+                    <img src="https://picsum.photos/seed/western20b/300/400">
+                    <img src="https://picsum.photos/seed/western20c/300/400">
+                </div>
+                <div class="prod-info">
+                    <div class="prod-title">Lace Overlay</div>
+                    <div class="prod-offer">₹3,500</div>
+                    <div class="prod-desc">Party wear lace.</div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-logo">A&M <span>Fashion</span></div>
+        <div class="footer-links"><a href="index.html">Home</a><a href="#">Contact</a><a href="#">Terms</a></div>
+        <div>© 2024 A&M Fashion & Jewels.</div>
+    </footer>
+<script>
+document.querySelectorAll(".product-card").forEach(card => {
+    card.addEventListener("click", () => {
+        const id = card.getAttribute("data-id");
+        window.location.href = "product.html?id=" + id;
+    });
+});
+</script>
+<script>
+function updateCartCount() {
+    let cart = JSON.parse(localStorage.getItem("cartItems")) || [];
+    document.getElementById("cartCount").innerText = cart.length;
+}
+
+// Load the count immediately after page loads
+updateCartCount();
+</script>
+
+
+</body>
+</html>
